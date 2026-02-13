@@ -1238,8 +1238,8 @@ function KitchenRemodelScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Kitchen Remodel" subtitle="The Heart of Your Home." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#FFF3E0', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="chef-hat" size={80} color="#FF9800" />
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="chef-hat" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Culinary Masterpiece</Text>
           <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Transform your kitchen into a modern, functional, and stylish space perfect for cooking and gathering.</Text>
@@ -1248,8 +1248,8 @@ function KitchenRemodelScreen({ navigation }) {
           <Text style={styles.sectionTitle}>What We Offer</Text>
           {steps.map((step, index) => (
             <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#FFF3E0', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#FF9800" />
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
@@ -1258,7 +1258,7 @@ function KitchenRemodelScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#FF9800', shadowColor: '#FF9800' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Plan My Kitchen</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1280,8 +1280,8 @@ function BathroomUpgradeScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Bathroom Upgrade" subtitle="Your Personal Spa." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E0F7FA', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="shower-head" size={80} color="#00BCD4" />
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="shower-head" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Refresh & Relax</Text>
           <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Upgrade your bathroom into a serene retreat with modern amenities and luxurious finishes.</Text>
@@ -1290,8 +1290,8 @@ function BathroomUpgradeScreen({ navigation }) {
           <Text style={styles.sectionTitle}>Features</Text>
           {steps.map((step, index) => (
             <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E0F7FA', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#00BCD4" />
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
@@ -1300,7 +1300,7 @@ function BathroomUpgradeScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#00BCD4', shadowColor: '#00BCD4' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Upgrade Bathroom</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1322,8 +1322,8 @@ function FlooringMakeoverScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Flooring" subtitle="Foundation of Style." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#CFD8DC', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="floor-plan" size={80} color="#455A64" />
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="floor-plan" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Step into Luxury</Text>
           <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Choose from a wide range of premium flooring options to elevate the look and feel of your home.</Text>
@@ -1332,8 +1332,8 @@ function FlooringMakeoverScreen({ navigation }) {
           <Text style={styles.sectionTitle}>Options</Text>
           {steps.map((step, index) => (
             <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#CFD8DC', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#455A64" />
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
@@ -1342,7 +1342,7 @@ function FlooringMakeoverScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#455A64', shadowColor: '#455A64' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Get Flooring Quote</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1364,8 +1364,8 @@ function FullHomeMakeoverScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Full Home Makeover" subtitle="Complete Transformation." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E1BEE7', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="home-modern" size={80} color="#8E24AA" />
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="home-modern" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Reimagine Your Home</Text>
           <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>A comprehensive renovation service to completely transform your living space into your dream home.</Text>
@@ -1374,8 +1374,8 @@ function FullHomeMakeoverScreen({ navigation }) {
           <Text style={styles.sectionTitle}>Our Approach</Text>
           {steps.map((step, index) => (
             <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E1BEE7', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#8E24AA" />
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
@@ -1384,7 +1384,7 @@ function FullHomeMakeoverScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#8E24AA', shadowColor: '#8E24AA' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Start Makeover</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1406,8 +1406,8 @@ function HomePaintingScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Home Painting" subtitle="A Fresh Coat of Life." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#C8E6C9', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="format-paint" size={80} color="#388E3C" />
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="format-paint" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Vibrant Spaces</Text>
           <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Professional interior and exterior painting services to refresh your home and protect your investment.</Text>
@@ -1416,8 +1416,8 @@ function HomePaintingScreen({ navigation }) {
           <Text style={styles.sectionTitle}>Services</Text>
           {steps.map((step, index) => (
             <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#C8E6C9', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#388E3C" />
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
@@ -1426,7 +1426,7 @@ function HomePaintingScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#388E3C', shadowColor: '#388E3C' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Get Painting Quote</Text>
         </TouchableOpacity>
       </ScrollView>
