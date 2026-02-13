@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image, TextInput, ActivityIndicator, Alert, Switch, Linking } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image, TextInput, ActivityIndicator, Alert, Switch, Linking, Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Location from 'expo-location';
@@ -21,6 +21,28 @@ const LanguageProvider = ({ children }) => {
     <LanguageContext.Provider value={{ locale, setLocale, t }}>
       {children}
     </LanguageContext.Provider>
+  );
+};
+
+const UserContext = React.createContext();
+
+const UserProvider = ({ children }) => {
+  const [userData, setUserData] = useState({
+    name: 'Harsh Mahto',
+    phone: '+91 9876543210',
+    email: 'harsh.batman@example.com',
+    address: '123 Construction St, Delhi',
+    profileImage: null
+  });
+
+  const updateUserData = (newData) => {
+    setUserData(prev => ({ ...prev, ...newData }));
+  };
+
+  return (
+    <UserContext.Provider value={{ userData, updateUserData }}>
+      {children}
+    </UserContext.Provider>
   );
 };
 
@@ -46,6 +68,7 @@ function CustomHeader({ title, subtitle, navigation, showBack = false }) {
 // --- HomeScreen Component ---
 function HomeScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
+  const { userData } = React.useContext(UserContext);
   const services = [
     {
       id: 'Construction',
@@ -87,7 +110,11 @@ function HomeScreen({ navigation }) {
             style={styles.profileButtonCard}
             onPress={() => navigation.navigate('Profile')}
           >
-            <MaterialCommunityIcons name="account-circle" size={48} color="#FFFFFF" />
+            {userData.profileImage ? (
+              <Image source={{ uri: userData.profileImage }} style={{ width: 48, height: 48, borderRadius: 24, borderWidth: 2, borderColor: '#FFF' }} />
+            ) : (
+              <MaterialCommunityIcons name="account-circle" size={48} color="#FFFFFF" />
+            )}
           </TouchableOpacity>
         </View>
 
@@ -139,6 +166,10 @@ function HomeScreen({ navigation }) {
 // --- ProfileScreen Component ---
 function ProfileScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
+  const [logoutVisible, setLogoutVisible] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(false);
+  const [confirmPhone, setConfirmPhone] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const accountItems = [
     { title: t('editProfile'), icon: 'account-edit', onPress: () => navigation.navigate('EditProfile') },
     { title: t('notification'), icon: 'bell-outline', onPress: () => navigation.navigate('Notification') },
@@ -146,15 +177,15 @@ function ProfileScreen({ navigation }) {
   ];
 
   const informationItems = [
-    { title: 'About Us', icon: 'information-outline' }, // Using appName as placeholder for 'About Us' if not translated specifically
-    { title: 'Terms & Condition', icon: 'file-document-outline' },
-    { title: 'Privacy Policy', icon: 'shield-check-outline' },
-    { title: 'Refund Policy', icon: 'cash-refund' },
+    { title: 'About Us', icon: 'information-outline', onPress: () => navigation.navigate('AboutUs') },
+    { title: 'Terms & Condition', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
+    { title: 'Privacy Policy', icon: 'shield-check-outline', onPress: () => navigation.navigate('PrivacyPolicy') },
+    { title: 'Refund Policy', icon: 'cash-refund', onPress: () => navigation.navigate('RefundPolicy') },
   ];
 
   const actionItems = [
-    { title: t('logout'), icon: 'logout', color: '#FF3B30' },
-    { title: t('deleteAccount'), icon: 'delete-forever', color: '#FF3B30' },
+    { title: t('logout'), icon: 'logout', color: '#FF3B30', onPress: () => setLogoutVisible(true) },
+    { title: t('deleteAccount'), icon: 'delete-forever', color: '#FF3B30', onPress: () => setDeleteVisible(true) },
   ];
 
   const renderMenuSection = (title, items) => (
@@ -207,17 +238,123 @@ function ProfileScreen({ navigation }) {
         {renderMenuSection(t('actions'), actionItems)}
 
       </ScrollView>
+
+      {/* Logout Confirmation Modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={logoutVisible}
+        onRequestClose={() => setLogoutVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.logoutCard}>
+            <View style={styles.logoutIconContainer}>
+              <MaterialCommunityIcons name="logout" size={32} color="#FF3B30" />
+            </View>
+            <Text style={styles.logoutTitle}>{t('logout')}</Text>
+            <Text style={styles.logoutMessage}>Are you sure you want to log out?</Text>
+
+            <View style={styles.logoutButtonContainer}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setLogoutVisible(false)}
+              >
+                <Text style={styles.cancelButtonText}>No, Stay</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={() => {
+                  setLogoutVisible(false);
+                  Alert.alert("Logged Out", "You have been logged out successfully.");
+                }}
+              >
+                <Text style={styles.confirmButtonText}>Yes, Logout</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Delete Account Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={deleteVisible}
+        onRequestClose={() => setDeleteVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.logoutCard}>
+            <View style={styles.logoutIconContainer}>
+              <MaterialCommunityIcons name="alert-octagon" size={32} color="#FF3B30" />
+            </View>
+            <Text style={styles.logoutTitle}>{t('deleteAccount')}</Text>
+            <Text style={styles.logoutMessage}>
+              This action cannot be undone. Please confirm your details to delete permanently.
+            </Text>
+
+            <View style={styles.modalInputWrapper}>
+              <MaterialCommunityIcons name="phone" size={20} color="#666" style={{ marginRight: 8 }} />
+              <TextInput
+                style={styles.modalInput}
+                placeholder="Phone Number"
+                value={confirmPhone}
+                onChangeText={setConfirmPhone}
+                keyboardType="phone-pad"
+                placeholderTextColor="#999"
+              />
+            </View>
+            <View style={styles.modalInputWrapper}>
+              <MaterialCommunityIcons name="lock-outline" size={20} color="#666" style={{ marginRight: 8 }} />
+              <TextInput
+                style={styles.modalInput}
+                placeholder="Password"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry
+                placeholderTextColor="#999"
+              />
+            </View>
+
+            <View style={styles.logoutButtonContainer}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setDeleteVisible(false)}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={() => {
+                  if (confirmPhone && confirmPassword) {
+                    setDeleteVisible(false);
+                    Alert.alert("Account Deleted", "Your account has been permanently deleted.");
+                    // Logic to navigate to login/welcome
+                  } else {
+                    Alert.alert("Error", "Please enter your phone and password.");
+                  }
+                }}
+              >
+                <Text style={styles.confirmButtonText}>Delete Forever</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
 
 // --- EditProfileScreen Component ---
 function EditProfileScreen({ navigation }) {
-  const [name, setName] = useState('Harsh Mahto');
-  const [phone, setPhone] = useState('+91 9876543210');
-  const [email, setEmail] = useState('harsh.batman@example.com');
-  const [address, setAddress] = useState('123 Construction St, Delhi');
-  const [profileImage, setProfileImage] = useState(null);
+  const { userData, updateUserData } = React.useContext(UserContext);
+
+  const [name, setName] = useState(userData.name);
+  const [phone, setPhone] = useState(userData.phone);
+  const [email, setEmail] = useState(userData.email);
+  const [address, setAddress] = useState(userData.address);
+  const [profileImage, setProfileImage] = useState(userData.profileImage);
   const [loadingLocation, setLoadingLocation] = useState(false);
 
   const pickImage = async () => {
@@ -263,7 +400,7 @@ function EditProfileScreen({ navigation }) {
   };
 
   const handleSave = () => {
-    // Here you would typically save to backend
+    updateUserData({ name, phone, email, address, profileImage });
     Alert.alert('Profile Updated', 'Your changes have been saved successfully.');
     navigation.goBack();
   };
@@ -777,30 +914,345 @@ function ServiceScreen({ navigation }) {
   );
 }
 
+// --- TermsConditionScreen Component ---
+function TermsConditionScreen({ navigation }) {
+  const content = [
+    {
+      title: "1. Introduction",
+      text: "Welcome to MAHTO. By accessing or using our platform, you agree to represent that you are at least 18 years old and capable of entering into binding contracts. These Terms & Conditions govern your use of our website, mobile application, and services."
+    },
+    {
+      title: "2. User Accounts",
+      text: "To access certain features, you may be required to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account."
+    },
+    {
+      title: "3. Services",
+      text: "MAHTO connects users with construction professionals, material suppliers, and financial services. We act as a facilitator and platform provider. While we vet our partners, the final service agreement is between you and the service provider."
+    },
+    {
+      title: "4. Payments",
+      text: "All payments made through the MAHTO platform are secured. Payment terms for specific construction or renovation projects will be detailed in the respective service agreements."
+    },
+    {
+      title: "5. Intellectual Property",
+      text: "All content, trademarks, and data on this platform, including the MAHTO brand and logo, are the property of MAHTO and are protected by applicable intellectual property laws."
+    },
+    {
+      title: "6. Limitation of Liability",
+      text: "MAHTO shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your access to or use of, or inability to access or use, the services."
+    },
+    {
+      title: "7. Changes to Terms",
+      text: "We reserve the right to modify these terms at any time. We will provide notice of significant changes. Your continued use of the platform constitutes acceptance of the new terms."
+    }
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title="Terms & Conditions"
+          subtitle="Please read carefully"
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={styles.termsContainer}>
+          <Text style={styles.lastUpdatedText}>Last Updated: February 2026</Text>
+
+          {content.map((section, index) => (
+            <View key={index} style={styles.termsSection}>
+              <Text style={styles.termsTitle}>{section.title}</Text>
+              <Text style={styles.termsText}>{section.text}</Text>
+            </View>
+          ))}
+
+          <View style={styles.termsFooter}>
+            <Text style={styles.termsFooterText}>
+              By using MAHTO, you acknowledge that you have read and understood these agreements.
+            </Text>
+          </View>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- PrivacyPolicyScreen Component ---
+function PrivacyPolicyScreen({ navigation }) {
+  const content = [
+    {
+      title: "1. Information We Collect",
+      text: "We collect personal information you provide directly to us (such as name, email, phone number) and information automatically collected from your device (such as location, IP address, and usage data)."
+    },
+    {
+      title: "2. How We Use Your Information",
+      text: "We use your information to provide construction and renovation services, process payments, communicate with you, and improve our platform. We may also use it for safety and security purposes."
+    },
+    {
+      title: "3. Information Sharing",
+      text: "We share your information with service providers (contractors, workers) to fulfill your requests. We do not sell your personal data to third parties for marketing purposes."
+    },
+    {
+      title: "4. Data Security",
+      text: "We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction."
+    },
+    {
+      title: "5. Your Rights",
+      text: "You have the right to access, correct, or delete your personal information. You can manage your communication preferences in the Notification settings."
+    },
+    {
+      title: "6. Cookies and Tracking",
+      text: "We may use cookies and similar tracking technologies to track the activity on our service and hold certain information to enhance your experience."
+    }
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title="Privacy Policy"
+          subtitle="How we handle your data"
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={styles.termsContainer}>
+          <Text style={styles.lastUpdatedText}>Last Updated: February 2026</Text>
+
+          <View style={{ marginBottom: 24, padding: 12, backgroundColor: '#E3F2FD', borderRadius: 8 }}>
+            <Text style={{ fontSize: 13, color: '#0047AB', lineHeight: 20 }}>
+              At MAHTO, we are committed to protecting your privacy and ensuring the security of your personal information.
+            </Text>
+          </View>
+
+          {content.map((section, index) => (
+            <View key={index} style={styles.termsSection}>
+              <Text style={styles.termsTitle}>{section.title}</Text>
+              <Text style={styles.termsText}>{section.text}</Text>
+            </View>
+          ))}
+
+          <View style={styles.termsFooter}>
+            <Text style={styles.termsFooterText}>
+              If you have any questions about this Privacy Policy, please contact us at support@mahtoji.tech.
+            </Text>
+          </View>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- RefundPolicyScreen Component ---
+function RefundPolicyScreen({ navigation }) {
+  const content = [
+    {
+      title: "1. Service Cancellations",
+      text: "You may cancel a scheduled service request up to 24 hours before the scheduled time for a full refund. Cancellations made within 24 hours may incur a cancellation fee of up to ₹500 or 10% of the service value, whichever is lower."
+    },
+    {
+      title: "2. Service Quality Issues",
+      text: "If you are dissatisfied with the quality of service provided, please report the issue within 48 hours of service completion. We will investigate and, if the claim is valid, offer a rework or a partial/full refund based on the severity of the issue."
+    },
+    {
+      title: "3. Material Returns",
+      text: "Unused and undamaged construction materials purchased through MAHTO can be returned within 7 days of delivery. A restocking fee may apply. Custom-ordered materials are non-refundable unless defective."
+    },
+    {
+      title: "4. Refund Processing",
+      text: "Approved refunds will be processed within 5-7 business days and credited back to the original payment method. For cash payments, refunds will be credited to your MAHTO wallet or bank account."
+    },
+    {
+      title: "5. Advance Payments",
+      text: "Advance payments for large projects are refundable only if the project is cancelled before any work has commenced or materials have been procured. Once work begins, advances are adjusted against completed milestones."
+    }
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title="Refund Policy"
+          subtitle="Cancellations & Returns"
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={styles.termsContainer}>
+          <Text style={styles.lastUpdatedText}>Last Updated: February 2026</Text>
+
+          <View style={{ marginBottom: 24, padding: 12, backgroundColor: '#FFF3E0', borderRadius: 8 }}>
+            <Text style={{ fontSize: 13, color: '#E65100', lineHeight: 20 }}>
+              <Text style={{ fontWeight: 'bold' }}>Note:</Text> Refund requests must be raised via the Help Center or by emailing support@mahtoji.tech.
+            </Text>
+          </View>
+
+          {content.map((section, index) => (
+            <View key={index} style={styles.termsSection}>
+              <Text style={styles.termsTitle}>{section.title}</Text>
+              <Text style={styles.termsText}>{section.text}</Text>
+            </View>
+          ))}
+
+          <View style={styles.termsFooter}>
+            <Text style={styles.termsFooterText}>
+              We strive to ensure fair and transparent handling of all refund requests.
+            </Text>
+          </View>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- AboutUsScreen Component ---
+function AboutUsScreen({ navigation }) {
+  const EcosystemItem = ({ icon, title, desc }) => (
+    <View style={styles.ecoItem}>
+      <View style={styles.ecoIconBox}>
+        <MaterialCommunityIcons name={icon} size={24} color="#0047AB" />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.ecoTitle}>{title}</Text>
+        <Text style={styles.ecoDesc}>{desc}</Text>
+      </View>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title="About MAHTO"
+          subtitle="The future of home building"
+          navigation={navigation}
+          showBack={true}
+        />
+
+        {/* Hero Section */}
+        <View style={styles.aboutHero}>
+          <View style={styles.aboutHeroIconContainer}>
+            <MaterialCommunityIcons name="home-group" size={48} color="#FFF" />
+          </View>
+          <Text style={styles.aboutHeroTitle}>MAHTO - Home Building OS</Text>
+          <Text style={styles.aboutHeroSubtitle}>
+            MAHTO is the operating system for home building.
+          </Text>
+        </View>
+
+        {/* Introduction */}
+        <View style={styles.aboutSection}>
+          <Text style={styles.aboutText}>
+            We are building one unified system that brings together everything required to build a home — from land and labor to construction materials, financing, and delivery.
+          </Text>
+          <Text style={[styles.aboutText, { marginTop: 12 }]}>
+            Today, building a home means dealing with fragmented vendors, contractors, workers, and middlemen. <Text style={{ fontWeight: 'bold', color: '#0047AB' }}>MAHTO</Text> simplifies this entire journey into a single, integrated platform — end to end.
+          </Text>
+        </View>
+
+        {/* Ecosystem */}
+        <View style={styles.aboutSection}>
+          <Text style={styles.aboutSectionTitle}>What we’re building</Text>
+          <Text style={styles.aboutSectionSubtitle}>MAHTO Ecosystem</Text>
+
+          <View style={styles.ecosystemContainer}>
+            <EcosystemItem
+              icon="account-hard-hat"
+              title="MAHTO"
+              desc="Worker, Contractor & Shops Marketplace"
+            />
+            <EcosystemItem
+              icon="home-city"
+              title="Mine (by MAHTO)"
+              desc="Full-stack Construction & Renovation Services"
+            />
+            <EcosystemItem
+              icon="bank"
+              title="MAHTO Home Loans"
+              desc="Home Loans Marketplace"
+            />
+            <EcosystemItem
+              icon="terrain"
+              title="MAHTO Land & Properties"
+              desc="Land & Property Listings"
+            />
+          </View>
+
+          <View style={styles.infoNote}>
+            <MaterialCommunityIcons name="information" size={20} color="#0047AB" />
+            <Text style={styles.infoNoteText}>
+              “Full-stack” at MAHTO means from land to lending — not just design to construction.
+            </Text>
+          </View>
+        </View>
+
+        {/* Mission & Vision */}
+        <View style={styles.missionVisionContainer}>
+          <View style={styles.mvCard}>
+            <View style={styles.mvIconCircle}>
+              <MaterialCommunityIcons name="target" size={24} color="#FFF" />
+            </View>
+            <Text style={styles.mvTitle}>Our Mission</Text>
+            <Text style={styles.mvText}>A roof over every head — not a roof, but own roof.</Text>
+            <Text style={styles.mvQuote}>“Sabka sar apni chhaat.”</Text>
+          </View>
+
+          <View style={styles.mvCard}>
+            <View style={[styles.mvIconCircle, { backgroundColor: '#002171' }]}>
+              <MaterialCommunityIcons name="eye-outline" size={24} color="#FFF" />
+            </View>
+            <Text style={styles.mvTitle}>Our Vision</Text>
+            <Text style={styles.mvText}>To raise living standards by becoming the global operating system for home building.</Text>
+          </View>
+        </View>
+
+        <View style={{ alignItems: 'center', marginVertical: 40 }}>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: '#E0E0E0', letterSpacing: 4 }}>MAHTO</Text>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 // --- Main App Component with Navigation ---
 export default function App() {
   return (
     <LanguageProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-            headerStyle: { backgroundColor: '#F8F9FA' },
-            contentStyle: { backgroundColor: '#F8F9FA' },
-          }}
-        >
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Construction" component={ConstructionScreen} />
-          <Stack.Screen name="Renovation" component={RenovationScreen} />
-          <Stack.Screen name="Service" component={ServiceScreen} />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-          <Stack.Screen name="Notification" component={NotificationScreen} />
-          <Stack.Screen name="Languages" component={LanguageScreen} />
-          <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
-          <Stack.Screen name="ContactUs" component={ContactUsScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <UserProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+              headerStyle: { backgroundColor: '#F8F9FA' },
+              contentStyle: { backgroundColor: '#F8F9FA' },
+            }}
+          >
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Construction" component={ConstructionScreen} />
+            <Stack.Screen name="Renovation" component={RenovationScreen} />
+            <Stack.Screen name="Service" component={ServiceScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+            <Stack.Screen name="Notification" component={NotificationScreen} />
+            <Stack.Screen name="Languages" component={LanguageScreen} />
+            <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+            <Stack.Screen name="ContactUs" component={ContactUsScreen} />
+            <Stack.Screen name="TermsCondition" component={TermsConditionScreen} />
+            <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+            <Stack.Screen name="RefundPolicy" component={RefundPolicyScreen} />
+            <Stack.Screen name="AboutUs" component={AboutUsScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </UserProvider>
     </LanguageProvider>
   );
 }
@@ -1287,5 +1739,286 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontWeight: '600',
     fontSize: 15
+  },
+  // About Us Styles
+  aboutHero: {
+    alignItems: 'center',
+    paddingVertical: 32,
+    paddingHorizontal: 20,
+    backgroundColor: '#F8F9FA',
+  },
+  aboutHeroIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#0047AB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    elevation: 4,
+    shadowColor: '#0047AB',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  aboutHeroTitle: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  aboutHeroSubtitle: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  aboutSection: {
+    padding: 24,
+    backgroundColor: '#FFF',
+    marginBottom: 16,
+    marginHorizontal: 16,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  aboutSectionTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#0047AB',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  aboutSectionSubtitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    marginBottom: 20,
+  },
+  aboutText: {
+    fontSize: 16,
+    color: '#444',
+    lineHeight: 26,
+  },
+  ecosystemContainer: {
+    marginTop: 8,
+  },
+  ecoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    padding: 12,
+    backgroundColor: '#F5F9FF',
+    borderRadius: 12,
+  },
+  ecoIconBox: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: '#FFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  ecoTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    marginBottom: 2,
+  },
+  ecoDesc: {
+    fontSize: 13,
+    color: '#666',
+  },
+  infoNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E3F2FD',
+    padding: 12,
+    borderRadius: 12,
+    marginTop: 8,
+  },
+  infoNoteText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#0047AB',
+    fontStyle: 'italic',
+    lineHeight: 18,
+  },
+  missionVisionContainer: {
+    paddingHorizontal: 16,
+  },
+  mvCard: {
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    padding: 24,
+    marginBottom: 16,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  mvIconCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#0047AB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  mvTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    marginBottom: 8,
+  },
+  mvText: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 12,
+  },
+  mvQuote: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#0047AB',
+    fontStyle: 'italic',
+  },
+  // Terms Styles
+  termsContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: '#EEE',
+  },
+  lastUpdatedText: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 24,
+    fontStyle: 'italic',
+  },
+  termsSection: {
+    marginBottom: 24,
+  },
+  termsTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    marginBottom: 8,
+  },
+  termsText: {
+    fontSize: 14,
+    color: '#555',
+    lineHeight: 22,
+  },
+  termsFooter: {
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+  termsFooterText: {
+    fontSize: 13,
+    color: '#0047AB',
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoutCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 32,
+    width: '85%',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 10,
+  },
+  logoutIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#FFEBEE',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  logoutTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    marginBottom: 10,
+  },
+  logoutMessage: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 30,
+  },
+  logoutButtonContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    gap: 16,
+  },
+  cancelButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: '#F5F5F5',
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+  },
+  confirmButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: '#FF3B30',
+    alignItems: 'center',
+  },
+  confirmButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFF',
+  },
+  modalInputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    width: '100%',
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  modalInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
   }
 });
