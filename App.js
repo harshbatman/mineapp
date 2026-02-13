@@ -838,6 +838,246 @@ function ResidentialBuildScreen({ navigation }) {
   );
 }
 
+// --- CommercialBuildScreen Component ---
+function CommercialBuildScreen({ navigation }) {
+  const steps = [
+    { title: 'Project Scoping', desc: 'Defining requirements for office or retail space.', icon: 'file-document-outline' },
+    { title: 'Design & Compliance', desc: 'Creating functional designs that meet regulations.', icon: 'ruler-square' },
+    { title: 'Execution', desc: 'Efficient construction to minimize downtime.', icon: 'hard-hat' },
+    { title: 'Launch Ready', desc: 'Final checks for a grand opening.', icon: 'rocket-launch' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title="Commercial Projects"
+          subtitle="Spaces for Business Success."
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{
+            width: '100%',
+            height: 200,
+            borderRadius: 20,
+            backgroundColor: '#E3F2FD',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 20,
+            overflow: 'hidden'
+          }}>
+            <MaterialCommunityIcons name="office-building" size={80} color="#0047AB" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Business Infrastructure</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>
+            We build modern commercial spaces, from retail stores to corporate offices, designed to enhance productivity and impress clients.
+          </Text>
+        </View>
+
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Process</Text>
+          {steps.map((step, index) => (
+            <View key={index} style={{
+              flexDirection: 'row',
+              backgroundColor: '#FFF',
+              padding: 16,
+              borderRadius: 16,
+              marginBottom: 12,
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: '#F0F0F0'
+            }}>
+              <View style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: '#E3F2FD',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 16
+              }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Get a Quote</Text>
+        </TouchableOpacity>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- IndustrialBuildScreen Component ---
+function IndustrialBuildScreen({ navigation }) {
+  const steps = [
+    { title: 'Site Analysis', desc: 'Evaluating terrain and logistics access.', icon: 'map-search' },
+    { title: 'Heavy Engineering', desc: 'Structural integrity for heavy machinery.', icon: 'robot-industrial' },
+    { title: 'Safety Systems', desc: 'Implementing fire and safety protocols.', icon: 'shield-check' },
+    { title: 'Operations Transfer', desc: 'Seamless handover for immediate use.', icon: 'truck-delivery' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title="Industrial Construction"
+          subtitle="Built for Heavy Duty."
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{
+            width: '100%',
+            height: 200,
+            borderRadius: 20,
+            backgroundColor: '#E3F2FD',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 20,
+            overflow: 'hidden'
+          }}>
+            <MaterialCommunityIcons name="factory" size={80} color="#0047AB" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Industrial Solutions</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>
+            Robust construction for factories, warehouses, and industrial plants. We prioritize safety, durability, and efficiency.
+          </Text>
+        </View>
+
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Key Steps</Text>
+          {steps.map((step, index) => (
+            <View key={index} style={{
+              flexDirection: 'row',
+              backgroundColor: '#FFF',
+              padding: 16,
+              borderRadius: 16,
+              marginBottom: 12,
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: '#F0F0F0'
+            }}>
+              <View style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: '#E3F2FD',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 16
+              }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Consult Engineers</Text>
+        </TouchableOpacity>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- ProjectManagementScreen Component ---
+function ProjectManagementScreen({ navigation }) {
+  const features = [
+    { title: 'Timeline Management', desc: 'Keeping your project on strict deadlines.', icon: 'calendar-clock' },
+    { title: 'Cost Control', desc: 'Monitoring budget and resource allocation.', icon: 'finance' },
+    { title: 'Quality Assurance', desc: 'Regular inspections and standards checks.', icon: 'check-decagram' },
+    { title: 'Vendor Coordination', desc: 'Managing subcontractors and suppliers.', icon: 'account-group' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title="Project Management"
+          subtitle="Orchestrating Success."
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{
+            width: '100%',
+            height: 200,
+            borderRadius: 20,
+            backgroundColor: '#E3F2FD',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 20,
+            overflow: 'hidden'
+          }}>
+            <MaterialCommunityIcons name="clipboard-check" size={80} color="#0047AB" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>End-to-End Management</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>
+            We take the stress out of construction. Our expert managers ensure your project is completed on time, within budget, and to the highest standards.
+          </Text>
+        </View>
+
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Our Services</Text>
+          {features.map((item, index) => (
+            <View key={index} style={{
+              flexDirection: 'row',
+              backgroundColor: '#FFF',
+              padding: 16,
+              borderRadius: 16,
+              marginBottom: 12,
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: '#F0F0F0'
+            }}>
+              <View style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: '#E3F2FD',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 16
+              }}>
+                <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{item.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{item.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Hire a Manager</Text>
+        </TouchableOpacity>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 // --- ContactUsScreen Component ---
 function ContactUsScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
@@ -898,9 +1138,9 @@ function ContactUsScreen({ navigation }) {
 function ConstructionScreen({ navigation }) {
   const constructionServices = [
     { title: 'Residential Building', icon: 'home', details: 'Custom homes built from the ground up.', route: 'ResidentialBuild' },
-    { title: 'Commercial Projects', icon: 'domain', details: 'Offices, retail spaces, and warehouses.' },
-    { title: 'Industrial Construction', icon: 'factory', details: 'Heavy-duty construction for industrial needs.' },
-    { title: 'Project Management', icon: 'clipboard-list', details: 'End-to-end management of your build.' },
+    { title: 'Commercial Projects', icon: 'domain', details: 'Offices, retail spaces, and warehouses.', route: 'CommercialBuild' },
+    { title: 'Industrial Construction', icon: 'factory', details: 'Heavy-duty construction for industrial needs.', route: 'IndustrialBuild' },
+    { title: 'Project Management', icon: 'clipboard-list', details: 'End-to-end management of your build.', route: 'ProjectManagement' },
   ];
 
   const handlePress = (item) => {
@@ -1331,6 +1571,9 @@ export default function App() {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Construction" component={ConstructionScreen} />
             <Stack.Screen name="ResidentialBuild" component={ResidentialBuildScreen} />
+            <Stack.Screen name="CommercialBuild" component={CommercialBuildScreen} />
+            <Stack.Screen name="IndustrialBuild" component={IndustrialBuildScreen} />
+            <Stack.Screen name="ProjectManagement" component={ProjectManagementScreen} />
             <Stack.Screen name="Renovation" component={RenovationScreen} />
             <Stack.Screen name="Service" component={ServiceScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
