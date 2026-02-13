@@ -111,7 +111,7 @@ function HomeScreen({ navigation }) {
             onPress={() => navigation.navigate('Profile')}
           >
             {userData.profileImage ? (
-              <Image source={{ uri: userData.profileImage }} style={{ width: 48, height: 48, borderRadius: 24, borderWidth: 2, borderColor: '#FFF' }} />
+              <Image source={{ uri: userData.profileImage }} style={{ width: 48, height: 48, borderRadius: 12, borderWidth: 2, borderColor: '#FFF' }} />
             ) : (
               <MaterialCommunityIcons name="account-circle" size={48} color="#FFFFFF" />
             )}
@@ -1308,7 +1308,7 @@ const styles = StyleSheet.create({
   profileButtonCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     padding: 12,
-    borderRadius: 50,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
