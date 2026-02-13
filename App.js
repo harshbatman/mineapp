@@ -1181,11 +1181,18 @@ function ConstructionScreen({ navigation }) {
 // --- RenovationScreen Component ---
 function RenovationScreen({ navigation }) {
   const renovationServices = [
-    { title: 'Kitchen Remodel', icon: 'silverware-fork-knife', details: 'Modern designs for the heart of your home.' },
-    { title: 'Bathroom Upgrade', icon: 'shower', details: 'Spa-like retreats and functional layouts.' },
-    { title: 'Flooring', icon: 'floor-plan', details: 'Hardwood, tile, and luxury vinyl installation.' },
-    { title: 'Full Home Makeover', icon: 'home-circle', details: 'Complete transformation of your living space.' },
+    { title: 'Kitchen Remodel', icon: 'silverware-fork-knife', details: 'Modern designs for the heart of your home.', route: 'KitchenRemodel' },
+    { title: 'Bathroom Upgrade', icon: 'shower', details: 'Spa-like retreats and functional layouts.', route: 'BathroomUpgrade' },
+    { title: 'Flooring', icon: 'floor-plan', details: 'Hardwood, tile, and luxury vinyl installation.', route: 'FlooringMakeover' },
+    { title: 'Full Home Makeover', icon: 'home-circle', details: 'Complete transformation of your living space.', route: 'FullHomeMakeover' },
+    { title: 'Home Painting', icon: 'format-paint', details: 'Interior and exterior professional painting.', route: 'HomePainting' },
   ];
+
+  const handlePress = (item) => {
+    if (item.route) {
+      navigation.navigate(item.route);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -1200,13 +1207,228 @@ function RenovationScreen({ navigation }) {
 
         <View style={styles.gridContainer}>
           {renovationServices.map((item, index) => (
-            <View key={index} style={styles.gridCard}>
+            <TouchableOpacity
+              key={index}
+              style={styles.gridCard}
+              onPress={() => handlePress(item)}
+            >
               <MaterialCommunityIcons name={item.icon} size={40} color="#0047AB" style={{ marginBottom: 10 }} />
               <Text style={styles.gridTitle}>{item.title}</Text>
               <Text style={styles.gridDetails}>{item.details}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- Renovation Detail Screens ---
+function KitchenRemodelScreen({ navigation }) {
+  const steps = [
+    { title: 'Layout Optimization', desc: 'Improving workflow and space utilization.', icon: 'arrow-expand-all' },
+    { title: 'Cabinetry & Storage', desc: 'Custom cabinets and smart storage solutions.', icon: 'cupboard' },
+    { title: 'Countertops & Backsplash', desc: 'Premium materials like granite, quartz, and marble.', icon: 'texture-box' },
+    { title: 'Appliances & Lighting', desc: 'Integration of modern appliances and fixtures.', icon: 'lightbulb-on-outline' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="Kitchen Remodel" subtitle="The Heart of Your Home." navigation={navigation} showBack={true} />
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#FFF3E0', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="chef-hat" size={80} color="#FF9800" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Culinary Masterpiece</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Transform your kitchen into a modern, functional, and stylish space perfect for cooking and gathering.</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>What We Offer</Text>
+          {steps.map((step, index) => (
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#FFF3E0', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#FF9800" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
+              </View>
             </View>
           ))}
         </View>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#FF9800', shadowColor: '#FF9800' }]} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Plan My Kitchen</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function BathroomUpgradeScreen({ navigation }) {
+  const steps = [
+    { title: 'Luxury Fixtures', desc: 'Rain showers, soaking tubs, and modern faucets.', icon: 'water-pump' },
+    { title: 'Tile & Flooring', desc: 'Water-resistant, stylish tiling options.', icon: 'checkerboard' },
+    { title: 'Vanity & Storage', desc: 'Elegant vanities with ample space.', icon: 'dresser' },
+    { title: 'Lighting & Ventilation', desc: 'Mood lighting and proper air circulation.', icon: 'fan' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="Bathroom Upgrade" subtitle="Your Personal Spa." navigation={navigation} showBack={true} />
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E0F7FA', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="shower-head" size={80} color="#00BCD4" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Refresh & Relax</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Upgrade your bathroom into a serene retreat with modern amenities and luxurious finishes.</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Features</Text>
+          {steps.map((step, index) => (
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E0F7FA', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#00BCD4" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#00BCD4', shadowColor: '#00BCD4' }]} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Upgrade Bathroom</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function FlooringMakeoverScreen({ navigation }) {
+  const steps = [
+    { title: 'Hardwood', desc: 'Timeless elegance and durability.', icon: 'tree' },
+    { title: 'Ceramic Tile', desc: 'Versatile and easy to maintain.', icon: 'grid' },
+    { title: 'Luxury Vinyl', desc: 'Waterproof and cost-effective.', icon: 'layers' },
+    { title: 'Carpet', desc: 'Soft comfort for bedrooms and living areas.', icon: 'rug' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="Flooring" subtitle="Foundation of Style." navigation={navigation} showBack={true} />
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#D7CCC8', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="floor-plan" size={80} color="#795548" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Step into Luxury</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Choose from a wide range of premium flooring options to elevate the look and feel of your home.</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Options</Text>
+          {steps.map((step, index) => (
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#D7CCC8', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#795548" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#795548', shadowColor: '#795548' }]} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Get Flooring Quote</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function FullHomeMakeoverScreen({ navigation }) {
+  const steps = [
+    { title: 'Concept Design', desc: 'Holistic vision for your entire home.', icon: 'lightbulb-on' },
+    { title: 'Structural Changes', desc: 'Wall removal and room reconfiguration.', icon: 'wall' },
+    { title: 'Systems Update', desc: 'Plumbing, electrical, and HVAC upgrades.', icon: 'lightning-bolt' },
+    { title: 'Finishing Touches', desc: 'Paint, trim, and decor styling.', icon: 'palette' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="Full Home Makeover" subtitle="Complete Transformation." navigation={navigation} showBack={true} />
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E1BEE7', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="home-modern" size={80} color="#8E24AA" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Reimagine Your Home</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>A comprehensive renovation service to completely transform your living space into your dream home.</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Our Approach</Text>
+          {steps.map((step, index) => (
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E1BEE7', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#8E24AA" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#8E24AA', shadowColor: '#8E24AA' }]} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Start Makeover</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function HomePaintingScreen({ navigation }) {
+  const steps = [
+    { title: 'Color Consultation', desc: 'Expert advice on color palettes.', icon: 'palette-swatch' },
+    { title: 'Surface Prep', desc: 'Sanding, priming, and repairing imperfections.', icon: 'format-paint' },
+    { title: 'Interior Painting', desc: 'Walls, ceilings, and trim.', icon: 'roller-skate' },
+    { title: 'Exterior Painting', desc: 'Durable finishes for curb appeal.', icon: 'home-roof' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="Home Painting" subtitle="A Fresh Coat of Life." navigation={navigation} showBack={true} />
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#C8E6C9', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="format-paint" size={80} color="#388E3C" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Vibrant Spaces</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Professional interior and exterior painting services to refresh your home and protect your investment.</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Services</Text>
+          {steps.map((step, index) => (
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#C8E6C9', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#388E3C" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#388E3C', shadowColor: '#388E3C' }]} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Get Painting Quote</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -1575,6 +1797,11 @@ export default function App() {
             <Stack.Screen name="IndustrialBuild" component={IndustrialBuildScreen} />
             <Stack.Screen name="ProjectManagement" component={ProjectManagementScreen} />
             <Stack.Screen name="Renovation" component={RenovationScreen} />
+            <Stack.Screen name="KitchenRemodel" component={KitchenRemodelScreen} />
+            <Stack.Screen name="BathroomUpgrade" component={BathroomUpgradeScreen} />
+            <Stack.Screen name="FlooringMakeover" component={FlooringMakeoverScreen} />
+            <Stack.Screen name="FullHomeMakeover" component={FullHomeMakeoverScreen} />
+            <Stack.Screen name="HomePainting" component={HomePaintingScreen} />
             <Stack.Screen name="Service" component={ServiceScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="EditProfile" component={EditProfileScreen} />
