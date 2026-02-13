@@ -117,18 +117,48 @@ function HomeScreen({ navigation }) {
 
 // --- ProfileScreen Component ---
 function ProfileScreen({ navigation }) {
-  const menuItems = [
+  const accountItems = [
     { title: 'Edit Profile', icon: 'account-edit' },
     { title: 'Notification', icon: 'bell-outline' },
     { title: 'Languages', icon: 'translate' },
+  ];
+
+  const informationItems = [
     { title: 'About Us', icon: 'information-outline' },
-    { title: 'Help & Support', icon: 'help-circle-outline' },
     { title: 'Terms & Condition', icon: 'file-document-outline' },
     { title: 'Privacy Policy', icon: 'shield-check-outline' },
     { title: 'Refund Policy', icon: 'cash-refund' },
+  ];
+
+  const actionItems = [
     { title: 'Logout', icon: 'logout', color: '#FF3B30' },
     { title: 'Permanent Account Delete', icon: 'delete-forever', color: '#FF3B30' },
   ];
+
+  const renderMenuSection = (title, items) => (
+    <View style={styles.sectionContainer}>
+      {title && <Text style={styles.sectionTitle}>{title}</Text>}
+      <View style={styles.profileMenuContainer}>
+        {items.map((item, index) => (
+          <TouchableOpacity key={index} style={[styles.menuItem, index === items.length - 1 && styles.lastMenuItem]}>
+            <View style={styles.menuItemLeft}>
+              <View style={[styles.menuIconBox, item.color && { backgroundColor: '#FFEBEE' }]}>
+                <MaterialCommunityIcons
+                  name={item.icon}
+                  size={24}
+                  color={item.color || "#0047AB"}
+                />
+              </View>
+              <Text style={[styles.menuItemText, item.color && { color: item.color }]}>
+                {item.title}
+              </Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -141,25 +171,15 @@ function ProfileScreen({ navigation }) {
           showBack={true}
         />
 
-        <View style={styles.profileMenuContainer}>
-          {menuItems.map((item, index) => (
-            <TouchableOpacity key={index} style={styles.menuItem}>
-              <View style={styles.menuItemLeft}>
-                <View style={[styles.menuIconBox, item.color && { backgroundColor: '#FFEBEE' }]}>
-                  <MaterialCommunityIcons
-                    name={item.icon}
-                    size={24}
-                    color={item.color || "#0047AB"}
-                  />
-                </View>
-                <Text style={[styles.menuItemText, item.color && { color: item.color }]}>
-                  {item.title}
-                </Text>
-              </View>
-              <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
-            </TouchableOpacity>
-          ))}
-        </View>
+        {renderMenuSection('Account Settings', accountItems)}
+        {renderMenuSection('Help & Support', [
+          { title: 'Help Center/FAQ', icon: 'help-circle-outline' },
+          { title: 'Contact Us', icon: 'email-outline' },
+          { title: 'Rate Us', icon: 'star-outline' },
+        ])}
+        {renderMenuSection('Information', informationItems)}
+        {renderMenuSection('Actions', actionItems)}
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -498,6 +518,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#F0F0F0',
+  },
+  lastMenuItem: {
+    borderBottomWidth: 0,
+  },
+  sectionContainer: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 12,
+    marginLeft: 4,
   },
   menuItemLeft: {
     flexDirection: 'row',
