@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image, TextInput, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image, TextInput, ActivityIndicator, Alert, Switch, Linking } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { translations } from './translations';
+
+const LanguageContext = React.createContext();
+
+const LanguageProvider = ({ children }) => {
+  const [locale, setLocale] = useState('en');
+
+  const t = (key) => {
+    return translations[locale][key] || translations['en'][key] || key;
+  };
+
+  return (
+    <LanguageContext.Provider value={{ locale, setLocale, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
 
 const Stack = createNativeStackNavigator();
 
@@ -28,22 +45,23 @@ function CustomHeader({ title, subtitle, navigation, showBack = false }) {
 
 // --- HomeScreen Component ---
 function HomeScreen({ navigation }) {
+  const { t } = React.useContext(LanguageContext);
   const services = [
     {
       id: 'Construction',
-      title: 'Construction',
+      title: t('construction'),
       icon: 'home',
       description: 'Full-stack construction services for residential and commercial projects.'
     },
     {
       id: 'Renovation',
-      title: 'Renovation',
+      title: t('renovation'),
       icon: 'auto-fix',
       description: 'Transform your space with our premium renovation solutions.'
     },
     {
       id: 'Service',
-      title: 'Service',
+      title: t('service'),
       icon: 'hammer-wrench',
       description: 'Reliable maintenance and repair services at your doorstep.'
     },
@@ -61,7 +79,7 @@ function HomeScreen({ navigation }) {
         {/* Stylish Welcome Card */}
         <View style={styles.welcomeCard}>
           <View style={styles.welcomeInfo}>
-            <Text style={styles.welcomeText}>Welcome to</Text>
+            <Text style={styles.welcomeText}>{t('welcome')}</Text>
             <Text style={styles.welcomeBrand}>mine</Text>
             <Text style={styles.welcomeSubtitle}>by MAHTO</Text>
           </View>
@@ -73,7 +91,7 @@ function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.tagline}>Full Stack Construction, Renovation, Service</Text>
+        <Text style={styles.tagline}>{t('tagline')}</Text>
 
         <View style={styles.servicesContainer}>
           {services.map((service, index) => (
@@ -120,22 +138,23 @@ function HomeScreen({ navigation }) {
 
 // --- ProfileScreen Component ---
 function ProfileScreen({ navigation }) {
+  const { t } = React.useContext(LanguageContext);
   const accountItems = [
-    { title: 'Edit Profile', icon: 'account-edit', onPress: () => navigation.navigate('EditProfile') },
-    { title: 'Notification', icon: 'bell-outline' },
-    { title: 'Languages', icon: 'translate' },
+    { title: t('editProfile'), icon: 'account-edit', onPress: () => navigation.navigate('EditProfile') },
+    { title: t('notification'), icon: 'bell-outline', onPress: () => navigation.navigate('Notification') },
+    { title: t('languages'), icon: 'translate', onPress: () => navigation.navigate('Languages') },
   ];
 
   const informationItems = [
-    { title: 'About Us', icon: 'information-outline' },
+    { title: 'About Us', icon: 'information-outline' }, // Using appName as placeholder for 'About Us' if not translated specifically
     { title: 'Terms & Condition', icon: 'file-document-outline' },
     { title: 'Privacy Policy', icon: 'shield-check-outline' },
     { title: 'Refund Policy', icon: 'cash-refund' },
   ];
 
   const actionItems = [
-    { title: 'Logout', icon: 'logout', color: '#FF3B30' },
-    { title: 'Permanent Account Delete', icon: 'delete-forever', color: '#FF3B30' },
+    { title: t('logout'), icon: 'logout', color: '#FF3B30' },
+    { title: t('deleteAccount'), icon: 'delete-forever', color: '#FF3B30' },
   ];
 
   const renderMenuSection = (title, items) => (
@@ -172,20 +191,20 @@ function ProfileScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader
-          title="My Profile"
-          subtitle="Manage your account settings"
+          title={t('myProfile')}
+          subtitle="Manage your account settings" // Could translate
           navigation={navigation}
           showBack={true}
         />
 
-        {renderMenuSection('Account Settings', accountItems)}
-        {renderMenuSection('Help & Support', [
-          { title: 'Help Center/FAQ', icon: 'help-circle-outline' },
-          { title: 'Contact Us', icon: 'email-outline' },
-          { title: 'Rate Us', icon: 'star-outline' },
+        {renderMenuSection(t('accountSettings'), accountItems)}
+        {renderMenuSection(t('support'), [
+          { title: t('helpCenter'), icon: 'help-circle-outline', onPress: () => navigation.navigate('HelpCenter') },
+          { title: t('contactUs'), icon: 'email-outline', onPress: () => navigation.navigate('ContactUs') },
+          { title: t('rateUs'), icon: 'star-outline' },
         ])}
-        {renderMenuSection('Information', informationItems)}
-        {renderMenuSection('Actions', actionItems)}
+        {renderMenuSection(t('information'), informationItems)}
+        {renderMenuSection(t('actions'), actionItems)}
 
       </ScrollView>
     </SafeAreaView>
@@ -350,6 +369,312 @@ function EditProfileScreen({ navigation }) {
   );
 }
 
+// --- NotificationScreen Component ---
+function NotificationScreen({ navigation }) {
+  const { t } = React.useContext(LanguageContext);
+  const [pushEnabled, setPushEnabled] = useState(true);
+  const [emailEnabled, setEmailEnabled] = useState(false);
+  const [smsEnabled, setSmsEnabled] = useState(true);
+  const [promoEnabled, setPromoEnabled] = useState(false);
+
+  const toggleSwitch = (type) => {
+    switch (type) {
+      case 'push': setPushEnabled(!pushEnabled); break;
+      case 'email': setEmailEnabled(!emailEnabled); break;
+      case 'sms': setSmsEnabled(!smsEnabled); break;
+      case 'promo': setPromoEnabled(!promoEnabled); break;
+    }
+  };
+
+  const NotificationItem = ({ title, subtitle, value, onValueChange }) => (
+    <View style={styles.notificationItem}>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.notificationTitle}>{title}</Text>
+        <Text style={styles.notificationSubtitle}>{subtitle}</Text>
+      </View>
+      <Switch
+        trackColor={{ false: "#767577", true: "#0047AB" }}
+        thumbColor={value ? "#f4f3f4" : "#f4f3f4"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={onValueChange}
+        value={value}
+      />
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title={t('notification')}
+          subtitle="Manage your alert preferences"
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>{t('general')}</Text>
+          <View style={styles.notificationCard}>
+            <NotificationItem
+              title={t('pushNotif')}
+              subtitle="Receive alerts on your device"
+              value={pushEnabled}
+              onValueChange={() => toggleSwitch('push')}
+            />
+            <View style={styles.divider} />
+            <NotificationItem
+              title={t('emailNotif')}
+              subtitle="Receive updates via email"
+              value={emailEnabled}
+              onValueChange={() => toggleSwitch('email')}
+            />
+            <View style={styles.divider} />
+            <NotificationItem
+              title={t('smsNotif')}
+              subtitle="Receive updates via SMS"
+              value={smsEnabled}
+              onValueChange={() => toggleSwitch('sms')}
+            />
+          </View>
+        </View>
+
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>{t('marketing')}</Text>
+          <View style={styles.notificationCard}>
+            <NotificationItem
+              title={t('promoOffers')}
+              subtitle="Get updates on sales and offers"
+              value={promoEnabled}
+              onValueChange={() => toggleSwitch('promo')}
+            />
+          </View>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- LanguageScreen Component ---
+function LanguageScreen({ navigation }) {
+  const { setLocale, locale, t } = React.useContext(LanguageContext);
+
+  const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'hi', name: 'Hindi (हिंदी)' },
+    { code: 'ur', name: 'Urdu (اردو)' },
+    { code: 'ks', name: 'Kashmiri (کأشُر)' },
+    { code: 'pa', name: 'Punjabi (ਪੰਜਾਬੀ)' },
+    { code: 'raj', name: 'Rajasthani (राजस्थानी)' },
+    { code: 'bgc', name: 'Haryanvi (हरियाणवी)' },
+    { code: 'mr', name: 'Marathi (मराठी)' },
+    { code: 'kn', name: 'Kannada (ಕನ್ನಡ)' },
+    { code: 'gu', name: 'Gujarati (ગુજરાતી)' },
+    { code: 'te', name: 'Telugu (తెలుగు)' },
+    { code: 'ml', name: 'Malayalam (മലയാളം)' },
+    { code: 'or', name: 'Odia (ଓଡ଼ିଆ)' },
+    { code: 'bn', name: 'Bengali (বাংলা)' },
+    { code: 'ne', name: 'Nepali (नेपाली)' },
+    { code: 'as', name: 'Assamese (অসমীয়া)' },
+    { code: 'bho', name: 'Bhojpuri (भोजपुरी)' },
+    { code: 'mai', name: 'Maithili (मैथिली)' },
+  ];
+
+  const handleLanguageSelect = (code) => {
+    setLocale(code);
+    // Optional: Go back after selection
+    // navigation.goBack(); 
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title={t('languages')}
+          subtitle="Select your preferred language"
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={styles.notificationCard}>
+          {/* Reusing notificationCard style for consistent look */}
+          {languages.map((lang, index) => (
+            <TouchableOpacity
+              key={lang.code}
+              style={[styles.notificationItem, { paddingVertical: 16 }]} // Slightly larger tap area
+              onPress={() => handleLanguageSelect(lang.code)}
+            >
+              <Text style={[styles.notificationTitle, { fontWeight: locale === lang.code ? 'bold' : 'normal', color: locale === lang.code ? '#0047AB' : '#333' }]}>
+                {lang.name}
+              </Text>
+              {locale === lang.code && <MaterialCommunityIcons name="check" size={24} color="#0047AB" />}
+              {index < languages.length - 1 && <View style={[styles.divider, { position: 'absolute', bottom: 0, left: 0, right: 0 }]} />}
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- HelpCenterScreen Component ---
+function HelpCenterScreen({ navigation }) {
+  const { t } = React.useContext(LanguageContext);
+
+  const faqs = [
+    { question: 'How do I book a service?', answer: 'Simply navigate to the service category you need (Construction, Renovation, or Service), select a specific service, and follow the booking prompts.' },
+    { question: 'Is there a cancellation fee?', answer: 'Cancellations made within 24 hours of the scheduled service may incur a small fee. Please check our Terms & Conditions for more details.' },
+    { question: 'How can I track my request?', answer: 'You can track the status of your service requests in the "My Orders" section (coming soon).' },
+    { question: 'What payment methods are accepted?', answer: 'We accept credit/debit cards, UPIs, and net banking.' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title={t('helpCenter')}
+          subtitle="We are here to help you"
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={{ alignItems: 'center', marginBottom: 32 }}>
+          <MaterialCommunityIcons name="lifebuoy" size={64} color="#0047AB" />
+          <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center', marginTop: 16, color: '#1A1A1A' }}>
+            Facing any issue while using{'\n'}mine by MAHTO?
+          </Text>
+          <Text style={{ textAlign: 'center', color: '#666', marginTop: 8, paddingHorizontal: 20, lineHeight: 20 }}>
+            We're here to help you bridge the gap between your problems and solutions.
+          </Text>
+        </View>
+
+        {/* Pro Tip */}
+        <View style={{ backgroundColor: '#E3F2FD', padding: 16, borderRadius: 16, flexDirection: 'row', marginBottom: 24, alignItems: 'center' }}>
+          <MaterialCommunityIcons name="camera-outline" size={24} color="#0047AB" style={{ marginRight: 12 }} />
+          <Text style={{ flex: 1, color: '#333', lineHeight: 20, fontSize: 13 }}>
+            <Text style={{ fontWeight: 'bold' }}>Pro Tip:</Text> Please attach a screenshot or image of the issue in your email to help us clarify and resolve the problem faster.
+          </Text>
+        </View>
+
+        {/* Report a Bug */}
+        <View style={styles.helpCard}>
+          <View style={styles.iconCircle}>
+            <MaterialCommunityIcons name="bug-outline" size={24} color="#0047AB" />
+          </View>
+          <Text style={styles.helpCardTitle}>Report a Bug</Text>
+          <Text style={styles.helpCardDesc}>Found a technical glitch or an error? Let our tech team know immediately.</Text>
+          <TouchableOpacity style={styles.helpCardButton} onPress={() => Linking.openURL('mailto:support@mahtoji.tech?subject=Bug Report')}>
+            <Text style={styles.helpCardButtonText}>Contact Support</Text>
+            <MaterialCommunityIcons name="email-outline" size={20} color="#FFF" style={{ marginLeft: 8 }} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Feature Request */}
+        <View style={styles.helpCard}>
+          <View style={styles.iconCircle}>
+            <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color="#0047AB" />
+          </View>
+          <Text style={styles.helpCardTitle}>Feature Request</Text>
+          <Text style={styles.helpCardDesc}>Have an idea to make MAHTO better? We'd love to hear your suggestions.</Text>
+          <TouchableOpacity style={styles.helpCardButton} onPress={() => Linking.openURL('mailto:support@mahtoji.tech?subject=Feature Request')}>
+            <Text style={styles.helpCardButtonText}>Send Suggestion</Text>
+            <MaterialCommunityIcons name="email-outline" size={20} color="#FFF" style={{ marginLeft: 8 }} />
+          </TouchableOpacity>
+        </View>
+
+        {/* CEO Office */}
+        <View style={[styles.helpCard, { backgroundColor: '#002171', borderColor: '#002171' }]}>
+          <View style={[styles.iconCircle, { backgroundColor: 'rgba(255,255,255,0.1)' }]}>
+            <MaterialCommunityIcons name="medal-outline" size={24} color="#FFF" />
+          </View>
+          <Text style={[styles.helpCardTitle, { color: '#FFF' }]}>CEO's Office</Text>
+          <Text style={[styles.helpCardDesc, { color: '#B3CDE0' }]}>For critical escalations or partnership inquiries directly to the leadership.</Text>
+          <TouchableOpacity style={[styles.helpCardButton, { backgroundColor: '#FFF' }]} onPress={() => Linking.openURL('mailto:harshkumarceo@mahtoji.tech?subject=CEO Office Inquiry')}>
+            <Text style={[styles.helpCardButtonText, { color: '#002171' }]}>Contact CEO Office</Text>
+            <MaterialCommunityIcons name="email-outline" size={20} color="#002171" style={{ marginLeft: 8 }} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Standard Response Time */}
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 16, marginBottom: 40 }}>
+          <MaterialCommunityIcons name="clock-outline" size={16} color="#666" style={{ marginRight: 6 }} />
+          <Text style={{ color: '#666', fontSize: 12 }}>Standard Response Time: 24 - 48 Hours</Text>
+        </View>
+
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
+          {faqs.map((faq, index) => (
+            <View key={index} style={[styles.notificationCard, { marginBottom: 12 }]}>
+              <Text style={styles.notificationTitle}>{faq.question}</Text>
+              <Text style={{ fontSize: 14, color: '#555', marginTop: 4, lineHeight: 20 }}>{faq.answer}</Text>
+            </View>
+          ))}
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- ContactUsScreen Component ---
+function ContactUsScreen({ navigation }) {
+  const { t } = React.useContext(LanguageContext);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title={t('contactUs')}
+          subtitle=""
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={{ paddingHorizontal: 4 }}>
+          {/* General Support Card */}
+          <View style={[styles.contactCard, { backgroundColor: '#0047AB' }]}>
+            <MaterialCommunityIcons name="email" size={48} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={styles.contactCardTitle}>General Support</Text>
+            <Text style={styles.contactCardDesc}>For bugs, feature requests, or general queries.</Text>
+            <TouchableOpacity
+              style={styles.contactCardButton}
+              onPress={() => Linking.openURL('mailto:support@mahtoji.tech')}
+            >
+              <Text style={styles.contactCardButtonText}>Contact Support</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* CEO's Office Card */}
+          <View style={[styles.contactCard, { backgroundColor: '#001529' }]}>
+            <MaterialCommunityIcons name="medal" size={48} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={styles.contactCardTitle}>CEO's Office</Text>
+            <Text style={styles.contactCardDesc}>For critical escalations or leadership inquiries.</Text>
+            <TouchableOpacity
+              style={[styles.contactCardButton, { borderColor: '#B3CDE0' }]}
+              onPress={() => Linking.openURL('mailto:harshkumarceo@mahtoji.tech')}
+            >
+              <Text style={{ color: '#FFF', fontWeight: '600', fontSize: 16 }}>Contact CEO Office</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Info Banner */}
+        <View style={styles.infoBanner}>
+          <MaterialCommunityIcons name="information-outline" size={24} color="#0047AB" style={{ marginRight: 12 }} />
+          <Text style={styles.infoBannerText}>
+            Response Time: 24-48 Hours. Please attach images to clarify problems.
+          </Text>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 // --- ConstructionScreen Component ---
 function ConstructionScreen({ navigation }) {
   const constructionServices = [
@@ -455,22 +780,28 @@ function ServiceScreen({ navigation }) {
 // --- Main App Component with Navigation ---
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          headerStyle: { backgroundColor: '#F8F9FA' },
-          contentStyle: { backgroundColor: '#F8F9FA' },
-        }}
-      >
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Construction" component={ConstructionScreen} />
-        <Stack.Screen name="Renovation" component={RenovationScreen} />
-        <Stack.Screen name="Service" component={ServiceScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <LanguageProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            headerStyle: { backgroundColor: '#F8F9FA' },
+            contentStyle: { backgroundColor: '#F8F9FA' },
+          }}
+        >
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Construction" component={ConstructionScreen} />
+          <Stack.Screen name="Renovation" component={RenovationScreen} />
+          <Stack.Screen name="Service" component={ServiceScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+          <Stack.Screen name="Notification" component={NotificationScreen} />
+          <Stack.Screen name="Languages" component={LanguageScreen} />
+          <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+          <Stack.Screen name="ContactUs" component={ContactUsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </LanguageProvider>
   );
 }
 
@@ -818,4 +1149,143 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
+  // Contact Us Styles
+  contactCard: {
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  contactCardTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  contactCardDesc: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.8)',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 20,
+  },
+  contactCardButton: {
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    width: '100%',
+    alignItems: 'center',
+  },
+  contactCardButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  infoBanner: {
+    flexDirection: 'row',
+    backgroundColor: '#F0F4F8',
+    padding: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginTop: 8,
+    marginBottom: 32,
+  },
+  infoBannerText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#555',
+    lineHeight: 18,
+  },
+  // Notification Styles
+  notificationCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#EEE',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  notificationItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+  },
+  notificationTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4,
+  },
+  notificationSubtitle: {
+    fontSize: 12,
+    color: '#666',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#F0F0F0',
+    marginVertical: 8,
+  },
+  // Help Center Styles
+  helpCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  iconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#E3F2FD',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16
+  },
+  helpCardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    marginBottom: 8
+  },
+  helpCardDesc: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 22,
+    marginBottom: 20
+  },
+  helpCardButton: {
+    backgroundColor: '#0047AB',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+  },
+  helpCardButtonText: {
+    color: '#FFF',
+    fontWeight: '600',
+    fontSize: 15
+  }
 });
