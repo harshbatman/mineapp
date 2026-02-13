@@ -756,6 +756,88 @@ function HelpCenterScreen({ navigation }) {
   );
 }
 
+// --- ResidentialBuildScreen Component ---
+function ResidentialBuildScreen({ navigation }) {
+  const steps = [
+    { title: 'Consultation', desc: 'We meet to discuss your vision and budget.', icon: 'account-voice' },
+    { title: 'Design & Planning', desc: 'Architectural drawings and 3D modeling.', icon: 'pencil-ruler' },
+    { title: 'Construction', desc: 'Building your dream home with quality materials.', icon: 'hammer-wrench' },
+    { title: 'Handover', desc: 'Final inspection and key handover.', icon: 'key-variant' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title="Residential Build"
+          subtitle="Your Dream Home, Our Expertise."
+          navigation={navigation}
+          showBack={true}
+        />
+
+        {/* Hero Section */}
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{
+            width: '100%',
+            height: 200,
+            borderRadius: 20,
+            backgroundColor: '#E3F2FD',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 20,
+            overflow: 'hidden'
+          }}>
+            <MaterialCommunityIcons name="home-city" size={80} color="#0047AB" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Custom Homes</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>
+            From modern villas to cozy cottages, we specialize in building residential properties that stand the test of time.
+          </Text>
+        </View>
+
+        {/* Steps Section */}
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>How We Work</Text>
+          {steps.map((step, index) => (
+            <View key={index} style={{
+              flexDirection: 'row',
+              backgroundColor: '#FFF',
+              padding: 16,
+              borderRadius: 16,
+              marginBottom: 12,
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: '#F0F0F0'
+            }}>
+              <View style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: '#E3F2FD',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 16
+              }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Start Your Project</Text>
+        </TouchableOpacity>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 // --- ContactUsScreen Component ---
 function ContactUsScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
@@ -815,11 +897,17 @@ function ContactUsScreen({ navigation }) {
 // --- ConstructionScreen Component ---
 function ConstructionScreen({ navigation }) {
   const constructionServices = [
-    { title: 'Residential Building', icon: 'home', details: 'Custom homes built from the ground up.' },
+    { title: 'Residential Building', icon: 'home', details: 'Custom homes built from the ground up.', route: 'ResidentialBuild' },
     { title: 'Commercial Projects', icon: 'domain', details: 'Offices, retail spaces, and warehouses.' },
     { title: 'Industrial Construction', icon: 'factory', details: 'Heavy-duty construction for industrial needs.' },
     { title: 'Project Management', icon: 'clipboard-list', details: 'End-to-end management of your build.' },
   ];
+
+  const handlePress = (item) => {
+    if (item.route) {
+      navigation.navigate(item.route);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -834,11 +922,15 @@ function ConstructionScreen({ navigation }) {
 
         <View style={styles.gridContainer}>
           {constructionServices.map((item, index) => (
-            <View key={index} style={styles.gridCard}>
+            <TouchableOpacity
+              key={index}
+              style={styles.gridCard}
+              onPress={() => handlePress(item)}
+            >
               <MaterialCommunityIcons name={item.icon} size={40} color="#0047AB" style={{ marginBottom: 10 }} />
               <Text style={styles.gridTitle}>{item.title}</Text>
               <Text style={styles.gridDetails}>{item.details}</Text>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
@@ -1238,6 +1330,7 @@ export default function App() {
           >
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Construction" component={ConstructionScreen} />
+            <Stack.Screen name="ResidentialBuild" component={ResidentialBuildScreen} />
             <Stack.Screen name="Renovation" component={RenovationScreen} />
             <Stack.Screen name="Service" component={ServiceScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
