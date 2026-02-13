@@ -1322,8 +1322,8 @@ function FlooringMakeoverScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Flooring" subtitle="Foundation of Style." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#D7CCC8', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="floor-plan" size={80} color="#795548" />
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#CFD8DC', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="floor-plan" size={80} color="#455A64" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Step into Luxury</Text>
           <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Choose from a wide range of premium flooring options to elevate the look and feel of your home.</Text>
@@ -1332,8 +1332,8 @@ function FlooringMakeoverScreen({ navigation }) {
           <Text style={styles.sectionTitle}>Options</Text>
           {steps.map((step, index) => (
             <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#D7CCC8', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#795548" />
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#CFD8DC', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={step.icon} size={24} color="#455A64" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
@@ -1342,7 +1342,7 @@ function FlooringMakeoverScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#795548', shadowColor: '#795548' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#455A64', shadowColor: '#455A64' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Get Flooring Quote</Text>
         </TouchableOpacity>
       </ScrollView>
