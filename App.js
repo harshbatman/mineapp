@@ -1,7 +1,10 @@
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image, TextInput, ActivityIndicator, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
+import * as Location from 'expo-location';
+import * as ImagePicker from 'expo-image-picker';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
@@ -118,7 +121,7 @@ function HomeScreen({ navigation }) {
 // --- ProfileScreen Component ---
 function ProfileScreen({ navigation }) {
   const accountItems = [
-    { title: 'Edit Profile', icon: 'account-edit' },
+    { title: 'Edit Profile', icon: 'account-edit', onPress: () => navigation.navigate('EditProfile') },
     { title: 'Notification', icon: 'bell-outline' },
     { title: 'Languages', icon: 'translate' },
   ];
@@ -140,7 +143,11 @@ function ProfileScreen({ navigation }) {
       {title && <Text style={styles.sectionTitle}>{title}</Text>}
       <View style={styles.profileMenuContainer}>
         {items.map((item, index) => (
-          <TouchableOpacity key={index} style={[styles.menuItem, index === items.length - 1 && styles.lastMenuItem]}>
+          <TouchableOpacity
+            key={index}
+            style={[styles.menuItem, index === items.length - 1 && styles.lastMenuItem]}
+            onPress={item.onPress} // Added onPress handler
+          >
             <View style={styles.menuItemLeft}>
               <View style={[styles.menuIconBox, item.color && { backgroundColor: '#FFEBEE' }]}>
                 <MaterialCommunityIcons
@@ -179,6 +186,164 @@ function ProfileScreen({ navigation }) {
         ])}
         {renderMenuSection('Information', informationItems)}
         {renderMenuSection('Actions', actionItems)}
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- EditProfileScreen Component ---
+function EditProfileScreen({ navigation }) {
+  const [name, setName] = useState('Harsh Mahto');
+  const [phone, setPhone] = useState('+91 9876543210');
+  const [email, setEmail] = useState('harsh.batman@example.com');
+  const [address, setAddress] = useState('123 Construction St, Delhi');
+  const [profileImage, setProfileImage] = useState(null);
+  const [loadingLocation, setLoadingLocation] = useState(false);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
+    }
+  };
+
+  const getCurrentLocation = async () => {
+    setLoadingLocation(true);
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');
+        setLoadingLocation(false);
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      let reverseGeocode = await Location.reverseGeocodeAsync({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      });
+
+      if (reverseGeocode.length > 0) {
+        const addr = reverseGeocode[0];
+        const formattedAddress = `${addr.street || ''} ${addr.name || ''}, ${addr.city}, ${addr.region}, ${addr.postalCode}, ${addr.country}`;
+        setAddress(formattedAddress.replace(/ ,/g, ''));
+      }
+    } catch (error) {
+      Alert.alert('Error fetching location', error.message);
+    } finally {
+      setLoadingLocation(false);
+    }
+  };
+
+  const handleSave = () => {
+    // Here you would typically save to backend
+    Alert.alert('Profile Updated', 'Your changes have been saved successfully.');
+    navigation.goBack();
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title="Edit Profile"
+          subtitle="Update your personal details"
+          navigation={navigation}
+          showBack={true}
+        />
+
+        <View style={styles.profileHeaderContainer}>
+          <View style={styles.profileImageContainer}>
+            {profileImage ? (
+              <Image source={{ uri: profileImage }} style={styles.profileImage} />
+            ) : (
+              <View style={[styles.profileImage, { justifyContent: 'center', alignItems: 'center', backgroundColor: '#E3F2FD' }]}>
+                <MaterialCommunityIcons name="account" size={80} color="#0047AB" />
+              </View>
+            )}
+            <TouchableOpacity style={styles.editIconBadge} onPress={pickImage}>
+              <MaterialCommunityIcons name="camera" size={20} color="#FFF" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.formContainer}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Full Name</Text>
+            <View style={styles.inputWrapper}>
+              <MaterialCommunityIcons name="account" size={20} color="#666" style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                value={name}
+                onChangeText={setName}
+                placeholder="Enter your name"
+              />
+            </View>
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Phone Number</Text>
+            <View style={styles.inputWrapper}>
+              <MaterialCommunityIcons name="phone" size={20} color="#666" style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+                placeholder="Enter your phone number"
+              />
+            </View>
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Email Address</Text>
+            <View style={styles.inputWrapper}>
+              <MaterialCommunityIcons name="email" size={20} color="#666" style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                placeholder="Enter your email"
+              />
+            </View>
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Address</Text>
+            <View style={styles.addressContainer}>
+              <View style={[styles.inputWrapper, { flex: 1, marginRight: 10 }]}>
+                <MaterialCommunityIcons name="map-marker" size={20} color="#666" style={styles.inputIcon} />
+                <TextInput
+                  style={[styles.input, { flex: 1 }]}
+                  value={address}
+                  onChangeText={setAddress}
+                  multiline
+                  placeholder="Enter your address"
+                />
+              </View>
+              <TouchableOpacity style={styles.locationButton} onPress={getCurrentLocation} disabled={loadingLocation}>
+                {loadingLocation ? (
+                  <ActivityIndicator color="#FFF" size="small" />
+                ) : (
+                  <MaterialCommunityIcons name="crosshairs-gps" size={24} color="#FFF" />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+            <Text style={styles.saveButtonText}>Save Changes</Text>
+          </TouchableOpacity>
+        </View>
 
       </ScrollView>
     </SafeAreaView>
@@ -303,6 +468,7 @@ export default function App() {
         <Stack.Screen name="Renovation" component={RenovationScreen} />
         <Stack.Screen name="Service" component={ServiceScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -549,5 +715,107 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: '#333',
+  },
+  // Edit Profile Styles
+  profileHeaderContainer: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  profileImageContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#E3F2FD', // Fallback color
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+  },
+  editIconBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#0047AB',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#FFF',
+  },
+  formContainer: {
+    marginTop: 10,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+    fontWeight: '600',
+    marginLeft: 4,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    paddingHorizontal: 12,
+    height: 50, // Fixed height for standard inputs
+  },
+  inputIcon: {
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
+  },
+  addressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  locationButton: {
+    backgroundColor: '#0047AB',
+    width: 50,
+    height: 50,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#0047AB',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  saveButton: {
+    backgroundColor: '#0047AB',
+    borderRadius: 30,
+    paddingVertical: 18,
+    alignItems: 'center',
+    marginTop: 20,
+    shadowColor: '#0047AB',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  saveButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
 });
