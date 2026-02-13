@@ -1437,11 +1437,17 @@ function HomePaintingScreen({ navigation }) {
 // --- ServiceScreen Component ---
 function ServiceScreen({ navigation }) {
   const serviceOptions = [
-    { title: 'Plumbing', icon: 'water-pump', details: 'Leak repairs, installations, and maintenance.' },
-    { title: 'Electrical', icon: 'flash', details: 'Wiring, lighting, and safety inspections.' },
-    { title: 'HVAC', icon: 'air-conditioner', details: 'Heating, ventilation, and air conditioning.' },
-    { title: 'General Repairs', icon: 'hammer-wrench', details: 'Fixing the small things before they grow.' },
+    { title: 'Plumbing', icon: 'water-pump', details: 'Leak repairs, installations, and maintenance.', route: 'Plumbing' },
+    { title: 'Electrical', icon: 'flash', details: 'Wiring, lighting, and safety inspections.', route: 'Electrical' },
+    { title: 'HVAC', icon: 'air-conditioner', details: 'Heating, ventilation, and air conditioning.', route: 'HVAC' },
+    { title: 'General Repairs', icon: 'hammer-wrench', details: 'Fixing the small things before they grow.', route: 'GeneralRepairs' },
   ];
+
+  const handlePress = (item) => {
+    if (item.route) {
+      navigation.navigate(item.route);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -1456,13 +1462,187 @@ function ServiceScreen({ navigation }) {
 
         <View style={styles.gridContainer}>
           {serviceOptions.map((item, index) => (
-            <View key={index} style={styles.gridCard}>
+            <TouchableOpacity
+              key={index}
+              style={styles.gridCard}
+              onPress={() => handlePress(item)}
+            >
               <MaterialCommunityIcons name={item.icon} size={40} color="#0047AB" style={{ marginBottom: 10 }} />
               <Text style={styles.gridTitle}>{item.title}</Text>
               <Text style={styles.gridDetails}>{item.details}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- Maintenance Service Components ---
+
+function PlumbingScreen({ navigation }) {
+  const services = [
+    { title: 'Leak Detection', desc: 'Finding and fixing hidden leaks.', icon: 'water-off' },
+    { title: 'Pipe Repair', desc: 'Replace old or burst pipes.', icon: 'pipe' },
+    { title: 'Fixture Install', desc: 'Faucets, sinks, and toilets.', icon: 'toilet' },
+    { title: 'Drain Cleaning', desc: 'Unclogging drains efficiently.', icon: 'water-remove' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="Plumbing Services" subtitle="Expert Flow Control." navigation={navigation} showBack={true} />
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="water-pump" size={80} color="#0047AB" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Reliable Plumbing</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>From emergency repairs to scheduled maintenance, our plumbers ensure your water systems run smoothly.</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Services</Text>
+          {services.map((item, index) => (
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{item.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{item.desc}</Text>
+              </View>
             </View>
           ))}
         </View>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Call a Plumber</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function ElectricalScreen({ navigation }) {
+  const services = [
+    { title: 'Wiring & Rewiring', desc: 'Safe electrical infrastructure.', icon: 'power-plug' },
+    { title: 'Lighting Install', desc: 'Smart, LED, and ambient lighting.', icon: 'ceiling-light' },
+    { title: 'Panel Upgrades', desc: 'Modernize your circuit breakers.', icon: 'flash-alert' },
+    { title: 'Safety Inspections', desc: 'Compliance and hazard checks.', icon: 'shield-check' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="Electrical Services" subtitle="Powering Your Life." navigation={navigation} showBack={true} />
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="flash" size={80} color="#0047AB" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Expert Electricians</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Certified electricians for all your residential and commercial electrical needs. Safety first.</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>What We Do</Text>
+          {services.map((item, index) => (
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{item.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{item.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Book Electrician</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function HVACScreen({ navigation }) {
+  const services = [
+    { title: 'AC Installation', desc: 'Split, window, and central AC systems.', icon: 'air-conditioner' },
+    { title: 'Heater Repair', desc: 'Furnace and heater maintenance.', icon: 'fire' },
+    { title: 'Duct Cleaning', desc: 'Improving air quality.', icon: 'weather-windy' },
+    { title: 'Thermostat Setup', desc: 'Smart climate control.', icon: 'thermometer' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="HVAC Services" subtitle="Comfort in All Seasons." navigation={navigation} showBack={true} />
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="air-conditioner" size={80} color="#0047AB" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Climate Control</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Keep your home cool in summer and warm in winter with our professional HVAC services.</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Services</Text>
+          {services.map((item, index) => (
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{item.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{item.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Schedule Service</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function GeneralRepairsScreen({ navigation }) {
+  const services = [
+    { title: 'Handyman Services', desc: 'Furniture assembly, mounting, etc.', icon: 'account-hard-hat' },
+    { title: 'Drywall Repair', desc: 'Patching holes and cracks.', icon: 'wall' },
+    { title: 'Door & Window', desc: 'Fixing jams, locks, and hinges.', icon: 'door' },
+    { title: 'Painting Touch-ups', desc: 'Small area repainting.', icon: 'format-paint' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="General Repairs" subtitle="Small Fixes, Big Impact." navigation={navigation} showBack={true} />
+        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="hammer-wrench" size={80} color="#0047AB" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Home Maintenance</Text>
+          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Don't let small problems become big headaches. Our general repair services cover all the odd jobs around your house.</Text>
+        </View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>What We Fix</Text>
+          {services.map((item, index) => (
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{item.title}</Text>
+                <Text style={{ fontSize: 14, color: '#666' }}>{item.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+          <Text style={styles.ctaText}>Request Handyman</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -1803,6 +1983,10 @@ export default function App() {
             <Stack.Screen name="FullHomeMakeover" component={FullHomeMakeoverScreen} />
             <Stack.Screen name="HomePainting" component={HomePaintingScreen} />
             <Stack.Screen name="Service" component={ServiceScreen} />
+            <Stack.Screen name="Plumbing" component={PlumbingScreen} />
+            <Stack.Screen name="Electrical" component={ElectricalScreen} />
+            <Stack.Screen name="HVAC" component={HVACScreen} />
+            <Stack.Screen name="GeneralRepairs" component={GeneralRepairsScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="EditProfile" component={EditProfileScreen} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
