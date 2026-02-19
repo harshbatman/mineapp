@@ -1889,30 +1889,51 @@ function TermsConditionScreen({ navigation }) {
   const content = [
     {
       title: "1. Introduction",
+      icon: "handshake-outline",
+      bg: "#E3F2FD",
+      iconColor: "#2196F3",
       text: "Welcome to MAHTO. By accessing or using our platform, you agree to represent that you are at least 18 years old and capable of entering into binding contracts. These Terms & Conditions govern your use of our website, mobile application, and services."
     },
     {
       title: "2. User Accounts",
+      icon: "account-box-outline",
+      bg: "#F3E5F5",
+      iconColor: "#9C27B0",
       text: "To access certain features, you may be required to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account."
     },
     {
       title: "3. Services",
+      icon: "cog-transfer-outline",
+      bg: "#E8F5E9",
+      iconColor: "#4CAF50",
       text: "MAHTO connects users with construction professionals, material suppliers, and financial services. We act as a facilitator and platform provider. While we vet our partners, the final service agreement is between you and the service provider."
     },
     {
       title: "4. Payments",
+      icon: "credit-card-outline",
+      bg: "#FFF3E0",
+      iconColor: "#FF9800",
       text: "All payments made through the MAHTO platform are secured. Payment terms for specific construction or renovation projects will be detailed in the respective service agreements."
     },
     {
-      title: "5. Intellectual Property",
+      title: "5. IP Rights",
+      icon: "shield-check-outline",
+      bg: "#E0F2F1",
+      iconColor: "#009688",
       text: "All content, trademarks, and data on this platform, including the MAHTO brand and logo, are the property of MAHTO and are protected by applicable intellectual property laws."
     },
     {
-      title: "6. Limitation of Liability",
+      title: "6. Liability",
+      icon: "alert-circle-outline",
+      bg: "#FFEBEE",
+      iconColor: "#F44336",
       text: "MAHTO shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your access to or use of, or inability to access or use, the services."
     },
     {
-      title: "7. Changes to Terms",
+      title: "7. Changes",
+      icon: "update",
+      bg: "#E8EAF6",
+      iconColor: "#3F51B5",
       text: "We reserve the right to modify these terms at any time. We will provide notice of significant changes. Your continued use of the platform constitutes acceptance of the new terms."
     }
   ];
@@ -1920,31 +1941,42 @@ function TermsConditionScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}>
         <CustomHeader
           title="Terms & Conditions"
-          subtitle="Please read carefully"
+          subtitle="Legal agreement for using MAHTO"
           navigation={navigation}
           showBack={true}
         />
 
-        <View style={styles.termsContainer}>
-          <Text style={styles.lastUpdatedText}>Last Updated: February 2026</Text>
+        <View style={{ paddingHorizontal: 20, marginBottom: 16 }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: '#AAA', textTransform: 'uppercase', letterSpacing: 1 }}>Last Updated: February 2026</Text>
+        </View>
 
-          {content.map((section, index) => (
-            <View key={index} style={styles.termsSection}>
-              <Text style={styles.termsTitle}>{section.title}</Text>
-              <Text style={styles.termsText}>{section.text}</Text>
+        {content.map((section, index) => (
+          <View key={index} style={{ paddingHorizontal: 20, marginBottom: 20 }}>
+            <View style={{ backgroundColor: '#FFF', borderRadius: 24, padding: 20, elevation: 6, shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.06, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: section.bg, justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
+                  <MaterialCommunityIcons name={section.icon} size={20} color={section.iconColor} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A' }}>{section.title}</Text>
+              </View>
+              <Text style={{ fontSize: 14, color: '#666', lineHeight: 22, fontWeight: '500' }}>
+                {section.text}
+              </Text>
             </View>
-          ))}
+          </View>
+        ))}
 
-          <View style={styles.termsFooter}>
-            <Text style={styles.termsFooterText}>
-              By using MAHTO, you acknowledge that you have read and understood these agreements.
+        <View style={{ paddingHorizontal: 30, marginTop: 10, marginBottom: 40 }}>
+          <View style={{ backgroundColor: '#F8F9FA', padding: 18, borderRadius: 20, flexDirection: 'row', alignItems: 'flex-start' }}>
+            <MaterialCommunityIcons name="check-decagram-outline" size={20} color="#4CAF50" style={{ marginRight: 12, marginTop: 2 }} />
+            <Text style={{ flex: 1, fontSize: 13, color: '#666', lineHeight: 18 }}>
+              By using the MAHTO platform, you acknowledge that you have read, understood, and agreed to be bound by these Terms & Conditions.
             </Text>
           </View>
         </View>
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -1954,27 +1986,45 @@ function TermsConditionScreen({ navigation }) {
 function PrivacyPolicyScreen({ navigation }) {
   const content = [
     {
-      title: "1. Information We Collect",
+      title: "1. Data Collection",
+      icon: "database-outline",
+      bg: "#E3F2FD",
+      iconColor: "#2196F3",
       text: "We collect personal information you provide directly to us (such as name, email, phone number) and information automatically collected from your device (such as location, IP address, and usage data)."
     },
     {
-      title: "2. How We Use Your Information",
+      title: "2. Data Usage",
+      icon: "cog-outline",
+      bg: "#F3E5F5",
+      iconColor: "#9C27B0",
       text: "We use your information to provide construction and renovation services, process payments, communicate with you, and improve our platform. We may also use it for safety and security purposes."
     },
     {
-      title: "3. Information Sharing",
+      title: "3. Data Sharing",
+      icon: "share-variant-outline",
+      bg: "#E8F5E9",
+      iconColor: "#4CAF50",
       text: "We share your information with service providers (contractors, workers) to fulfill your requests. We do not sell your personal data to third parties for marketing purposes."
     },
     {
-      title: "4. Data Security",
+      title: "4. Security",
+      icon: "shield-lock-outline",
+      bg: "#FFF3E0",
+      iconColor: "#FF9800",
       text: "We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction."
     },
     {
       title: "5. Your Rights",
+      icon: "account-check-outline",
+      bg: "#E0F2F1",
+      iconColor: "#009688",
       text: "You have the right to access, correct, or delete your personal information. You can manage your communication preferences in the Notification settings."
     },
     {
-      title: "6. Cookies and Tracking",
+      title: "6. Tracking",
+      icon: "cookie-outline",
+      bg: "#FFEBEE",
+      iconColor: "#F44336",
       text: "We may use cookies and similar tracking technologies to track the activity on our service and hold certain information to enhance your experience."
     }
   ];
@@ -1982,7 +2032,7 @@ function PrivacyPolicyScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}>
         <CustomHeader
           title="Privacy Policy"
           subtitle="How we handle your data"
@@ -1990,29 +2040,43 @@ function PrivacyPolicyScreen({ navigation }) {
           showBack={true}
         />
 
-        <View style={styles.termsContainer}>
-          <Text style={styles.lastUpdatedText}>Last Updated: February 2026</Text>
+        <View style={{ paddingHorizontal: 20, marginBottom: 16 }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: '#AAA', textTransform: 'uppercase', letterSpacing: 1 }}>Last Updated: February 2026</Text>
+        </View>
 
-          <View style={{ marginBottom: 24, padding: 12, backgroundColor: '#E3F2FD', borderRadius: 8 }}>
-            <Text style={{ fontSize: 13, color: '#000', lineHeight: 20 }}>
+        <View style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+          <View style={{ backgroundColor: '#E3F2FD', padding: 16, borderRadius: 20, flexDirection: 'row', alignItems: 'center' }}>
+            <MaterialCommunityIcons name="shield-check" size={24} color="#2196F3" style={{ marginRight: 12 }} />
+            <Text style={{ flex: 1, fontSize: 13, color: '#000', lineHeight: 20, fontWeight: '500' }}>
               At MAHTO, we are committed to protecting your privacy and ensuring the security of your personal information.
-            </Text>
-          </View>
-
-          {content.map((section, index) => (
-            <View key={index} style={styles.termsSection}>
-              <Text style={styles.termsTitle}>{section.title}</Text>
-              <Text style={styles.termsText}>{section.text}</Text>
-            </View>
-          ))}
-
-          <View style={styles.termsFooter}>
-            <Text style={styles.termsFooterText}>
-              If you have any questions about this Privacy Policy, please contact us at support@mahtoji.tech.
             </Text>
           </View>
         </View>
 
+        {content.map((section, index) => (
+          <View key={index} style={{ paddingHorizontal: 20, marginBottom: 20 }}>
+            <View style={{ backgroundColor: '#FFF', borderRadius: 24, padding: 20, elevation: 6, shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.06, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: section.bg, justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
+                  <MaterialCommunityIcons name={section.icon} size={20} color={section.iconColor} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A' }}>{section.title}</Text>
+              </View>
+              <Text style={{ fontSize: 14, color: '#666', lineHeight: 22, fontWeight: '500' }}>
+                {section.text}
+              </Text>
+            </View>
+          </View>
+        ))}
+
+        <View style={{ paddingHorizontal: 30, marginTop: 10, marginBottom: 40 }}>
+          <View style={{ backgroundColor: '#F8F9FA', padding: 18, borderRadius: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <MaterialCommunityIcons name="email-outline" size={18} color="#666" style={{ marginRight: 10 }} />
+            <Text style={{ fontSize: 13, color: '#666', fontWeight: '500' }}>
+              Questions? support@mahtoji.tech
+            </Text>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -2022,23 +2086,38 @@ function PrivacyPolicyScreen({ navigation }) {
 function RefundPolicyScreen({ navigation }) {
   const content = [
     {
-      title: "1. Service Cancellations",
+      title: "1. Cancellations",
+      icon: "calendar-remove-outline",
+      bg: "#E3F2FD",
+      iconColor: "#2196F3",
       text: "You may cancel a scheduled service request up to 24 hours before the scheduled time for a full refund. Cancellations made within 24 hours may incur a cancellation fee of up to ₹500 or 10% of the service value, whichever is lower."
     },
     {
-      title: "2. Service Quality Issues",
+      title: "2. Quality Issues",
+      icon: "star-off-outline",
+      bg: "#F3E5F5",
+      iconColor: "#9C27B0",
       text: "If you are dissatisfied with the quality of service provided, please report the issue within 48 hours of service completion. We will investigate and, if the claim is valid, offer a rework or a partial/full refund based on the severity of the issue."
     },
     {
       title: "3. Material Returns",
+      icon: "package-variant-closed",
+      bg: "#E8F5E9",
+      iconColor: "#4CAF50",
       text: "Unused and undamaged construction materials purchased through MAHTO can be returned within 7 days of delivery. A restocking fee may apply. Custom-ordered materials are non-refundable unless defective."
     },
     {
-      title: "4. Refund Processing",
+      title: "4. Processing",
+      icon: "timer-sand-empty",
+      bg: "#FFF3E0",
+      iconColor: "#FF9800",
       text: "Approved refunds will be processed within 5-7 business days and credited back to the original payment method. For cash payments, refunds will be credited to your MAHTO wallet or bank account."
     },
     {
-      title: "5. Advance Payments",
+      title: "5. Advances",
+      icon: "cash-multiple",
+      bg: "#E8EAF6",
+      iconColor: "#3F51B5",
       text: "Advance payments for large projects are refundable only if the project is cancelled before any work has commenced or materials have been procured. Once work begins, advances are adjusted against completed milestones."
     }
   ];
@@ -2046,7 +2125,7 @@ function RefundPolicyScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}>
         <CustomHeader
           title="Refund Policy"
           subtitle="Cancellations & Returns"
@@ -2054,29 +2133,40 @@ function RefundPolicyScreen({ navigation }) {
           showBack={true}
         />
 
-        <View style={styles.termsContainer}>
-          <Text style={styles.lastUpdatedText}>Last Updated: February 2026</Text>
+        <View style={{ paddingHorizontal: 20, marginBottom: 16 }}>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: '#AAA', textTransform: 'uppercase', letterSpacing: 1 }}>Last Updated: February 2026</Text>
+        </View>
 
-          <View style={{ marginBottom: 24, padding: 12, backgroundColor: '#FFF3E0', borderRadius: 8 }}>
-            <Text style={{ fontSize: 13, color: '#E65100', lineHeight: 20 }}>
+        <View style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+          <View style={{ backgroundColor: '#FFF3E0', padding: 16, borderRadius: 20, flexDirection: 'row', alignItems: 'center' }}>
+            <MaterialCommunityIcons name="information-outline" size={24} color="#FF9800" style={{ marginRight: 12 }} />
+            <Text style={{ flex: 1, fontSize: 13, color: '#000', lineHeight: 20, fontWeight: '500' }}>
               <Text style={{ fontWeight: 'bold' }}>Note:</Text> Refund requests must be raised via the Help Center or by emailing support@mahtoji.tech.
-            </Text>
-          </View>
-
-          {content.map((section, index) => (
-            <View key={index} style={styles.termsSection}>
-              <Text style={styles.termsTitle}>{section.title}</Text>
-              <Text style={styles.termsText}>{section.text}</Text>
-            </View>
-          ))}
-
-          <View style={styles.termsFooter}>
-            <Text style={styles.termsFooterText}>
-              We strive to ensure fair and transparent handling of all refund requests.
             </Text>
           </View>
         </View>
 
+        {content.map((section, index) => (
+          <View key={index} style={{ paddingHorizontal: 20, marginBottom: 20 }}>
+            <View style={{ backgroundColor: '#FFF', borderRadius: 24, padding: 20, elevation: 6, shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.06, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: section.bg, justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
+                  <MaterialCommunityIcons name={section.icon} size={20} color={section.iconColor} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A' }}>{section.title}</Text>
+              </View>
+              <Text style={{ fontSize: 14, color: '#666', lineHeight: 22, fontWeight: '500' }}>
+                {section.text}
+              </Text>
+            </View>
+          </View>
+        ))}
+
+        <View style={{ paddingHorizontal: 30, marginTop: 10, marginBottom: 40, alignItems: 'center' }}>
+          <Text style={{ fontSize: 12, color: '#AAA', fontWeight: '500' }}>
+            MAHTO - Fairness and transparency in every transaction.
+          </Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
