@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert, Modal, ImageBackground, Platform, ActivityIndicator, BackHandler, Animated, Dimensions, SafeAreaView, Switch, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert, Modal, ImageBackground, Platform, ActivityIndicator, BackHandler, Animated, Dimensions, SafeAreaView, Switch, Linking, StatusBar as RNStatusBar } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -236,28 +236,30 @@ function HomeScreen({ navigation }) {
         </View>
 
         <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
-          <Text style={[styles.uberSectionTitle, { marginBottom: 16 }]}>The MAHTO Difference</Text>
-          <View style={{ gap: 16 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialCommunityIcons name="layers" size={24} color="#000" style={{ marginRight: 12 }} />
-              <View>
-                <Text style={{ fontWeight: '700', fontSize: 16 }}>End-to-End Stack</Text>
-                <Text style={{ color: '#666', fontSize: 13 }}>From plan to possession, one unified team.</Text>
+          <Text style={[styles.uberSectionTitle, { marginBottom: 20, letterSpacing: -0.5 }]}>The MAHTO Difference</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ width: '31%', alignItems: 'center' }}>
+              <View style={{ width: 64, height: 64, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 12, shadowColor: '#2196F3', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 2 }}>
+                <MaterialCommunityIcons name="layers-triple-outline" size={30} color="#2196F3" />
               </View>
+              <Text style={{ fontWeight: '800', fontSize: 13, textAlign: 'center', color: '#1A1A1A', marginBottom: 4 }}>Full Stack</Text>
+              <Text style={{ color: '#777', fontSize: 10, textAlign: 'center', lineHeight: 14 }}>One team from plan to key.</Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialCommunityIcons name="account-group" size={24} color="#000" style={{ marginRight: 12 }} />
-              <View>
-                <Text style={{ fontWeight: '700', fontSize: 16 }}>Direct Execution</Text>
-                <Text style={{ color: '#666', fontSize: 13 }}>In-house labor and professional engineers.</Text>
+
+            <View style={{ width: '31%', alignItems: 'center' }}>
+              <View style={{ width: 64, height: 64, borderRadius: 20, backgroundColor: '#F3E5F5', justifyContent: 'center', alignItems: 'center', marginBottom: 12, shadowColor: '#9C27B0', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 2 }}>
+                <MaterialCommunityIcons name="account-hard-hat-outline" size={30} color="#9C27B0" />
               </View>
+              <Text style={{ fontWeight: '800', fontSize: 13, textAlign: 'center', color: '#1A1A1A', marginBottom: 4 }}>Direct Labor</Text>
+              <Text style={{ color: '#777', fontSize: 10, textAlign: 'center', lineHeight: 14 }}>No middlemen, direct execution.</Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialCommunityIcons name="currency-inr" size={24} color="#000" style={{ marginRight: 12 }} />
-              <View>
-                <Text style={{ fontWeight: '700', fontSize: 16 }}>Factory Pricing</Text>
-                <Text style={{ color: '#666', fontSize: 13 }}>Materials sourced directly for maximum value.</Text>
+
+            <View style={{ width: '31%', alignItems: 'center' }}>
+              <View style={{ width: 64, height: 64, borderRadius: 20, backgroundColor: '#E8F5E9', justifyContent: 'center', alignItems: 'center', marginBottom: 12, shadowColor: '#4CAF50', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 2 }}>
+                <MaterialCommunityIcons name="tag-outline" size={30} color="#4CAF50" />
               </View>
+              <Text style={{ fontWeight: '800', fontSize: 13, textAlign: 'center', color: '#1A1A1A', marginBottom: 4 }}>Factory Rate</Text>
+              <Text style={{ color: '#777', fontSize: 10, textAlign: 'center', lineHeight: 14 }}>Sourced directly for you.</Text>
             </View>
           </View>
         </View>
@@ -1082,10 +1084,10 @@ function HelpCenterScreen({ navigation }) {
 // --- ResidentialBuildScreen Component ---
 function ResidentialBuildScreen({ navigation }) {
   const steps = [
-    { title: 'Consultation', desc: 'We meet to discuss your vision and budget.', icon: 'account-voice' },
-    { title: 'Design & Planning', desc: 'Architectural drawings and 3D modeling.', icon: 'pencil-ruler' },
-    { title: 'Construction', desc: 'Building your dream home with quality materials.', icon: 'hammer-wrench' },
-    { title: 'Handover', desc: 'Final inspection and key handover.', icon: 'key-variant' },
+    { title: 'Consultation', desc: 'Discuss your vision and budget.', icon: 'account-voice', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Design & Planning', desc: 'Architectural drawings & 3D modeling.', icon: 'pencil-ruler', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Construction', desc: 'Building with premium quality materials.', icon: 'hammer-wrench', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Handover', desc: 'Final inspection & key delivery.', icon: 'key-variant', color: '#9C27B0', bg: '#F3E5F5' },
   ];
 
   return (
@@ -1100,60 +1102,83 @@ function ResidentialBuildScreen({ navigation }) {
         />
 
         {/* Hero Section */}
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
           <View style={{
-            width: '100%',
-            height: 200,
-            borderRadius: 20,
-            backgroundColor: '#E3F2FD',
-            justifyContent: 'center',
+            backgroundColor: '#0047AB',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#0047AB',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.35,
+            shadowRadius: 20,
+            elevation: 10,
             alignItems: 'center',
-            marginBottom: 20,
-            overflow: 'hidden'
           }}>
-            <MaterialCommunityIcons name="home-city" size={80} color="#0047AB" />
+            <MaterialCommunityIcons name="home-city-outline" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Custom Homes</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              From modern villas to cozy cottages, we specialize in building residential properties that stand the test of time.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Custom Homes</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>
-            From modern villas to cozy cottages, we specialize in building residential properties that stand the test of time.
-          </Text>
         </View>
 
-        {/* Steps Section */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>How We Work</Text>
-          {steps.map((step, index) => (
-            <View key={index} style={{
-              flexDirection: 'row',
-              backgroundColor: '#FFF',
-              padding: 16,
-              borderRadius: 16,
-              marginBottom: 12,
-              alignItems: 'center',
-              borderWidth: 1,
-              borderColor: '#F0F0F0'
-            }}>
-              <View style={{
-                width: 50,
-                height: 50,
-                borderRadius: 25,
-                backgroundColor: '#E3F2FD',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: 16
+        {/* Steps Section as Stylish Cards */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>How We Work</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {steps.map((step, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
               }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: step.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{step.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{step.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
 
-        <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Start Your Project</Text>
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
 
       </ScrollView>
@@ -1164,10 +1189,10 @@ function ResidentialBuildScreen({ navigation }) {
 // --- CommercialBuildScreen Component ---
 function CommercialBuildScreen({ navigation }) {
   const steps = [
-    { title: 'Project Scoping', desc: 'Defining requirements for office or retail space.', icon: 'file-document-outline' },
-    { title: 'Design & Compliance', desc: 'Creating functional designs that meet regulations.', icon: 'ruler-square' },
-    { title: 'Execution', desc: 'Efficient construction to minimize downtime.', icon: 'hard-hat' },
-    { title: 'Launch Ready', desc: 'Final checks for a grand opening.', icon: 'rocket-launch' },
+    { title: 'Project Scoping', desc: 'Define precise requirements for scale.', icon: 'file-document-outline', color: '#00BCD4', bg: '#E0F7FA' },
+    { title: 'Design & Code', desc: 'Strict compliance with planning codes.', icon: 'ruler-square', color: '#3F51B5', bg: '#E8EAF6' },
+    { title: 'Execution', desc: 'Minimal downtime & rapid delivery.', icon: 'hard-hat', color: '#FF5722', bg: '#FBE9E7' },
+    { title: 'Launch', desc: 'Final checks for an impressive opening.', icon: 'rocket-launch-outline', color: '#E91E63', bg: '#FCE4EC' },
   ];
 
   return (
@@ -1181,59 +1206,84 @@ function CommercialBuildScreen({ navigation }) {
           showBack={true}
         />
 
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
           <View style={{
-            width: '100%',
-            height: 200,
-            borderRadius: 20,
-            backgroundColor: '#F3F3F3',
-            justifyContent: 'center',
+            backgroundColor: '#002B5B', // Deep, professional navy
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#002B5B',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.35,
+            shadowRadius: 20,
+            elevation: 10,
             alignItems: 'center',
-            marginBottom: 20,
-            overflow: 'hidden'
           }}>
-            <MaterialCommunityIcons name="office-building" size={80} color="#0047AB" />
+            <MaterialCommunityIcons name="office-building" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Business Infrastructure</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              We build modern commercial spaces, from retail stores to corporate offices, designed to enhance productivity and impress your clients.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Business Infrastructure</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>
-            We build modern commercial spaces, from retail stores to corporate offices, designed to enhance productivity and impress clients.
-          </Text>
         </View>
 
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Process</Text>
-          {steps.map((step, index) => (
-            <View key={index} style={{
-              flexDirection: 'row',
-              backgroundColor: '#FFF',
-              padding: 16,
-              borderRadius: 16,
-              marginBottom: 12,
-              alignItems: 'center',
-              borderWidth: 1,
-              backgroundColor: '#F3F3F3'
-            }}>
-              <View style={{
-                width: 50,
-                height: 50,
-                borderRadius: 25,
-                backgroundColor: '#F3F3F3',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: 16
+        {/* Steps Section as Stylish Cards */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Our Process</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {steps.map((step, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
               }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: step.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{step.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{step.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
 
-        <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Get a Quote</Text>
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Get a Quote</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
 
       </ScrollView>
@@ -1242,12 +1292,13 @@ function CommercialBuildScreen({ navigation }) {
 }
 
 // --- IndustrialBuildScreen Component ---
+// --- IndustrialBuildScreen Component ---
 function IndustrialBuildScreen({ navigation }) {
   const steps = [
-    { title: 'Site Analysis', desc: 'Evaluating terrain and logistics access.', icon: 'map-search' },
-    { title: 'Heavy Engineering', desc: 'Structural integrity for heavy machinery.', icon: 'robot-industrial' },
-    { title: 'Safety Systems', desc: 'Implementing fire and safety protocols.', icon: 'shield-check' },
-    { title: 'Operations Transfer', desc: 'Seamless handover for immediate use.', icon: 'truck-delivery' },
+    { title: 'Site Analysis', desc: 'Evaluating terrain & logistics.', icon: 'map-search-outline', color: '#607D8B', bg: '#ECEFF1' },
+    { title: 'Heavy Engineering', desc: 'Structural integrity for machinery.', icon: 'robot-industrial', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Safety Systems', desc: 'Implementing strict protocols.', icon: 'shield-alert-outline', color: '#E53935', bg: '#FFEBEE' },
+    { title: 'Operations Transfer', desc: 'Seamless handover for use.', icon: 'truck-delivery-outline', color: '#43A047', bg: '#E8F5E9' },
   ];
 
   return (
@@ -1261,59 +1312,86 @@ function IndustrialBuildScreen({ navigation }) {
           showBack={true}
         />
 
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
           <View style={{
-            width: '100%',
-            height: 200,
-            borderRadius: 20,
-            backgroundColor: '#F3F3F3',
-            justifyContent: 'center',
+            backgroundColor: '#1C1C1E', // Very dark gray, almost black
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.4,
+            shadowRadius: 20,
+            elevation: 12,
             alignItems: 'center',
-            marginBottom: 20,
-            overflow: 'hidden'
+            borderWidth: 1,
+            borderColor: '#333',
           }}>
-            <MaterialCommunityIcons name="factory" size={80} color="#0047AB" />
+            <MaterialCommunityIcons name="factory" size={64} color="#FFB300" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Industrial Solutions</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              Robust construction for factories, warehouses, and industrial plants. We prioritize uncompromising safety, durability, and operational efficiency.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Industrial Solutions</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>
-            Robust construction for factories, warehouses, and industrial plants. We prioritize safety, durability, and efficiency.
-          </Text>
         </View>
 
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Key Steps</Text>
-          {steps.map((step, index) => (
-            <View key={index} style={{
-              flexDirection: 'row',
-              backgroundColor: '#FFF',
-              padding: 16,
-              borderRadius: 16,
-              marginBottom: 12,
-              alignItems: 'center',
-              borderWidth: 1,
-              backgroundColor: '#F3F3F3'
-            }}>
-              <View style={{
-                width: 50,
-                height: 50,
-                borderRadius: 25,
-                backgroundColor: '#F3F3F3',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: 16
+        {/* Steps Section as Stylish Cards */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Key Steps</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {steps.map((step, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
               }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: step.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{step.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{step.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
 
-        <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Consult Engineers</Text>
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#FFB300', // Warning/Industrial yellow-orange
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#FFB300',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.35,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#000', fontSize: 17, fontWeight: '900', marginRight: 10, letterSpacing: 0.5 }}>Consult Engineers</Text>
+          <MaterialCommunityIcons name="arrow-right" size={24} color="#000" />
         </TouchableOpacity>
 
       </ScrollView>
@@ -1324,10 +1402,10 @@ function IndustrialBuildScreen({ navigation }) {
 // --- ProjectManagementScreen Component ---
 function ProjectManagementScreen({ navigation }) {
   const features = [
-    { title: 'Timeline Management', desc: 'Keeping your project on strict deadlines.', icon: 'calendar-clock' },
-    { title: 'Cost Control', desc: 'Monitoring budget and resource allocation.', icon: 'finance' },
-    { title: 'Quality Assurance', desc: 'Regular inspections and standards checks.', icon: 'check-decagram' },
-    { title: 'Vendor Coordination', desc: 'Managing subcontractors and suppliers.', icon: 'account-group' },
+    { title: 'Timeline Control', desc: 'Strict tracking of deadlines.', icon: 'calendar-clock-outline', color: '#8E24AA', bg: '#F3E5F5' },
+    { title: 'Cost Budgeting', desc: 'Precise resource allocation.', icon: 'finance', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Quality Checks', desc: 'Rigorous standard inspections.', icon: 'check-decagram-outline', color: '#1976D2', bg: '#E3F2FD' },
+    { title: 'Vendor Sync', desc: 'Managing all subcontractors.', icon: 'account-group-outline', color: '#FF9800', bg: '#FFF3E0' },
   ];
 
   return (
@@ -1341,59 +1419,84 @@ function ProjectManagementScreen({ navigation }) {
           showBack={true}
         />
 
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
           <View style={{
-            width: '100%',
-            height: 200,
-            borderRadius: 20,
-            backgroundColor: '#F3F3F3',
-            justifyContent: 'center',
+            backgroundColor: '#4A148C', // Deep, rich purple for management/orchestration
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#4A148C',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.35,
+            shadowRadius: 20,
+            elevation: 10,
             alignItems: 'center',
-            marginBottom: 20,
-            overflow: 'hidden'
           }}>
-            <MaterialCommunityIcons name="clipboard-check" size={80} color="#0047AB" />
+            <MaterialCommunityIcons name="clipboard-check-outline" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>End-to-End Control</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              We take the stress out of construction. Our expert managers ensure your project is completed on time, within budget, and to the highest industry standards.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>End-to-End Management</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>
-            We take the stress out of construction. Our expert managers ensure your project is completed on time, within budget, and to the highest standards.
-          </Text>
         </View>
 
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Our Services</Text>
-          {features.map((item, index) => (
-            <View key={index} style={{
-              flexDirection: 'row',
-              backgroundColor: '#FFF',
-              padding: 16,
-              borderRadius: 16,
-              marginBottom: 12,
-              alignItems: 'center',
-              borderWidth: 1,
-              backgroundColor: '#F3F3F3'
-            }}>
-              <View style={{
-                width: 50,
-                height: 50,
-                borderRadius: 25,
-                backgroundColor: '#F3F3F3',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: 16
+        {/* Steps Section as Stylish Cards */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Our Services</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {features.map((item, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
               }}>
-                <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: item.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{item.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{item.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{item.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{item.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
 
-        <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Hire a Manager</Text>
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Hire a Manager</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
 
       </ScrollView>
@@ -1487,10 +1590,10 @@ function ContactUsScreen({ navigation }) {
 // --- ConstructionScreen Component ---
 function ConstructionScreen({ navigation }) {
   const constructionServices = [
-    { title: 'Residential Building', icon: 'home', details: 'Custom homes built from the ground up.', route: 'ResidentialBuild' },
-    { title: 'Commercial Projects', icon: 'domain', details: 'Offices, retail spaces, and warehouses.', route: 'CommercialBuild' },
-    { title: 'Industrial Construction', icon: 'factory', details: 'Heavy-duty construction for industrial needs.', route: 'IndustrialBuild' },
-    { title: 'Project Management', icon: 'clipboard-list', details: 'End-to-end management of your build.', route: 'ProjectManagement' },
+    { title: 'Residential Building', icon: 'home-city-outline', details: 'Custom homes built from the ground up.', route: 'ResidentialBuild', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Commercial Projects', icon: 'office-building', details: 'Offices, retail spaces, and warehouses.', route: 'CommercialBuild', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Industrial Construction', icon: 'factory', details: 'Heavy-duty construction for industrial needs.', route: 'IndustrialBuild', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Project Management', icon: 'clipboard-list-outline', details: 'End-to-end management of your build.', route: 'ProjectManagement', color: '#9C27B0', bg: '#F3E5F5' },
   ];
 
   return (
@@ -1504,19 +1607,70 @@ function ConstructionScreen({ navigation }) {
           showBack={true}
         />
 
-        <View style={styles.gridContainer}>
-          {constructionServices.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.gridCard}
-              onPress={() => item.route && navigation.navigate(item.route)}
-            >
-              <MaterialCommunityIcons name={item.icon} size={32} color="#000" />
-              <Text style={styles.gridTitle}>{item.title}</Text>
-              <Text style={styles.gridDetails}>{item.details}</Text>
-            </TouchableOpacity>
-          ))}
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#FF7F50', // A vibrant coral
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#FF7F50',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.35,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="hard-hat" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Master Builders</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              We transform blueprints into reality with uncompromising quality, safety, and architectural excellence.
+            </Text>
+          </View>
         </View>
+
+        {/* Categories Section as Stylish Square Cards */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Our Sectors</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {constructionServices.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                activeOpacity={0.8}
+                onPress={() => item.route && navigation.navigate(item.route)}
+                style={{
+                  width: '47.5%',
+                  backgroundColor: '#FFF',
+                  padding: 20,
+                  borderRadius: 24,
+                  alignItems: 'center',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 8 },
+                  shadowOpacity: 0.06,
+                  shadowRadius: 16,
+                  elevation: 6,
+                  borderWidth: 1,
+                  borderColor: '#F0F2F5',
+                  marginBottom: 16,
+                }}
+              >
+                <View style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 20,
+                  backgroundColor: item.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={item.icon} size={32} color={item.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', marginBottom: 8, letterSpacing: -0.2 }}>{item.title}</Text>
+                <Text style={{ fontSize: 12, color: '#666', lineHeight: 16, fontWeight: '500', textAlign: 'center' }}>{item.details}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -1525,11 +1679,11 @@ function ConstructionScreen({ navigation }) {
 // --- RenovationScreen Component ---
 function RenovationScreen({ navigation }) {
   const renovationServices = [
-    { title: 'Kitchen Remodel', icon: 'silverware-fork-knife', details: 'Modern designs for the heart of your home.', route: 'KitchenRemodel' },
-    { title: 'Bathroom Upgrade', icon: 'shower', details: 'Spa-like retreats and functional layouts.', route: 'BathroomUpgrade' },
-    { title: 'Flooring', icon: 'floor-plan', details: 'Hardwood, tile, and luxury vinyl installation.', route: 'FlooringMakeover' },
-    { title: 'Full Home Makeover', icon: 'home-circle', details: 'Complete transformation of your living space.', route: 'FullHomeMakeover' },
-    { title: 'Home Painting', icon: 'format-paint', details: 'Interior and exterior professional painting.', route: 'HomePainting' },
+    { title: 'Kitchen Remodel', icon: 'silverware-fork-knife', details: 'Modern designs for your home heart.', route: 'KitchenRemodel', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Bathroom Upgrade', icon: 'shower', details: 'Spa-like retreats & functional layouts.', route: 'BathroomUpgrade', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Flooring', icon: 'floor-plan', details: 'Hardwood, tile, & vinyl installation.', route: 'FlooringMakeover', color: '#795548', bg: '#EFEBE9' },
+    { title: 'Full Home Makeover', icon: 'home-circle-outline', details: 'Complete living space transformation.', route: 'FullHomeMakeover', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Home Painting', icon: 'format-paint', details: 'Professional interior & exterior work.', route: 'HomePainting', color: '#E91E63', bg: '#FCE4EC' },
   ];
 
   return (
@@ -1543,18 +1697,68 @@ function RenovationScreen({ navigation }) {
           showBack={true}
         />
 
-        <View style={styles.gridContainer}>
-          {renovationServices.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.gridCard}
-              onPress={() => item.route && navigation.navigate(item.route)}
-            >
-              <MaterialCommunityIcons name={item.icon} size={32} color="#000" />
-              <Text style={styles.gridTitle}>{item.title}</Text>
-              <Text style={styles.gridDetails}>{item.details}</Text>
-            </TouchableOpacity>
-          ))}
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#9C27B0', // Purple for creativity/renovation
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#9C27B0',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="home-edit-outline" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Transform Your Space</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              From modern kitchens to serene bathrooms, we bring new life to your home with expert craftsmanship and premium materials.
+            </Text>
+          </View>
+        </View>
+
+        {/* Categories Section as Stylish Square Cards */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Renovation Services</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {renovationServices.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                activeOpacity={0.8}
+                onPress={() => item.route && navigation.navigate(item.route)}
+                style={{
+                  width: '47.5%',
+                  backgroundColor: '#FFF',
+                  padding: 20,
+                  borderRadius: 24,
+                  alignItems: 'center',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 8 },
+                  shadowOpacity: 0.06,
+                  shadowRadius: 16,
+                  elevation: 6,
+                  borderWidth: 1,
+                  borderColor: '#F0F2F5',
+                  marginBottom: 16,
+                }}
+              >
+                <View style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 20,
+                  backgroundColor: item.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={item.icon} size={32} color={item.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', marginBottom: 8, letterSpacing: -0.2 }}>{item.title}</Text>
+                <Text style={{ fontSize: 12, color: '#666', lineHeight: 16, fontWeight: '500', textAlign: 'center' }}>{item.details}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -1564,10 +1768,10 @@ function RenovationScreen({ navigation }) {
 // --- Renovation Detail Screens ---
 function KitchenRemodelScreen({ navigation }) {
   const steps = [
-    { title: 'Layout Optimization', desc: 'Improving workflow and space utilization.', icon: 'arrow-expand-all' },
-    { title: 'Cabinetry & Storage', desc: 'Custom cabinets and smart storage solutions.', icon: 'cupboard' },
-    { title: 'Countertops & Backsplash', desc: 'Premium materials like granite, quartz, and marble.', icon: 'texture-box' },
-    { title: 'Appliances & Lighting', desc: 'Integration of modern appliances and fixtures.', icon: 'lightbulb-on-outline' },
+    { title: 'Layout Optimization', desc: 'Improving workflow and space.', icon: 'arrow-expand-all', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Cabinetry', desc: 'Custom smart storage solutions.', icon: 'cupboard', color: '#795548', bg: '#EFEBE9' },
+    { title: 'Countertops', desc: 'Granite, quartz, and marble.', icon: 'texture-box', color: '#607D8B', bg: '#ECEFF1' },
+    { title: 'Appliances', desc: 'Integration of modern fixtures.', icon: 'lightbulb-on-outline', color: '#2196F3', bg: '#E3F2FD' },
   ];
 
   return (
@@ -1575,29 +1779,85 @@ function KitchenRemodelScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Kitchen Remodel" subtitle="The Heart of Your Home." navigation={navigation} showBack={true} />
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="chef-hat" size={80} color="#0047AB" />
+
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#FF9800',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#FF9800',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="chef-hat" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Culinary Masterpiece</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              Transform your kitchen into a modern, functional, and stylish space perfect for cooking and gathering.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Culinary Masterpiece</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Transform your kitchen into a modern, functional, and stylish space perfect for cooking and gathering.</Text>
         </View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>What We Offer</Text>
-          {steps.map((step, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+
+        {/* Steps Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>What We Offer</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {steps.map((step, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
+              }}>
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: step.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{step.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{step.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Plan My Kitchen</Text>
+
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Plan My Kitchen</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -1606,10 +1866,10 @@ function KitchenRemodelScreen({ navigation }) {
 
 function BathroomUpgradeScreen({ navigation }) {
   const steps = [
-    { title: 'Luxury Fixtures', desc: 'Rain showers, soaking tubs, and modern faucets.', icon: 'water-pump' },
-    { title: 'Tile & Flooring', desc: 'Water-resistant, stylish tiling options.', icon: 'checkerboard' },
-    { title: 'Vanity & Storage', desc: 'Elegant vanities with ample space.', icon: 'dresser' },
-    { title: 'Lighting & Ventilation', desc: 'Mood lighting and proper air circulation.', icon: 'fan' },
+    { title: 'Luxury Fixtures', desc: 'Rain showers & modern faucets.', icon: 'water-pump', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Tile & Flooring', desc: 'Water-resistant stylish options.', icon: 'checkerboard', color: '#00BCD4', bg: '#E0F7FA' },
+    { title: 'Vanity & Storage', desc: 'Elegant vanities with space.', icon: 'dresser', color: '#9C27B0', bg: '#F3E5F5' },
+    { title: 'Ventilation', desc: 'Mood lighting & air circulation.', icon: 'fan', color: '#4CAF50', bg: '#E8F5E9' },
   ];
 
   return (
@@ -1617,29 +1877,85 @@ function BathroomUpgradeScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Bathroom Upgrade" subtitle="Your Personal Spa." navigation={navigation} showBack={true} />
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="shower-head" size={80} color="#0047AB" />
+
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#00BCD4',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#00BCD4',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="shower-head" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Refresh & Relax</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              Upgrade your bathroom into a serene retreat with modern amenities and luxurious finishes.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Refresh & Relax</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Upgrade your bathroom into a serene retreat with modern amenities and luxurious finishes.</Text>
         </View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Features</Text>
-          {steps.map((step, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+
+        {/* Features Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Features</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {steps.map((step, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
+              }}>
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: step.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{step.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{step.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Upgrade Bathroom</Text>
+
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Upgrade Bathroom</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -1648,10 +1964,10 @@ function BathroomUpgradeScreen({ navigation }) {
 
 function FlooringMakeoverScreen({ navigation }) {
   const steps = [
-    { title: 'Hardwood', desc: 'Timeless elegance and durability.', icon: 'tree' },
-    { title: 'Ceramic Tile', desc: 'Versatile and easy to maintain.', icon: 'grid' },
-    { title: 'Luxury Vinyl', desc: 'Waterproof and cost-effective.', icon: 'layers' },
-    { title: 'Carpet', desc: 'Soft comfort for bedrooms and living areas.', icon: 'rug' },
+    { title: 'Hardwood', desc: 'Timeless elegance & durability.', icon: 'tree', color: '#795548', bg: '#EFEBE9' },
+    { title: 'Ceramic Tile', desc: 'Versatile and easy to maintain.', icon: 'grid', color: '#607D8B', bg: '#ECEFF1' },
+    { title: 'Luxury Vinyl', desc: 'Waterproof and cost-effective.', icon: 'layers', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Carpet', desc: 'Soft comfort for living areas.', icon: 'rug', color: '#9C27B0', bg: '#F3E5F5' },
   ];
 
   return (
@@ -1659,29 +1975,85 @@ function FlooringMakeoverScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Flooring" subtitle="Foundation of Style." navigation={navigation} showBack={true} />
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="floor-plan" size={80} color="#0047AB" />
+
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#795548',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#795548',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="floor-plan" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Step into Luxury</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              Choose from a wide range of premium flooring options to elevate the look and feel of your home.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Step into Luxury</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Choose from a wide range of premium flooring options to elevate the look and feel of your home.</Text>
         </View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Options</Text>
-          {steps.map((step, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+
+        {/* Options Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Options</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {steps.map((step, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
+              }}>
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: step.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{step.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{step.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Get Flooring Quote</Text>
+
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Get Flooring Quote</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -1690,10 +2062,10 @@ function FlooringMakeoverScreen({ navigation }) {
 
 function FullHomeMakeoverScreen({ navigation }) {
   const steps = [
-    { title: 'Concept Design', desc: 'Holistic vision for your entire home.', icon: 'lightbulb-on' },
-    { title: 'Structural Changes', desc: 'Wall removal and room reconfiguration.', icon: 'wall' },
-    { title: 'Systems Update', desc: 'Plumbing, electrical, and HVAC upgrades.', icon: 'lightning-bolt' },
-    { title: 'Finishing Touches', desc: 'Paint, trim, and decor styling.', icon: 'palette' },
+    { title: 'Concept Design', desc: 'Holistic vision for entire home.', icon: 'lightbulb-on-outline', color: '#FFB300', bg: '#FFF8E1' },
+    { title: 'Structure', desc: 'Wall removal & reconfiguration.', icon: 'wall', color: '#D32F2F', bg: '#FFEBEE' },
+    { title: 'Systems Update', desc: 'Plumbing, electric & HVAC.', icon: 'lightning-bolt-outline', color: '#1976D2', bg: '#E3F2FD' },
+    { title: 'Finishing', desc: 'Paint, trim, and decor styling.', icon: 'palette-outline', color: '#9C27B0', bg: '#F3E5F5' },
   ];
 
   return (
@@ -1701,29 +2073,85 @@ function FullHomeMakeoverScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Full Home Makeover" subtitle="Complete Transformation." navigation={navigation} showBack={true} />
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="home-modern" size={80} color="#0047AB" />
+
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#4CAF50',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#4CAF50',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="home-modern" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Reimagine Your Home</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              A comprehensive renovation service to completely transform your living space into your dream home.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Reimagine Your Home</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>A comprehensive renovation service to completely transform your living space into your dream home.</Text>
         </View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Our Approach</Text>
-          {steps.map((step, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+
+        {/* Approach Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Our Approach</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {steps.map((step, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
+              }}>
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: step.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{step.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{step.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Start Makeover</Text>
+
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Makeover</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -1732,10 +2160,10 @@ function FullHomeMakeoverScreen({ navigation }) {
 
 function HomePaintingScreen({ navigation }) {
   const steps = [
-    { title: 'Color Consultation', desc: 'Expert advice on color palettes.', icon: 'palette-swatch' },
-    { title: 'Surface Prep', desc: 'Sanding, priming, and repairing imperfections.', icon: 'format-paint' },
-    { title: 'Interior Painting', desc: 'Walls, ceilings, and trim.', icon: 'roller-skate' },
-    { title: 'Exterior Painting', desc: 'Durable finishes for curb appeal.', icon: 'home-roof' },
+    { title: 'Color Consultation', desc: 'Expert advice on palettes.', icon: 'palette-swatch-outline', color: '#E91E63', bg: '#FCE4EC' },
+    { title: 'Surface Prep', desc: 'Repairing imperfections.', icon: 'format-paint', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Interior Painting', desc: 'Walls, ceilings, and trim.', icon: 'roller-skate', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Exterior Painting', desc: 'Durable finishes for appeal.', icon: 'home-roof', color: '#4CAF50', bg: '#E8F5E9' },
   ];
 
   return (
@@ -1743,29 +2171,85 @@ function HomePaintingScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Home Painting" subtitle="A Fresh Coat of Life." navigation={navigation} showBack={true} />
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="format-paint" size={80} color="#0047AB" />
+
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#EC407A',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#EC407A',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="format-paint" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Vibrant Spaces</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              Professional interior and exterior painting services to refresh your home and protect your investment.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Vibrant Spaces</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Professional interior and exterior painting services to refresh your home and protect your investment.</Text>
         </View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Services</Text>
-          {steps.map((step, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
+
+        {/* Services Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Services</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {steps.map((step, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
+              }}>
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: step.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{step.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{step.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{step.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{step.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Get Painting Quote</Text>
+
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Get Painting Quote</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -1775,16 +2259,16 @@ function HomePaintingScreen({ navigation }) {
 // --- ServiceScreen Component ---
 function ServiceScreen({ navigation }) {
   const serviceOptions = [
-    { title: 'Plumbing', icon: 'water-pump', details: 'Leak repairs, installations, and maintenance.', route: 'Plumbing' },
-    { title: 'Electrical', icon: 'flash', details: 'Wiring, lighting, and safety inspections.', route: 'Electrical' },
-    { title: 'HVAC', icon: 'air-conditioner', details: 'Heating, ventilation, and air conditioning.', route: 'HVAC' },
-    { title: 'General Repairs', icon: 'hammer-wrench', details: 'Fixing the small things before they grow.', route: 'GeneralRepairs' },
+    { title: 'Plumbing', icon: 'water-pump', details: 'Leak repairs, installs, & maintenance.', route: 'Plumbing', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Electrical', icon: 'flash', details: 'Wiring, lighting, & safety checks.', route: 'Electrical', color: '#FFB300', bg: '#FFF8E1' },
+    { title: 'HVAC', icon: 'air-conditioner', details: 'Heating, ventilation, & air systems.', route: 'HVAC', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'General Repairs', icon: 'hammer-wrench', details: 'Small fixes before they grow.', route: 'GeneralRepairs', color: '#E91E63', bg: '#FCE4EC' },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <CustomHeader
           title="Maintenance"
           subtitle="Reliable repairs when you need them."
@@ -1792,18 +2276,68 @@ function ServiceScreen({ navigation }) {
           showBack={true}
         />
 
-        <View style={styles.gridContainer}>
-          {serviceOptions.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.gridCard}
-              onPress={() => item.route && navigation.navigate(item.route)}
-            >
-              <MaterialCommunityIcons name={item.icon} size={32} color="#000" />
-              <Text style={styles.gridTitle}>{item.title}</Text>
-              <Text style={styles.gridDetails}>{item.details}</Text>
-            </TouchableOpacity>
-          ))}
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#075E54', // Deep green for reliability/maintenance
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#075E54',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="tools" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Service & Care</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              Your home deserves the best care. From sudden leaks to scheduled safety checks, our experts are just a tap away.
+            </Text>
+          </View>
+        </View>
+
+        {/* Categories Section as Stylish Square Cards */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Maintenance Services</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {serviceOptions.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                activeOpacity={0.8}
+                onPress={() => item.route && navigation.navigate(item.route)}
+                style={{
+                  width: '47.5%',
+                  backgroundColor: '#FFF',
+                  padding: 20,
+                  borderRadius: 24,
+                  alignItems: 'center',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 8 },
+                  shadowOpacity: 0.06,
+                  shadowRadius: 16,
+                  elevation: 6,
+                  borderWidth: 1,
+                  borderColor: '#F0F2F5',
+                  marginBottom: 16,
+                }}
+              >
+                <View style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 20,
+                  backgroundColor: item.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={item.icon} size={32} color={item.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', marginBottom: 8, letterSpacing: -0.2 }}>{item.title}</Text>
+                <Text style={{ fontSize: 12, color: '#666', lineHeight: 16, fontWeight: '500', textAlign: 'center' }}>{item.details}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -1814,10 +2348,10 @@ function ServiceScreen({ navigation }) {
 
 function PlumbingScreen({ navigation }) {
   const services = [
-    { title: 'Leak Detection', desc: 'Finding and fixing hidden leaks.', icon: 'water-off' },
-    { title: 'Pipe Repair', desc: 'Replace old or burst pipes.', icon: 'pipe' },
-    { title: 'Fixture Install', desc: 'Faucets, sinks, and toilets.', icon: 'toilet' },
-    { title: 'Drain Cleaning', desc: 'Unclogging drains efficiently.', icon: 'water-remove' },
+    { title: 'Leak Detection', desc: 'Finding hidden leaks.', icon: 'water-off-outline', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Pipe Repair', desc: 'Replace old or burst pipes.', icon: 'pipe', color: '#1E88E5', bg: '#E0E3FF' },
+    { title: 'Fixture Install', desc: 'Faucets, sinks, and toilets.', icon: 'toilet', color: '#0288D1', bg: '#E1F5FE' },
+    { title: 'Drain Clean', desc: 'Unclogging drains fast.', icon: 'water-remove-outline', color: '#0277BD', bg: '#E1F5FE' },
   ];
 
   return (
@@ -1825,29 +2359,85 @@ function PlumbingScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Plumbing Services" subtitle="Expert Flow Control." navigation={navigation} showBack={true} />
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="water-pump" size={80} color="#0047AB" />
+
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#2196F3',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#2196F3',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="water-pump" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Reliable Plumbing</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              From emergency repairs to scheduled maintenance, our plumbers ensure your water systems run smoothly.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Reliable Plumbing</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>From emergency repairs to scheduled maintenance, our plumbers ensure your water systems run smoothly.</Text>
         </View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Services</Text>
-          {services.map((item, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
+
+        {/* Steps Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Our Services</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {services.map((item, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
+              }}>
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: item.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{item.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{item.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{item.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{item.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Call a Plumber</Text>
+
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Call a Plumber</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -1856,10 +2446,10 @@ function PlumbingScreen({ navigation }) {
 
 function ElectricalScreen({ navigation }) {
   const services = [
-    { title: 'Wiring & Rewiring', desc: 'Safe electrical infrastructure.', icon: 'power-plug' },
-    { title: 'Lighting Install', desc: 'Smart, LED, and ambient lighting.', icon: 'ceiling-light' },
-    { title: 'Panel Upgrades', desc: 'Modernize your circuit breakers.', icon: 'flash-alert' },
-    { title: 'Safety Inspections', desc: 'Compliance and hazard checks.', icon: 'shield-check' },
+    { title: 'Wiring & Rewiring', desc: 'Safe legal infrastructure.', icon: 'power-plug', color: '#FFB300', bg: '#FFF8E1' },
+    { title: 'Lighting Install', desc: 'Smart, LED, and ambient.', icon: 'ceiling-light', color: '#FBC02D', bg: '#FFFDE7' },
+    { title: 'Panel Upgrades', desc: 'Modernize circuit breakers.', icon: 'flash-alert-outline', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Safety Checks', desc: 'Compliance & hazard checks.', icon: 'shield-check-outline', color: '#4CAF50', bg: '#E8F5E9' },
   ];
 
   return (
@@ -1867,29 +2457,85 @@ function ElectricalScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Electrical Services" subtitle="Powering Your Life." navigation={navigation} showBack={true} />
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="flash" size={80} color="#0047AB" />
+
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#FFB300',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#FFB300',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="flash-outline" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Expert Electricians</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              Certified electricians for all your residential and commercial electrical needs. Safety and precision guaranteed.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Expert Electricians</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Certified electricians for all your residential and commercial electrical needs. Safety first.</Text>
         </View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>What We Do</Text>
-          {services.map((item, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
+
+        {/* Steps Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>What We Do</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {services.map((item, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
+              }}>
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: item.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{item.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{item.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{item.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{item.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Book Electrician</Text>
+
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Book Electrician</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -1898,10 +2544,10 @@ function ElectricalScreen({ navigation }) {
 
 function HVACScreen({ navigation }) {
   const services = [
-    { title: 'AC Installation', desc: 'Split, window, and central AC systems.', icon: 'air-conditioner' },
-    { title: 'Heater Repair', desc: 'Furnace and heater maintenance.', icon: 'fire' },
-    { title: 'Duct Cleaning', desc: 'Improving air quality.', icon: 'weather-windy' },
-    { title: 'Thermostat Setup', desc: 'Smart climate control.', icon: 'thermometer' },
+    { title: 'AC Installation', desc: 'Split, window, & central AC.', icon: 'air-conditioner', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Heater Repair', desc: 'Furnace and heater maintenance.', icon: 'fire-circle', color: '#FF5722', bg: '#FBE9E7' },
+    { title: 'Duct Cleaning', desc: 'Improving indoor air quality.', icon: 'weather-windy', color: '#03A9F4', bg: '#E1F5FE' },
+    { title: 'Smart Setup', desc: 'Smart climate control solutions.', icon: 'thermometer-lines', color: '#673AB7', bg: '#EDE7F6' },
   ];
 
   return (
@@ -1909,29 +2555,85 @@ function HVACScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="HVAC Services" subtitle="Comfort in All Seasons." navigation={navigation} showBack={true} />
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="air-conditioner" size={80} color="#0047AB" />
+
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#4CAF50',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#4CAF50',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="air-conditioner" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Climate Control</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              Keep your home cool in summer and warm in winter with our professional HVAC installation and services.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Climate Control</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Keep your home cool in summer and warm in winter with our professional HVAC services.</Text>
         </View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Services</Text>
-          {services.map((item, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
+
+        {/* Services Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Services</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {services.map((item, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
+              }}>
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: item.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{item.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{item.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{item.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{item.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Schedule Service</Text>
+
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Schedule Service</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -1940,10 +2642,10 @@ function HVACScreen({ navigation }) {
 
 function GeneralRepairsScreen({ navigation }) {
   const services = [
-    { title: 'Handyman Services', desc: 'Furniture assembly, mounting, etc.', icon: 'account-hard-hat' },
-    { title: 'Drywall Repair', desc: 'Patching holes and cracks.', icon: 'wall' },
-    { title: 'Door & Window', desc: 'Fixing jams, locks, and hinges.', icon: 'door' },
-    { title: 'Painting Touch-ups', desc: 'Small area repainting.', icon: 'format-paint' },
+    { title: 'Handyman', desc: 'Furniture, mounting, & more.', icon: 'account-hard-hat-outline', color: '#E91E63', bg: '#FCE4EC' },
+    { title: 'Drywall Repair', desc: 'Patching holes and cracks.', icon: 'wall', color: '#795548', bg: '#EFEBE9' },
+    { title: 'Door & Window', desc: 'Fixing jams, locks, & hinges.', icon: 'door-open', color: '#1976D2', bg: '#E3F2FD' },
+    { title: 'Touch-ups', desc: 'Small area professional painting.', icon: 'format-paint', color: '#9C27B0', bg: '#F3E5F5' },
   ];
 
   return (
@@ -1951,29 +2653,85 @@ function GeneralRepairsScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="General Repairs" subtitle="Small Fixes, Big Impact." navigation={navigation} showBack={true} />
-        <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <MaterialCommunityIcons name="hammer-wrench" size={80} color="#0047AB" />
+
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#E91E63',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#E91E63',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="hammer-wrench" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Home Maintenance</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              Don't let small problems become big headaches. Our general repair services cover all the odd jobs around your house.
+            </Text>
           </View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Home Maintenance</Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center', lineHeight: 24 }}>Don't let small problems become big headaches. Our general repair services cover all the odd jobs around your house.</Text>
         </View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>What We Fix</Text>
-          {services.map((item, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
-                <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
+
+        {/* What We Fix Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>What We Fix</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {services.map((item, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
+              }}>
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: item.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginBottom: 8, letterSpacing: -0.2 }}>{item.title}</Text>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{item.desc}</Text>
               </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 4 }}>{item.title}</Text>
-                <Text style={{ fontSize: 14, color: '#666' }}>{item.desc}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
-          <Text style={styles.ctaText}>Request Handyman</Text>
+
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ContactUs')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Request Handyman</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -3209,6 +3967,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
+    paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight || 24 : 0,
   },
   scrollContent: {
     paddingBottom: 200,
