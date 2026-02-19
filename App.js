@@ -133,8 +133,8 @@ function HomeScreen({ navigation }) {
             <Text style={{ fontSize: 36, fontWeight: '900', color: '#FFF', letterSpacing: -1 }}>mine</Text>
             <Text style={{ fontSize: 18, fontWeight: '600', color: '#FFF', marginTop: -8 }}>By MAHTO</Text>
           </View>
-          <View style={{ paddingHorizontal: 20, marginBottom: 4, alignItems: 'center', height: 40 }}>
-            <Text style={{ fontSize: 32, fontWeight: '800', color: '#FFF' }}>{displayText}</Text>
+          <View style={{ paddingHorizontal: 20, marginBottom: 4, alignItems: 'center', height: 30 }}>
+            <Text style={{ fontSize: 20, fontWeight: '800', color: '#FFF' }}>{displayText}</Text>
           </View>
         </ImageBackground>
 
