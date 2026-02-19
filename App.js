@@ -2371,6 +2371,18 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#FFF',
   },
+  addressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  locationButton: {
+    backgroundColor: '#000',
+    width: 56,
+    height: 56,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   // CTA Buttons
   ctaButton: {
     marginHorizontal: 20,
