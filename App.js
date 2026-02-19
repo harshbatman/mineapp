@@ -302,8 +302,8 @@ function HomeScreen({ navigation }) {
           <View style={{ position: 'absolute', left: -20, bottom: -30, opacity: 0.12, transform: [{ rotate: '15deg' }] }}>
             <MaterialCommunityIcons name="hard-hat" size={160} color="#FFF" />
           </View>
-          <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: 'rgba(255,179,0,0.15)', justifyContent: 'center', alignItems: 'center', marginLeft: 16 }}>
-            <MaterialCommunityIcons name="shield-check" size={32} color="#FFB300" />
+          <View style={{ width: 80, height: 80, borderRadius: 20, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', marginLeft: 16, overflow: 'hidden' }}>
+            <Image source={require('./assets/construction.png')} style={{ width: 74, height: 74 }} resizeMode="contain" />
           </View>
         </TouchableOpacity>
 
