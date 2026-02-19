@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert, Modal, ImageBackground, Platform, ActivityIndicator, BackHandler, Animated, Dimensions, SafeAreaView, Switch, Linking } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image, TextInput, ActivityIndicator, Alert, Switch, Linking, Modal, ImageBackground, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -15,6 +15,26 @@ import { storage } from './firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const LanguageContext = React.createContext();
+const ScrollContext = React.createContext();
+
+const ScrollProvider = ({ children }) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const onScroll = (event) => {
+    const offset = event.nativeEvent.contentOffset.y;
+    if (offset > 100 && !isCollapsed) {
+      setIsCollapsed(true);
+    } else if (offset < 50 && isCollapsed) {
+      setIsCollapsed(false);
+    }
+  };
+
+  return (
+    <ScrollContext.Provider value={{ isCollapsed, setIsCollapsed, onScroll }}>
+      {children}
+    </ScrollContext.Provider>
+  );
+};
 
 const LanguageProvider = ({ children }) => {
   const [locale, setLocale] = useState('en');
@@ -117,6 +137,7 @@ function CustomHeader({ title, subtitle, navigation, showBack = false }) {
 function HomeScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
   const { userData } = React.useContext(UserContext);
+  const { onScroll } = React.useContext(ScrollContext);
 
   const fullText = "Build Your Dream Home For Your Family";
   const [displayText, setDisplayText] = useState('');
@@ -143,7 +164,12 @@ function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF' }}>
       <StatusBar style="light" translucent backgroundColor="transparent" />
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+      >
 
         <ImageBackground
           source={require('./assets/this.jpg')}
@@ -252,7 +278,7 @@ function HomeScreen({ navigation }) {
           </View>
         </View>
 
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 }
@@ -263,6 +289,8 @@ function ProfileScreen({ navigation }) {
   const { userData, logout } = React.useContext(UserContext);
   const [logoutVisible, setLogoutVisible] = useState(false);
 
+  const { onScroll } = React.useContext(ScrollContext);
+
   const menuItems = [
     { title: 'Edit Profile', icon: 'account-edit-outline', onPress: () => navigation.navigate('EditProfile') },
     { title: 'Settings', icon: 'cog-outline', onPress: () => navigation.navigate('Settings') },
@@ -271,7 +299,12 @@ function ProfileScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+      >
         <View style={{ paddingTop: 60, paddingHorizontal: 20, alignItems: 'center' }}>
           {/* Profile Photo Centered */}
           <View style={{ marginBottom: 16 }}>
@@ -320,7 +353,7 @@ function ProfileScreen({ navigation }) {
             <Text style={{ flex: 1, fontSize: 16, fontWeight: '700', color: '#FF3B30' }}>Sign Out</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
 
       {/* Logout Confirmation Modal */}
       <Modal
@@ -2334,6 +2367,7 @@ function AboutUsScreen({ navigation }) {
 // --- SavedPropertiesScreen Component ---
 function SavedPropertiesScreen({ navigation }) {
   const { userData } = React.useContext(UserContext);
+  const { onScroll } = React.useContext(ScrollContext);
   const savedItems = [
     { id: 1, title: 'Luxury Villa', location: 'South Delhi', price: '₹5.5 Cr', icon: 'home-modern' },
     { id: 2, title: 'Modern Office', location: 'Gurugram', price: '₹2.1 Cr', icon: 'office-building' },
@@ -2342,7 +2376,11 @@ function SavedPropertiesScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <Animated.ScrollView
+        contentContainerStyle={styles.scrollContent}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+      >
         <CustomHeader title="Saved Items" subtitle={`${userData.savedCount} items you loved`} navigation={navigation} showBack={true} />
         <View style={{ paddingHorizontal: 20 }}>
           {savedItems.map(item => (
@@ -2361,7 +2399,7 @@ function SavedPropertiesScreen({ navigation }) {
             <Text style={{ textAlign: 'center', color: '#666', marginTop: 20 }}>+ {userData.savedCount - 2} more items</Text>
           )}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
     </SafeAreaView>
   );
 }
@@ -2927,6 +2965,7 @@ function RegisterScreen({ navigation }) {
 }
 
 function ActivityScreen({ navigation }) {
+  const { onScroll } = React.useContext(ScrollContext);
   const activities = [
     { id: 1, title: 'Consultation', status: 'Completed', date: 'May 05', icon: 'check-circle' },
   ];
@@ -2934,7 +2973,11 @@ function ActivityScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <Animated.ScrollView
+        contentContainerStyle={styles.scrollContent}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+      >
         <CustomHeader title="Activity" subtitle="Track your projects" navigation={navigation} showBack={false} />
         <View style={{ paddingHorizontal: 20 }}>
           <Text style={[styles.uberSectionTitle, { marginTop: 10 }]}>Past Projects</Text>
@@ -2951,20 +2994,111 @@ function ActivityScreen({ navigation }) {
             </TouchableOpacity>
           ))}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
     </SafeAreaView>
   );
 }
 
 
+const CustomTabBar = ({ state, descriptors, navigation }) => {
+  const { isCollapsed, setIsCollapsed } = React.useContext(ScrollContext);
+  const animation = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    Animated.spring(animation, {
+      toValue: isCollapsed ? 1 : 0,
+      useNativeDriver: false,
+      friction: 8,
+      tension: 40
+    }).start();
+  }, [isCollapsed]);
+
+  const { width: screenWidth } = Dimensions.get('window');
+  const barWidth = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [screenWidth * 0.8, 60]
+  });
+
+  return (
+    <View style={{
+      position: 'absolute',
+      bottom: 40,
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+      <Animated.View style={{
+        flexDirection: 'row',
+        backgroundColor: '#000',
+        height: 60,
+        width: barWidth,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: isCollapsed ? 'center' : 'space-around',
+        elevation: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+        overflow: 'hidden',
+        alignSelf: isCollapsed ? 'flex-start' : 'center',
+        marginLeft: isCollapsed ? 30 : 0,
+      }}>
+        {state.routes.map((route, index) => {
+          const isFocused = state.index === index;
+          const { options } = descriptors[route.key];
+
+          const onPress = () => {
+            if (isCollapsed) {
+              setIsCollapsed(false);
+            } else {
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
+              });
+              if (!isFocused && !event.defaultPrevented) {
+                navigation.navigate(route.name);
+              }
+            }
+          };
+
+          const iconName = route.name === 'Home' ? 'home-variant' :
+            route.name === 'Activity' ? 'clock-outline' :
+              route.name === 'Saved' ? 'heart-outline' : 'account-outline';
+
+          if (isCollapsed && !isFocused) return null;
+
+          return (
+            <TouchableOpacity
+              key={route.key}
+              onPress={onPress}
+              style={{ flex: isCollapsed ? 0 : 1, alignItems: 'center', justifyContent: 'center' }}
+            >
+              <MaterialCommunityIcons
+                name={iconName}
+                size={24}
+                color={isFocused ? '#FFF' : '#888'}
+              />
+              {!isCollapsed && isFocused && (
+                <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#FFF', marginTop: 4 }} />
+              )}
+            </TouchableOpacity>
+          );
+        })}
+      </Animated.View>
+    </View>
+  );
+};
+
 function MainTabs({ navigation }) {
   const { t } = React.useContext(LanguageContext);
 
-  // Exit app on hardware back press when on main tabs (do not go back to Login)
   useEffect(() => {
     const onBackPress = () => {
       BackHandler.exitApp();
-      return true; // prevent default back behaviour
+      return true;
     };
     const sub = BackHandler.addEventListener('hardwareBackPress', onBackPress);
     return () => sub.remove();
@@ -2972,37 +3106,8 @@ function MainTabs({ navigation }) {
 
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          backgroundColor: '#FFF',
-          height: 56,
-          marginBottom: 40,
-          marginHorizontal: 30,
-          borderRadius: 28,
-          borderTopWidth: 0,
-          elevation: 10,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 5 },
-          shadowOpacity: 0.1,
-          shadowRadius: 10,
-        },
-        tabBarActiveTintColor: '#000',
-        tabBarInactiveTintColor: '#AAA',
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '500',
-        },
-        tabBarIcon: ({ color, size }) => {
-          let iconName;
-          if (route.name === 'Home') iconName = 'home-variant';
-          else if (route.name === 'Activity') iconName = 'clock-outline';
-          else if (route.name === 'Saved') iconName = 'heart-outline';
-          else if (route.name === 'Profile') iconName = 'account-outline';
-          return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
-        },
-      })}
+      tabBar={props => <CustomTabBar {...props} />}
+      screenOptions={{ headerShown: false }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Activity" component={ActivityScreen} />
@@ -3090,9 +3195,11 @@ export default function App() {
   return (
     <LanguageProvider>
       <UserProvider>
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
+        <ScrollProvider>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </ScrollProvider>
       </UserProvider>
     </LanguageProvider>
   );
