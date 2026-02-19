@@ -250,33 +250,6 @@ function ProfileScreen({ navigation }) {
             />
           </View>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 32, backgroundColor: '#F9F9F9', paddingVertical: 16, borderRadius: 16 }}>
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: 20, fontWeight: '700', color: '#000' }}>{userData.listingsCount}</Text>
-              <Text style={{ fontSize: 13, color: '#666', marginTop: 4 }}>Listings</Text>
-            </View>
-            <View style={{ width: 1, height: '100%', backgroundColor: '#EEE' }} />
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: 20, fontWeight: '700', color: '#000' }}>{userData.savedCount}</Text>
-              <Text style={{ fontSize: 13, color: '#666', marginTop: 4 }}>Saved</Text>
-            </View>
-          </View>
-
-          <View style={{ flexDirection: 'row', gap: 12, marginBottom: 32 }}>
-            <TouchableOpacity style={{ flex: 1, backgroundColor: '#F3F3F3', borderRadius: 12, padding: 16, alignItems: 'center' }}>
-              <MaterialCommunityIcons name="help-circle" size={28} color="#000" />
-              <Text style={{ marginTop: 8, fontWeight: '700', fontSize: 13 }}>Help</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flex: 1, backgroundColor: '#F3F3F3', borderRadius: 12, padding: 16, alignItems: 'center' }}>
-              <MaterialCommunityIcons name="wallet" size={28} color="#000" />
-              <Text style={{ marginTop: 8, fontWeight: '700', fontSize: 13 }}>Payment</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flex: 1, backgroundColor: '#F3F3F3', borderRadius: 12, padding: 16, alignItems: 'center' }}>
-              <MaterialCommunityIcons name="clock" size={28} color="#000" />
-              <Text style={{ marginTop: 8, fontWeight: '700', fontSize: 13 }}>Activity</Text>
-            </TouchableOpacity>
-          </View>
-
           <View style={{ borderTopWidth: 1, borderTopColor: '#EEE' }}>
             {menuItems.map((item, index) => (
               <TouchableOpacity
