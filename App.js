@@ -389,18 +389,20 @@ function EditProfileScreen({ navigation }) {
         />
 
         <View style={styles.profileHeaderContainer}>
-          <TouchableOpacity style={styles.profileImageContainer} onPress={pickImage} activeOpacity={0.8}>
-            {profileImage ? (
-              <Image source={{ uri: profileImage }} style={styles.profileImage} />
-            ) : (
-              <View style={[styles.profileImage, { justifyContent: 'center', alignItems: 'center', backgroundColor: '#E3F2FD' }]}>
-                <MaterialCommunityIcons name="account" size={80} color="#0047AB" />
-              </View>
-            )}
-            <View style={styles.editIconBadge}>
-              <MaterialCommunityIcons name="camera" size={20} color="#FFF" />
+          <View style={styles.profileImageContainer}>
+            <View style={styles.profileImageWrapper}>
+              {profileImage ? (
+                <Image source={{ uri: profileImage }} style={styles.profileImage} />
+              ) : (
+                <View style={[styles.profileImage, { justifyContent: 'center', alignItems: 'center', backgroundColor: '#E3F2FD' }]}>
+                  <MaterialCommunityIcons name="account" size={80} color="#0047AB" />
+                </View>
+              )}
             </View>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.editIconBadge} onPress={pickImage} activeOpacity={0.8}>
+              <MaterialCommunityIcons name="camera" size={22} color="#FFF" />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.formContainer}>
@@ -2382,6 +2384,53 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: '#FFF',
+  },
+  // Profile Header Styles
+  profileHeaderContainer: {
+    alignItems: 'center',
+    marginVertical: 40,
+  },
+  profileImageContainer: {
+    position: 'relative',
+    width: 140,
+    height: 140,
+  },
+  profileImageWrapper: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    borderWidth: 4,
+    borderColor: '#FFF',
+    backgroundColor: '#F3F3F3',
+    overflow: 'hidden',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+  },
+  profileImage: {
+    width: '100%',
+    height: '100%',
+  },
+  editIconBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#000',
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#FFF',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    zIndex: 10,
   },
   // Utilities
   divider: {
