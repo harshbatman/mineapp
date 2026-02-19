@@ -73,7 +73,7 @@ function HomeScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
   const { userData } = React.useContext(UserContext);
 
-  const fullText = "Build Your Dream Home";
+  const fullText = "Build Your Dream Home For Your Family";
   const [displayText, setDisplayText] = useState('');
 
   useEffect(() => {
