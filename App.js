@@ -152,7 +152,7 @@ function HomeScreen({ navigation }) {
               onPress={() => navigation.navigate(service.id)}
             >
               <View style={[styles.uberServiceIconBg, { width: 60, height: 60, justifyContent: 'center', alignItems: 'center' }]}>
-                <Image source={service.image} style={{ width: 56, height: 56 }} resizeMode="contain" />
+                <Image source={service.image} style={{ width: 45, height: 45 }} resizeMode="contain" />
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
                 <Text style={styles.uberServiceTitle}>{service.title}</Text>
@@ -162,20 +162,6 @@ function HomeScreen({ navigation }) {
               </View>
             </TouchableOpacity>
           ))}
-        </View>
-
-        <View style={styles.uberPromoCard}>
-          <View style={styles.uberPromoTextContainer}>
-            <Text style={styles.uberPromoTitle}>Full-Stack Construction</Text>
-            <Text style={styles.uberPromoDesc}>End-to-end service managed by MAHTO experts.</Text>
-            <TouchableOpacity style={styles.uberPromoBtn} onPress={() => navigation.navigate('AboutUs')}>
-              <Text style={styles.uberPromoBtnText}>How it works</Text>
-              <MaterialCommunityIcons name="arrow-right" size={18} color="#FFF" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.uberPromoIcon}>
-            <MaterialCommunityIcons name="shield-check" size={60} color="#000" opacity={0.1} />
-          </View>
         </View>
 
         <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
@@ -196,7 +182,7 @@ function HomeScreen({ navigation }) {
               </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialCommunityIcons name="currency-usd" size={24} color="#000" style={{ marginRight: 12 }} />
+              <MaterialCommunityIcons name="currency-inr" size={24} color="#000" style={{ marginRight: 12 }} />
               <View>
                 <Text style={{ fontWeight: '700', fontSize: 16 }}>Factory Pricing</Text>
                 <Text style={{ color: '#666', fontSize: 13 }}>Materials sourced directly for maximum value.</Text>
@@ -217,6 +203,20 @@ function HomeScreen({ navigation }) {
             </View>
             <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
           </TouchableOpacity>
+        </View>
+
+        <View style={styles.uberPromoCard}>
+          <View style={styles.uberPromoTextContainer}>
+            <Text style={styles.uberPromoTitle}>Full-Stack Construction</Text>
+            <Text style={styles.uberPromoDesc}>End-to-end service managed by MAHTO experts.</Text>
+            <TouchableOpacity style={styles.uberPromoBtn} onPress={() => navigation.navigate('AboutUs')}>
+              <Text style={styles.uberPromoBtnText}>How it works</Text>
+              <MaterialCommunityIcons name="arrow-right" size={18} color="#FFF" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.uberPromoIcon}>
+            <MaterialCommunityIcons name="shield-check" size={60} color="#000" opacity={0.1} />
+          </View>
         </View>
 
       </ScrollView>
@@ -1400,7 +1400,7 @@ function ConstructionScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <CustomHeader
           title="Construction"
           subtitle="Building your dreams with precision."
@@ -1439,7 +1439,7 @@ function RenovationScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <CustomHeader
           title="Renovation"
           subtitle="Revitalize your improved space."
@@ -2304,6 +2304,200 @@ function SavedPropertiesScreen({ navigation }) {
 }
 
 // --- ActivityScreen Component ---
+// --- LoginScreen Component ---
+function LoginScreen({ navigation }) {
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = () => {
+    if (!phone || !password) {
+      Alert.alert("Error", "Please enter both phone and password.");
+      return;
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigation.replace('Root');
+    }, 1500);
+  };
+
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: '#FFF' }]}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 25, justifyContent: 'center' }}>
+        <View style={{ marginBottom: 40, alignItems: 'center' }}>
+          <Text style={{ fontSize: 42, fontWeight: '950', color: '#000', letterSpacing: -2 }}>mine</Text>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: '#666', marginTop: -5, textTransform: 'uppercase', letterSpacing: 2 }}>By MAHTO</Text>
+        </View>
+
+        <View style={{ marginBottom: 30 }}>
+          <Text style={{ fontSize: 28, fontWeight: '800', color: '#000' }}>Welcome back</Text>
+          <Text style={{ fontSize: 16, color: '#AAA', marginTop: 8, fontWeight: '500' }}>Sign in to continue your journey.</Text>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Phone Number</Text>
+          <View style={[styles.inputWrapper, { backgroundColor: '#F8F9FA', borderRadius: 16, borderWidth: 1, borderColor: '#EEE' }]}>
+            <MaterialCommunityIcons name="phone-outline" size={22} color="#000" style={{ marginRight: 12 }} />
+            <TextInput
+              style={styles.input}
+              placeholder="e.g. 9876543210"
+              placeholderTextColor="#AAA"
+              value={phone}
+              onChangeText={setPhone}
+              keyboardType="phone-pad"
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Password</Text>
+          <View style={[styles.inputWrapper, { backgroundColor: '#F8F9FA', borderRadius: 16, borderWidth: 1, borderColor: '#EEE' }]}>
+            <MaterialCommunityIcons name="lock-outline" size={22} color="#000" style={{ marginRight: 12 }} />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your password"
+              placeholderTextColor="#AAA"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <MaterialCommunityIcons name={showPassword ? "eye-off-outline" : "eye-outline"} size={22} color="#AAA" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <TouchableOpacity style={{ alignSelf: 'flex-end', marginBottom: 30 }}>
+          <Text style={{ color: '#000', fontWeight: '700', fontSize: 14 }}>Forgot Password?</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.saveButton, { borderRadius: 16, height: 60, elevation: 6, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 10 }]}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          {loading ? <ActivityIndicator color="#FFF" /> : <Text style={[styles.saveButtonText, { fontSize: 18 }]}>Sign In</Text>}
+        </TouchableOpacity>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 40 }}>
+          <Text style={{ color: '#AAA', fontWeight: '500' }}>Don't have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Text style={{ color: '#000', fontWeight: '800' }}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- RegisterScreen Component ---
+function RegisterScreen({ navigation }) {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleRegister = () => {
+    if (!name || !phone || !password) {
+      Alert.alert("Error", "All fields are required.");
+      return;
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      Alert.alert("Success", "Account created successfully!", [
+        { text: "OK", onPress: () => navigation.navigate('Login') }
+      ]);
+    }, 1500);
+  };
+
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: '#FFF' }]}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 25, paddingTop: 60 }}>
+        <TouchableOpacity
+          style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#F8F9FA', justifyContent: 'center', alignItems: 'center', marginBottom: 30 }}
+          onPress={() => navigation.goBack()}
+        >
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+        </TouchableOpacity>
+
+        <View style={{ marginBottom: 40, alignItems: 'center' }}>
+          <Text style={{ fontSize: 42, fontWeight: '950', color: '#000', letterSpacing: -2 }}>mine</Text>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: '#666', marginTop: -5, textTransform: 'uppercase', letterSpacing: 2 }}>By MAHTO</Text>
+          <Text style={{ fontSize: 24, fontWeight: '800', color: '#000', marginTop: 20 }}>Create Account</Text>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Full Name</Text>
+          <View style={[styles.inputWrapper, { backgroundColor: '#F8F9FA', borderRadius: 16, borderWidth: 1, borderColor: '#EEE' }]}>
+            <MaterialCommunityIcons name="account-outline" size={22} color="#000" style={{ marginRight: 12 }} />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your name"
+              placeholderTextColor="#AAA"
+              value={name}
+              onChangeText={setName}
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Phone Number</Text>
+          <View style={[styles.inputWrapper, { backgroundColor: '#F8F9FA', borderRadius: 16, borderWidth: 1, borderColor: '#EEE' }]}>
+            <MaterialCommunityIcons name="phone-outline" size={22} color="#000" style={{ marginRight: 12 }} />
+            <TextInput
+              style={styles.input}
+              placeholder="e.g. 9876543210"
+              placeholderTextColor="#AAA"
+              value={phone}
+              onChangeText={setPhone}
+              keyboardType="phone-pad"
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Password</Text>
+          <View style={[styles.inputWrapper, { backgroundColor: '#F8F9FA', borderRadius: 16, borderWidth: 1, borderColor: '#EEE' }]}>
+            <MaterialCommunityIcons name="lock-outline" size={22} color="#000" style={{ marginRight: 12 }} />
+            <TextInput
+              style={styles.input}
+              placeholder="Create a password"
+              placeholderTextColor="#AAA"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <MaterialCommunityIcons name={showPassword ? "eye-off-outline" : "eye-outline"} size={22} color="#AAA" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={[styles.saveButton, { borderRadius: 16, height: 60, marginTop: 20, elevation: 6, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 10 }]}
+          onPress={handleRegister}
+          disabled={loading}
+        >
+          {loading ? <ActivityIndicator color="#FFF" /> : <Text style={[styles.saveButtonText, { fontSize: 18 }]}>Get Started</Text>}
+        </TouchableOpacity>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
+          <Text style={{ color: '#AAA', fontWeight: '500' }}>Already have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={{ color: '#000', fontWeight: '800' }}>Sign In</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 function ActivityScreen({ navigation }) {
   const activities = [
     { id: 1, title: 'Home Renovation', status: 'In Progress', date: 'June 12', icon: 'progress-wrench' },
@@ -2345,10 +2539,10 @@ function MainTabs() {
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: '#FFF',
-          height: 60,
-          marginBottom: 35,
-          marginHorizontal: 40,
-          borderRadius: 30,
+          height: 56,
+          marginBottom: 40,
+          marginHorizontal: 30,
+          borderRadius: 28,
           borderTopWidth: 0,
           elevation: 10,
           shadowColor: '#000',
@@ -2368,7 +2562,7 @@ function MainTabs() {
           else if (route.name === 'Activity') iconName = 'clock-outline';
           else if (route.name === 'Saved') iconName = 'heart-outline';
           else if (route.name === 'Profile') iconName = 'account-outline';
-          return <MaterialCommunityIcons name={iconName} size={size + 4} color={color} />;
+          return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
         },
       })}
     >
@@ -2386,12 +2580,15 @@ export default function App() {
       <UserProvider>
         <NavigationContainer>
           <Stack.Navigator
+            initialRouteName="Login"
             screenOptions={{
               headerShown: false,
               headerStyle: { backgroundColor: '#FFF' },
               contentStyle: { backgroundColor: '#FFF' },
             }}
           >
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Root" component={MainTabs} />
             <Stack.Screen name="Construction" component={ConstructionScreen} />
             <Stack.Screen name="ResidentialBuild" component={ResidentialBuildScreen} />
@@ -2438,7 +2635,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   scrollContent: {
-    paddingBottom: 40,
+    paddingBottom: 200,
   },
   // Uber Style Styles
   uberHeader: {
@@ -2535,7 +2732,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     backgroundColor: '#F3F3F3',
     borderRadius: 16,
-    padding: 24,
+    padding: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     overflow: 'hidden',
@@ -2546,21 +2743,21 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   uberPromoTitle: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: '700',
     color: '#000',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   uberPromoDesc: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#555',
-    marginBottom: 16,
-    lineHeight: 20,
+    marginBottom: 10,
+    lineHeight: 18,
   },
   uberPromoBtn: {
     backgroundColor: '#000',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
