@@ -326,18 +326,38 @@ function ProfileScreen({ navigation }) {
 
 // --- SettingsScreen Component ---
 function SettingsScreen({ navigation }) {
-  const settingsItems = [
-    { title: 'Notification Inbox', icon: 'email-receive-outline', onPress: () => navigation.navigate('NotificationInbox') },
-    { title: 'Notification', icon: 'bell-outline', onPress: () => navigation.navigate('Notification') },
-    { title: 'Languages', icon: 'translate', onPress: () => navigation.navigate('Languages') },
-    { title: 'About Us', icon: 'information-outline', onPress: () => navigation.navigate('AboutUs') },
-    { title: 'Contact Us', icon: 'headphones', onPress: () => navigation.navigate('ContactUs') },
-    { title: 'Rate Us', icon: 'star-outline', onPress: () => Linking.openURL('https://play.google.com/store/apps/details?id=com.mine.app') },
-    { title: 'FAQ', icon: 'frequently-asked-questions', onPress: () => navigation.navigate('HelpCenter') },
-    { title: 'Terms & Condition', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
-    { title: 'Refund Policy', icon: 'cash-refund', onPress: () => navigation.navigate('RefundPolicy') },
-    { title: 'Privacy Policy', icon: 'shield-lock-outline', onPress: () => navigation.navigate('PrivacyPolicy') },
-    { title: 'Delete Account', icon: 'delete-forever-outline', onPress: () => navigation.navigate('DeleteAccount') },
+  const settingsSections = [
+    {
+      title: 'App Preferences',
+      items: [
+        { title: 'Notification Inbox', subtitle: 'View your message history', icon: 'email-receive-outline', color: '#E3F2FD', iconColor: '#2196F3', onPress: () => navigation.navigate('NotificationInbox') },
+        { title: 'Notifications', subtitle: 'Manage alert sounds and types', icon: 'bell-outline', color: '#F3E5F5', iconColor: '#9C27B0', onPress: () => navigation.navigate('Notification') },
+        { title: 'Languages', subtitle: 'Choose your preferred language', icon: 'translate', color: '#E8F5E9', iconColor: '#4CAF50', onPress: () => navigation.navigate('Languages') },
+      ]
+    },
+    {
+      title: 'Support & Feedback',
+      items: [
+        { title: 'About Us', subtitle: 'Learn more about MAHTO', icon: 'information-outline', color: '#FFF3E0', iconColor: '#FF9800', onPress: () => navigation.navigate('AboutUs') },
+        { title: 'Contact Us', subtitle: 'Get in touch with our team', icon: 'headphones', color: '#E0F2F1', iconColor: '#009688', onPress: () => navigation.navigate('ContactUs') },
+        { title: 'Rate Us', subtitle: 'Tell us what you think', icon: 'star-outline', color: '#FFFDE7', iconColor: '#FBC02D', onPress: () => Linking.openURL('https://play.google.com/store/apps/details?id=com.mine.app') },
+        { title: 'Help center/FAQ', subtitle: 'Common questions and answers', icon: 'frequently-asked-questions', color: '#F1F8E9', iconColor: '#8BC34A', onPress: () => navigation.navigate('HelpCenter') },
+      ]
+    },
+    {
+      title: 'Legal & Privacy',
+      items: [
+        { title: 'Terms & Condition', subtitle: 'App usage rules', icon: 'file-document-outline', color: '#FCE4EC', iconColor: '#E91E63', onPress: () => navigation.navigate('TermsCondition') },
+        { title: 'Refund Policy', subtitle: 'Payment and return terms', icon: 'cash-refund', color: '#FFF8E1', iconColor: '#FFC107', onPress: () => navigation.navigate('RefundPolicy') },
+        { title: 'Privacy Policy', subtitle: 'How we protect your data', icon: 'shield-lock-outline', color: '#E8EAF6', iconColor: '#3F51B5', onPress: () => navigation.navigate('PrivacyPolicy') },
+      ]
+    },
+    {
+      title: 'Danger Zone',
+      items: [
+        { title: 'Delete Account', subtitle: 'Permanently remove your data', icon: 'delete-forever-outline', color: '#FFEBEE', iconColor: '#F44336', onPress: () => navigation.navigate('DeleteAccount') },
+      ]
+    }
   ];
 
   return (
@@ -349,24 +369,39 @@ function SettingsScreen({ navigation }) {
         navigation={navigation}
         showBack={true}
       />
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-        <View style={{ paddingHorizontal: 20 }}>
-          <View style={{ backgroundColor: '#F9F9F9', borderRadius: 16, padding: 8 }}>
-            {settingsItems.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16, paddingHorizontal: 12, borderBottomWidth: index === settingsItems.length - 1 ? 0 : 1, borderBottomColor: '#EEE' }}
-                onPress={item.onPress}
-              >
-                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', marginRight: 16, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 }}>
-                  <MaterialCommunityIcons name={item.icon} size={22} color="#000" />
-                </View>
-                <Text style={{ flex: 1, fontSize: 16, fontWeight: '600', color: '#000' }}>{item.title}</Text>
-                <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
-              </TouchableOpacity>
-            ))}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120, paddingTop: 10 }}>
+        {settingsSections.map((section, sIndex) => (
+          <View key={sIndex} style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+            <Text style={{ fontSize: 13, fontWeight: '800', color: '#AAA', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1.2 }}>{section.title}</Text>
+            <View style={{ backgroundColor: '#FFF', borderRadius: 24, overflow: 'hidden', elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, borderWidth: 1, borderColor: '#F0F0F0' }}>
+              {section.items.map((item, iIndex) => (
+                <TouchableOpacity
+                  key={iIndex}
+                  onPress={item.onPress}
+                  activeOpacity={0.7}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    padding: 18,
+                    borderBottomWidth: iIndex === section.items.length - 1 ? 0 : 1,
+                    borderBottomColor: '#F8F8F8'
+                  }}
+                >
+                  <View style={{ width: 48, height: 48, borderRadius: 16, backgroundColor: item.color, justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                    <MaterialCommunityIcons name={item.icon} size={24} color={item.iconColor} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: '#1A1A1A' }}>{item.title}</Text>
+                    <Text style={{ fontSize: 12, color: '#999', marginTop: 4, fontWeight: '500' }}>{item.subtitle}</Text>
+                  </View>
+                  <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#FAFAFA', justifyContent: 'center', alignItems: 'center' }}>
+                    <MaterialCommunityIcons name="chevron-right" size={20} color="#BBB" />
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
-        </View>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -499,7 +534,6 @@ function EditProfileScreen({ navigation }) {
   const [loadingLocation, setLoadingLocation] = useState(false);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
@@ -517,7 +551,7 @@ function EditProfileScreen({ navigation }) {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permission to access location was denied');
+        Alert.alert('Permission denied', 'Location access is required to fetch address.');
         setLoadingLocation(false);
         return;
       }
@@ -534,7 +568,7 @@ function EditProfileScreen({ navigation }) {
         setAddress(formattedAddress.replace(/ ,/g, ''));
       }
     } catch (error) {
-      Alert.alert('Error fetching location', error.message);
+      Alert.alert('Error', 'Unable to fetch location.');
     } finally {
       setLoadingLocation(false);
     }
@@ -542,105 +576,99 @@ function EditProfileScreen({ navigation }) {
 
   const handleSave = () => {
     updateUserData({ name, phone, email, address, profileImage });
-    Alert.alert('Profile Updated', 'Your changes have been saved successfully.');
+    Alert.alert('Success', 'Profile updated successfully!');
     navigation.goBack();
   };
+
+  const renderInputCard = (title, items) => (
+    <View style={{ marginBottom: 24, paddingHorizontal: 20 }}>
+      <Text style={{ fontSize: 13, fontWeight: '800', color: '#AAA', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1.2 }}>{title}</Text>
+      <View style={{ backgroundColor: '#FFF', borderRadius: 24, padding: 16, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, borderWidth: 1, borderColor: '#F0F0F0' }}>
+        {items.map((item, index) => (
+          <View key={index} style={{ marginBottom: index === items.length - 1 ? 0 : 20 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+              <View style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: item.bg, justifyContent: 'center', alignItems: 'center', marginRight: 10 }}>
+                <MaterialCommunityIcons name={item.icon} size={16} color={item.iconColor} />
+              </View>
+              <Text style={{ fontSize: 14, fontWeight: '700', color: '#444' }}>{item.label}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flex: 1, backgroundColor: '#F9FAFB', borderRadius: 12, borderWidth: 1, borderColor: '#F0F2F5', height: item.multiline ? 80 : 50, paddingHorizontal: 16, justifyContent: 'center' }}>
+                <TextInput
+                  style={{ fontSize: 15, color: '#1A1A1A', height: '100%' }}
+                  value={item.value}
+                  onChangeText={item.onChange}
+                  placeholder={item.placeholder}
+                  keyboardType={item.keyboardType || 'default'}
+                  multiline={item.multiline}
+                  textAlignVertical={item.multiline ? 'top' : 'center'}
+                />
+              </View>
+              {item.rightAction && (
+                <TouchableOpacity
+                  onPress={item.rightAction}
+                  disabled={item.loading}
+                  style={{ marginLeft: 10, width: 50, height: 50, borderRadius: 12, backgroundColor: '#000', justifyContent: 'center', alignItems: 'center' }}
+                >
+                  {item.loading ? <ActivityIndicator size="small" color="#FFF" /> : <MaterialCommunityIcons name={item.rightIcon} size={22} color="#FFF" />}
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}>
         <CustomHeader
           title="Edit Profile"
-          subtitle="Update your personal details"
+          subtitle="Keep your information up to date"
           navigation={navigation}
           showBack={true}
         />
 
-        <View style={styles.profileHeaderContainer}>
-          <View style={styles.profileImageContainer}>
-            <View style={styles.profileImageWrapper}>
+        <View style={{ alignItems: 'center', marginVertical: 32 }}>
+          <View style={{ position: 'relative' }}>
+            <View style={{ width: 140, height: 140, borderRadius: 70, borderWidth: 6, borderColor: '#FFF', backgroundColor: '#F3F4F6', overflow: 'hidden', elevation: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 10 }}>
               {profileImage ? (
-                <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                <Image source={{ uri: profileImage }} style={{ width: '100%', height: '100%' }} />
               ) : (
-                <View style={[styles.profileImage, { justifyContent: 'center', alignItems: 'center', backgroundColor: '#E3F2FD' }]}>
-                  <MaterialCommunityIcons name="account" size={80} color="#0047AB" />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                  <MaterialCommunityIcons name="account" size={80} color="#D1D5DB" />
                 </View>
               )}
             </View>
-            <TouchableOpacity style={styles.editIconBadge} onPress={pickImage} activeOpacity={0.8}>
-              <MaterialCommunityIcons name="camera" size={22} color="#FFF" />
+            <TouchableOpacity
+              onPress={pickImage}
+              activeOpacity={0.9}
+              style={{ position: 'absolute', bottom: 5, right: 5, backgroundColor: '#000', width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: 'center', borderWidth: 4, borderColor: '#FFF', elevation: 4 }}
+            >
+              <MaterialCommunityIcons name="camera" size={20} color="#FFF" />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={styles.formContainer}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Full Name</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialCommunityIcons name="account" size={20} color="#666" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={setName}
-                placeholder="Enter your name"
-              />
-            </View>
-          </View>
+        {renderInputCard('Basic Information', [
+          { label: 'Full Name', value: name, onChange: setName, icon: 'account-outline', bg: '#E3F2FD', iconColor: '#2196F3', placeholder: 'Enter your name' },
+          { label: 'Email Address', value: email, onChange: setEmail, icon: 'email-outline', bg: '#F3E5F5', iconColor: '#9C27B0', placeholder: 'Enter your email', keyboardType: 'email-address' },
+        ])}
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Phone Number</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialCommunityIcons name="phone" size={20} color="#666" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-                placeholder="Enter your phone number"
-              />
-            </View>
-          </View>
+        {renderInputCard('Contact & Location', [
+          { label: 'Phone Number', value: phone, onChange: setPhone, icon: 'phone-outline', bg: '#E8F5E9', iconColor: '#4CAF50', placeholder: 'Enter phone number', keyboardType: 'phone-pad' },
+          { label: 'Address', value: address, onChange: setAddress, icon: 'map-marker-outline', bg: '#FFF3E0', iconColor: '#FF9800', placeholder: 'Enter your address', multiline: true, rightAction: getCurrentLocation, rightIcon: 'crosshairs-gps', loading: loadingLocation },
+        ])}
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Email Address</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialCommunityIcons name="email" size={20} color="#666" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                placeholder="Enter your email"
-              />
-            </View>
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Address</Text>
-            <View style={styles.addressContainer}>
-              <View style={[styles.inputWrapper, { flex: 1, marginRight: 10 }]}>
-                <MaterialCommunityIcons name="map-marker" size={20} color="#666" style={styles.inputIcon} />
-                <TextInput
-                  style={[styles.input, { flex: 1 }]}
-                  value={address}
-                  onChangeText={setAddress}
-                  multiline
-                  placeholder="Enter your address"
-                />
-              </View>
-              <TouchableOpacity style={styles.locationButton} onPress={getCurrentLocation} disabled={loadingLocation}>
-                {loadingLocation ? (
-                  <ActivityIndicator color="#FFF" size="small" />
-                ) : (
-                  <MaterialCommunityIcons name="crosshairs-gps" size={24} color="#FFF" />
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>Save Changes</Text>
+        <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+          <TouchableOpacity
+            onPress={handleSave}
+            activeOpacity={0.8}
+            style={{ backgroundColor: '#000', borderRadius: 16, height: 60, justifyContent: 'center', alignItems: 'center', elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 }}
+          >
+            <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '700', letterSpacing: 0.5 }}>Save Profile Changes</Text>
           </TouchableOpacity>
         </View>
 
@@ -666,26 +694,45 @@ function NotificationScreen({ navigation }) {
     }
   };
 
-  const NotificationItem = ({ title, subtitle, value, onValueChange }) => (
-    <View style={styles.notificationItem}>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.notificationTitle}>{title}</Text>
-        <Text style={styles.notificationSubtitle}>{subtitle}</Text>
+  const renderSection = (title, items) => (
+    <View style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+      <Text style={{ fontSize: 13, fontWeight: '800', color: '#AAA', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1.2 }}>{title}</Text>
+      <View style={{ backgroundColor: '#FFF', borderRadius: 24, overflow: 'hidden', elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, borderWidth: 1, borderColor: '#F0F0F0' }}>
+        {items.map((item, index) => (
+          <View
+            key={index}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              padding: 18,
+              borderBottomWidth: index === items.length - 1 ? 0 : 1,
+              borderBottomColor: '#F8F8F8'
+            }}
+          >
+            <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: item.bg, justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+              <MaterialCommunityIcons name={item.icon} size={22} color={item.iconColor} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: '#1A1A1A' }}>{item.title}</Text>
+              <Text style={{ fontSize: 12, color: '#999', marginTop: 4, fontWeight: '500' }}>{item.subtitle}</Text>
+            </View>
+            <Switch
+              trackColor={{ false: "#E0E0E0", true: "#000" }}
+              thumbColor="#FFF"
+              ios_backgroundColor="#E0E0E0"
+              onValueChange={item.onToggle}
+              value={item.value}
+            />
+          </View>
+        ))}
       </View>
-      <Switch
-        trackColor={{ false: "#767577", true: "#0047AB" }}
-        thumbColor={value ? "#f4f3f4" : "#f4f3f4"}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={onValueChange}
-        value={value}
-      />
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}>
         <CustomHeader
           title={t('notification')}
           subtitle="Manage your alert preferences"
@@ -693,41 +740,22 @@ function NotificationScreen({ navigation }) {
           showBack={true}
         />
 
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>{t('general')}</Text>
-          <View style={styles.notificationCard}>
-            <NotificationItem
-              title={t('pushNotif')}
-              subtitle="Receive alerts on your device"
-              value={pushEnabled}
-              onValueChange={() => toggleSwitch('push')}
-            />
-            <View style={styles.divider} />
-            <NotificationItem
-              title={t('emailNotif')}
-              subtitle="Receive updates via email"
-              value={emailEnabled}
-              onValueChange={() => toggleSwitch('email')}
-            />
-            <View style={styles.divider} />
-            <NotificationItem
-              title={t('smsNotif')}
-              subtitle="Receive updates via SMS"
-              value={smsEnabled}
-              onValueChange={() => toggleSwitch('sms')}
-            />
-          </View>
-        </View>
+        {renderSection(t('general'), [
+          { title: t('pushNotif'), subtitle: 'Receive alerts on your device', icon: 'bell-ring-outline', bg: '#E3F2FD', iconColor: '#2196F3', value: pushEnabled, onToggle: () => toggleSwitch('push') },
+          { title: t('emailNotif'), subtitle: 'Receive updates via email', icon: 'email-outline', bg: '#F3E5F5', iconColor: '#9C27B0', value: emailEnabled, onToggle: () => toggleSwitch('email') },
+          { title: t('smsNotif'), subtitle: 'Receive updates via SMS', icon: 'message-text-outline', bg: '#E8F5E9', iconColor: '#4CAF50', value: smsEnabled, onToggle: () => toggleSwitch('sms') },
+        ])}
 
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>{t('marketing')}</Text>
-          <View style={styles.notificationCard}>
-            <NotificationItem
-              title={t('promoOffers')}
-              subtitle="Get updates on sales and offers"
-              value={promoEnabled}
-              onValueChange={() => toggleSwitch('promo')}
-            />
+        {renderSection(t('marketing'), [
+          { title: t('promoOffers'), subtitle: 'Get updates on sales and offers', icon: 'tag-outline', bg: '#FFF3E0', iconColor: '#FF9800', value: promoEnabled, onToggle: () => toggleSwitch('promo') },
+        ])}
+
+        <View style={{ paddingHorizontal: 30, marginTop: 10 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', backgroundColor: '#F8F9FA', padding: 16, borderRadius: 16 }}>
+            <MaterialCommunityIcons name="information-outline" size={20} color="#666" style={{ marginRight: 12, marginTop: 2 }} />
+            <Text style={{ flex: 1, fontSize: 13, color: '#666', lineHeight: 18 }}>
+              Stay updated with your project progress and latest offers. You can change these preferences anytime.
+            </Text>
           </View>
         </View>
 
@@ -741,58 +769,88 @@ function LanguageScreen({ navigation }) {
   const { setLocale, locale, t } = React.useContext(LanguageContext);
 
   const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'hi', name: 'Hindi (हिंदी)' },
-    { code: 'ur', name: 'Urdu (اردو)' },
-    { code: 'ks', name: 'Kashmiri (کأشُر)' },
-    { code: 'pa', name: 'Punjabi (ਪੰਜਾਬੀ)' },
-    { code: 'raj', name: 'Rajasthani (राजस्थानी)' },
-    { code: 'bgc', name: 'Haryanvi (हरियाणवी)' },
-    { code: 'mr', name: 'Marathi (मराठी)' },
-    { code: 'kn', name: 'Kannada (ಕನ್ನಡ)' },
-    { code: 'gu', name: 'Gujarati (ગુજરાતી)' },
-    { code: 'te', name: 'Telugu (తెలుగు)' },
-    { code: 'ml', name: 'Malayalam (മലയാളം)' },
-    { code: 'or', name: 'Odia (ଓଡ଼ିଆ)' },
-    { code: 'bn', name: 'Bengali (বাংলা)' },
-    { code: 'ne', name: 'Nepali (नेपाली)' },
-    { code: 'as', name: 'Assamese (অসমীয়া)' },
-    { code: 'bho', name: 'Bhojpuri (भोजपुरी)' },
-    { code: 'mai', name: 'Maithili (मैथिली)' },
+    { code: 'en', name: 'English', native: 'English' },
+    { code: 'hi', name: 'Hindi', native: 'हिंदी' },
+    { code: 'ur', name: 'Urdu', native: 'اردو' },
+    { code: 'ks', name: 'Kashmiri', native: 'کأشُر' },
+    { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ' },
+    { code: 'raj', name: 'Rajasthani', native: 'राजस्थानी' },
+    { code: 'bgc', name: 'Haryanvi', native: 'हरियाणवी' },
+    { code: 'mr', name: 'Marathi', native: 'मराठी' },
+    { code: 'kn', name: 'Kannada', native: 'ಕನ್ನಡ' },
+    { code: 'gu', name: 'Gujarati', native: 'ગુજરાતી' },
+    { code: 'te', name: 'Telugu', native: 'తెలుగు' },
+    { code: 'ml', name: 'Malayalam', native: 'മലയാളം' },
+    { code: 'or', name: 'Odia', native: 'ଓଡ଼ିଆ' },
+    { code: 'bn', name: 'Bengali', native: 'বাংলা' },
+    { code: 'ne', name: 'Nepali', native: 'नेपाली' },
+    { code: 'as', name: 'Assamese', native: 'অসমীয়া' },
+    { code: 'bho', name: 'Bhojpuri', native: 'भोजपुरी' },
+    { code: 'mai', name: 'Maithili', native: 'मैथिली' },
   ];
 
   const handleLanguageSelect = (code) => {
     setLocale(code);
-    // Optional: Go back after selection
-    // navigation.goBack(); 
+    Alert.alert('Language Updated', 'App language has been updated successfully.', [
+      { text: 'OK', onPress: () => navigation.goBack() }
+    ]);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}>
         <CustomHeader
           title={t('languages')}
-          subtitle="Select your preferred language"
+          subtitle="Choose your preferred language"
           navigation={navigation}
           showBack={true}
         />
 
-        <View style={styles.notificationCard}>
-          {/* Reusing notificationCard style for consistent look */}
-          {languages.map((lang, index) => (
-            <TouchableOpacity
-              key={lang.code}
-              style={[styles.notificationItem, { paddingVertical: 16 }]} // Slightly larger tap area
-              onPress={() => handleLanguageSelect(lang.code)}
-            >
-              <Text style={[styles.notificationTitle, { fontWeight: locale === lang.code ? 'bold' : 'normal', color: locale === lang.code ? '#0047AB' : '#333' }]}>
-                {lang.name}
-              </Text>
-              {locale === lang.code && <MaterialCommunityIcons name="check" size={24} color="#0047AB" />}
-              {index < languages.length - 1 && <View style={[styles.divider, { position: 'absolute', bottom: 0, left: 0, right: 0 }]} />}
-            </TouchableOpacity>
-          ))}
+        <View style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+          <Text style={{ fontSize: 13, fontWeight: '800', color: '#AAA', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1.2 }}>Available Languages</Text>
+          <View style={{ backgroundColor: '#FFF', borderRadius: 24, overflow: 'hidden', elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, borderWidth: 1, borderColor: '#F0F0F0' }}>
+            {languages.map((lang, index) => {
+              const isSelected = locale === lang.code;
+              return (
+                <TouchableOpacity
+                  key={lang.code}
+                  onPress={() => handleLanguageSelect(lang.code)}
+                  activeOpacity={0.7}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    padding: 18,
+                    backgroundColor: isSelected ? '#F8F9FA' : '#FFF',
+                    borderBottomWidth: index === languages.length - 1 ? 0 : 1,
+                    borderBottomColor: '#F8F8F8'
+                  }}
+                >
+                  <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: isSelected ? '#000' : '#F3F4F6', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: isSelected ? '#FFF' : '#666' }}>{lang.code.toUpperCase()}</Text>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: isSelected ? '#000' : '#1A1A1A' }}>{lang.name}</Text>
+                    <Text style={{ fontSize: 12, color: isSelected ? '#444' : '#999', marginTop: 4, fontWeight: '500' }}>{lang.native}</Text>
+                  </View>
+                  {isSelected && (
+                    <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#000', justifyContent: 'center', alignItems: 'center' }}>
+                      <MaterialCommunityIcons name="check" size={20} color="#FFF" />
+                    </View>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+
+        <View style={{ paddingHorizontal: 30, marginTop: 10 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', backgroundColor: '#F8F9FA', padding: 16, borderRadius: 16 }}>
+            <MaterialCommunityIcons name="translate" size={20} color="#666" style={{ marginRight: 12, marginTop: 2 }} />
+            <Text style={{ flex: 1, fontSize: 13, color: '#666', lineHeight: 18 }}>
+              Changing language will update most of the interface text. More translations are being added regularly.
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -802,96 +860,122 @@ function LanguageScreen({ navigation }) {
 // --- HelpCenterScreen Component ---
 function HelpCenterScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
-  const faqs = [
-    { question: 'How do I book a service?', answer: 'Simply navigate to the service category you need (Construction, Renovation, or Service), select a specific service, and follow the booking prompts.' },
-    { question: 'Is there a cancellation fee?', answer: 'Cancellations made within 24 hours of the scheduled service may incur a small fee. Please check our Terms & Conditions for more details.' },
-    { question: 'How can I track my request?', answer: 'You can track the status of your service requests in the "My Orders" section (coming soon).' },
-    { question: 'What payment methods are accepted?', answer: 'We accept credit/debit cards, UPIs, and net banking.' },
+  const categories = [
+    {
+      title: 'Booking & Services',
+      items: [
+        { question: 'How do I book a service?', answer: 'Simply navigate to the service category you need (Construction, Renovation, or Service), select a specific service, and follow the booking prompts.' },
+        { question: 'How can I track my request?', answer: 'You can track the status of your service requests in the "My Orders" section (coming soon).' },
+      ]
+    },
+    {
+      title: 'Payments & Policies',
+      items: [
+        { question: 'Is there a cancellation fee?', answer: 'Cancellations made within 24 hours of the scheduled service may incur a small fee. Please check our Terms & Conditions for more details.' },
+        { question: 'What payment methods are accepted?', answer: 'We accept credit/debit cards, UPIs, and net banking for all transactions.' },
+      ]
+    },
+    {
+      title: 'Technical Support',
+      items: [
+        { question: 'App is freezing/not working', answer: 'Try restarting the app. if the problem persists, please report a bug via the contact section below.' },
+      ]
+    }
+  ];
+
+  const contactOptions = [
+    { title: 'Report a Bug', icon: 'bug-outline', bg: '#FFEBEE', color: '#F44336', action: () => Linking.openURL('mailto:support@mahtoji.tech?subject=Bug Report') },
+    { title: 'Feature Request', icon: 'lightbulb-on-outline', bg: '#FFFDE7', color: '#FBC02D', action: () => Linking.openURL('mailto:support@mahtoji.tech?subject=Feature Request') },
+    { title: 'CEO Office', icon: 'medal-outline', bg: '#E8EAF6', color: '#3F51B5', action: () => Linking.openURL('mailto:harshkumarceo@mahtoji.tech?subject=CEO Office Inquiry') },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}>
         <CustomHeader
           title={t('helpCenter')}
-          subtitle="We are here to help you"
+          subtitle="How can we help you today?"
           navigation={navigation}
           showBack={true}
         />
 
-        <View style={{ alignItems: 'center', marginBottom: 32 }}>
-          <MaterialCommunityIcons name="lifebuoy" size={64} color="#0047AB" />
-          <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center', marginTop: 16, color: '#1A1A1A' }}>
-            Facing any issue while using{'\n'}mine by MAHTO?
-          </Text>
-          <Text style={{ textAlign: 'center', color: '#666', marginTop: 8, paddingHorizontal: 20, lineHeight: 20 }}>
-            We're here to help you bridge the gap between your problems and solutions.
-          </Text>
-        </View>
-
-        {/* Pro Tip */}
-        <View style={{ backgroundColor: '#E3F2FD', padding: 16, borderRadius: 16, flexDirection: 'row', marginBottom: 24, alignItems: 'center' }}>
-          <MaterialCommunityIcons name="camera-outline" size={24} color="#0047AB" style={{ marginRight: 12 }} />
-          <Text style={{ flex: 1, color: '#333', lineHeight: 20, fontSize: 13 }}>
-            <Text style={{ fontWeight: 'bold' }}>Pro Tip:</Text> Please attach a screenshot or image of the issue in your email to help us clarify and resolve the problem faster.
-          </Text>
-        </View>
-
-        {/* Report a Bug */}
-        <View style={styles.helpCard}>
-          <View style={styles.iconCircle}>
-            <MaterialCommunityIcons name="bug-outline" size={24} color="#0047AB" />
-          </View>
-          <Text style={styles.helpCardTitle}>Report a Bug</Text>
-          <Text style={styles.helpCardDesc}>Found a technical glitch or an error? Let our tech team know immediately.</Text>
-          <TouchableOpacity style={styles.helpCardButton} onPress={() => Linking.openURL('mailto:support@mahtoji.tech?subject=Bug Report')}>
-            <Text style={styles.helpCardButtonText}>Contact Support</Text>
-            <MaterialCommunityIcons name="email-outline" size={20} color="#FFF" style={{ marginLeft: 8 }} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Feature Request */}
-        <View style={styles.helpCard}>
-          <View style={styles.iconCircle}>
-            <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color="#0047AB" />
-          </View>
-          <Text style={styles.helpCardTitle}>Feature Request</Text>
-          <Text style={styles.helpCardDesc}>Have an idea to make MAHTO better? We'd love to hear your suggestions.</Text>
-          <TouchableOpacity style={styles.helpCardButton} onPress={() => Linking.openURL('mailto:support@mahtoji.tech?subject=Feature Request')}>
-            <Text style={styles.helpCardButtonText}>Send Suggestion</Text>
-            <MaterialCommunityIcons name="email-outline" size={20} color="#FFF" style={{ marginLeft: 8 }} />
-          </TouchableOpacity>
-        </View>
-
-        {/* CEO Office */}
-        <View style={[styles.helpCard, { backgroundColor: '#002171', borderColor: '#002171' }]}>
-          <View style={[styles.iconCircle, { backgroundColor: 'rgba(255,255,255,0.1)' }]}>
-            <MaterialCommunityIcons name="medal-outline" size={24} color="#FFF" />
-          </View>
-          <Text style={[styles.helpCardTitle, { color: '#FFF' }]}>CEO's Office</Text>
-          <Text style={[styles.helpCardDesc, { color: '#B3CDE0' }]}>For critical escalations or partnership inquiries directly to the leadership.</Text>
-          <TouchableOpacity style={[styles.helpCardButton, { backgroundColor: '#FFF' }]} onPress={() => Linking.openURL('mailto:harshkumarceo@mahtoji.tech?subject=CEO Office Inquiry')}>
-            <Text style={[styles.helpCardButtonText, { color: '#002171' }]}>Contact CEO Office</Text>
-            <MaterialCommunityIcons name="email-outline" size={20} color="#002171" style={{ marginLeft: 8 }} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Standard Response Time */}
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 16, marginBottom: 40 }}>
-          <MaterialCommunityIcons name="clock-outline" size={16} color="#666" style={{ marginRight: 6 }} />
-          <Text style={{ color: '#666', fontSize: 12 }}>Standard Response Time: 24 - 48 Hours</Text>
-        </View>
-
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
-          {faqs.map((faq, index) => (
-            <View key={index} style={[styles.notificationCard, { marginBottom: 12 }]}>
-              <Text style={styles.notificationTitle}>{faq.question}</Text>
-              <Text style={{ fontSize: 14, color: '#555', marginTop: 4, lineHeight: 20 }}>{faq.answer}</Text>
+        {/* Categories & FAQs */}
+        {categories.map((cat, cIdx) => (
+          <View key={cIdx} style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+            <Text style={{ fontSize: 13, fontWeight: '800', color: '#AAA', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1.2 }}>{cat.title}</Text>
+            <View style={{ backgroundColor: '#FFF', borderRadius: 24, padding: 8, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, borderWidth: 1, borderColor: '#F0F0F0' }}>
+              {cat.items.map((faq, fIdx) => {
+                const globalIdx = `${cIdx}-${fIdx}`;
+                const isExpanded = expandedIndex === globalIdx;
+                return (
+                  <TouchableOpacity
+                    key={fIdx}
+                    onPress={() => setExpandedIndex(isExpanded ? null : globalIdx)}
+                    activeOpacity={0.7}
+                    style={{
+                      padding: 16,
+                      borderBottomWidth: fIdx === cat.items.length - 1 ? 0 : 1,
+                      borderBottomColor: '#F8F8F8'
+                    }}
+                  >
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Text style={{ flex: 1, fontSize: 15, fontWeight: '700', color: '#1A1A1A', lineHeight: 20 }}>{faq.question}</Text>
+                      <MaterialCommunityIcons
+                        name={isExpanded ? "chevron-up" : "chevron-down"}
+                        size={20}
+                        color={isExpanded ? "#000" : "#BBB"}
+                      />
+                    </View>
+                    {isExpanded && (
+                      <Text style={{ fontSize: 13, color: '#666', marginTop: 12, lineHeight: 20 }}>
+                        {faq.answer}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
             </View>
-          ))}
+          </View>
+        ))}
+
+        {/* Still Need Help? */}
+        <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+          <Text style={{ fontSize: 13, fontWeight: '800', color: '#AAA', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1.2 }}>Still Need Help?</Text>
+          <View style={{ backgroundColor: '#FFF', borderRadius: 24, padding: 12, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, borderWidth: 1, borderColor: '#F0F0F0' }}>
+            {contactOptions.map((opt, oIdx) => (
+              <TouchableOpacity
+                key={oIdx}
+                onPress={opt.action}
+                activeOpacity={0.7}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: 14,
+                  borderBottomWidth: oIdx === contactOptions.length - 1 ? 0 : 1,
+                  borderBottomColor: '#F8F8F8'
+                }}
+              >
+                <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: opt.bg, justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                  <MaterialCommunityIcons name={opt.icon} size={20} color={opt.color} />
+                </View>
+                <Text style={{ flex: 1, fontSize: 15, fontWeight: '700', color: '#1A1A1A' }}>{opt.title}</Text>
+                <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#FAFAFA', justifyContent: 'center', alignItems: 'center' }}>
+                  <MaterialCommunityIcons name="chevron-right" size={20} color="#BBB" />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Note */}
+        <View style={{ paddingHorizontal: 30, marginTop: 32 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <MaterialCommunityIcons name="clock-outline" size={14} color="#AAA" style={{ marginRight: 6 }} />
+            <Text style={{ fontSize: 12, color: '#AAA', fontWeight: '500' }}>Average Response Time: 24-48 Hours</Text>
+          </View>
         </View>
 
       </ScrollView>
@@ -1222,54 +1306,81 @@ function ProjectManagementScreen({ navigation }) {
 }
 
 // --- ContactUsScreen Component ---
+// --- ContactUsScreen Component ---
 function ContactUsScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
+
+  const contactChannels = [
+    {
+      title: 'Direct Support',
+      items: [
+        { title: 'General Support', subtitle: 'For bugs, features, or queries', icon: 'email-outline', bg: '#E3F2FD', iconColor: '#2196F3', action: () => Linking.openURL('mailto:support@mahtoji.tech') },
+        { title: 'CEO\'s Office', subtitle: 'For critical escalations', icon: 'medal-outline', bg: '#FFF3E0', iconColor: '#FF9800', action: () => Linking.openURL('mailto:harshkumarceo@mahtoji.tech') },
+      ]
+    },
+    {
+      title: 'Operating Hours',
+      items: [
+        { title: 'Response Time', subtitle: 'Expect a reply within 24-48 hours', icon: 'clock-outline', bg: '#F3E5F5', iconColor: '#9C27B0', action: null },
+        { title: 'Working Days', subtitle: 'Monday to Saturday (9 AM - 5 PM)', icon: 'calendar-check-outline', bg: '#E8F5E9', iconColor: '#4CAF50', action: null },
+      ]
+    }
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}>
         <CustomHeader
           title={t('contactUs')}
-          subtitle=""
+          subtitle="We're here to help you build better"
           navigation={navigation}
           showBack={true}
         />
 
-        <View style={{ paddingHorizontal: 4 }}>
-          {/* General Support Card */}
-          <View style={[styles.contactCard, { backgroundColor: '#000' }]}>
-            <MaterialCommunityIcons name="email" size={48} color="#FFF" style={{ marginBottom: 16 }} />
-            <Text style={styles.contactCardTitle}>General Support</Text>
-            <Text style={styles.contactCardDesc}>For bugs, feature requests, or general queries.</Text>
-            <TouchableOpacity
-              style={styles.contactCardButton}
-              onPress={() => Linking.openURL('mailto:support@mahtoji.tech')}
-            >
-              <Text style={styles.contactCardButtonText}>Contact Support</Text>
-            </TouchableOpacity>
+        {contactChannels.map((section, sIndex) => (
+          <View key={sIndex} style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+            <Text style={{ fontSize: 13, fontWeight: '800', color: '#AAA', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1.2 }}>{section.title}</Text>
+            <View style={{ backgroundColor: '#FFF', borderRadius: 24, overflow: 'hidden', elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, borderWidth: 1, borderColor: '#F0F0F0' }}>
+              {section.items.map((item, iIndex) => (
+                <TouchableOpacity
+                  key={iIndex}
+                  onPress={item.action}
+                  disabled={!item.action}
+                  activeOpacity={item.action ? 0.7 : 1}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    padding: 18,
+                    borderBottomWidth: iIndex === section.items.length - 1 ? 0 : 1,
+                    borderBottomColor: '#F8F8F8'
+                  }}
+                >
+                  <View style={{ width: 48, height: 48, borderRadius: 16, backgroundColor: item.bg, justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                    <MaterialCommunityIcons name={item.icon} size={24} color={item.iconColor} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '700', color: '#1A1A1A' }}>{item.title}</Text>
+                    <Text style={{ fontSize: 12, color: '#999', marginTop: 4, fontWeight: '500' }}>{item.subtitle}</Text>
+                  </View>
+                  {item.action && (
+                    <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#FAFAFA', justifyContent: 'center', alignItems: 'center' }}>
+                      <MaterialCommunityIcons name="chevron-right" size={20} color="#BBB" />
+                    </View>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
+        ))}
 
-          {/* CEO's Office Card */}
-          <View style={[styles.contactCard, { backgroundColor: '#001529' }]}>
-            <MaterialCommunityIcons name="medal" size={48} color="#FFF" style={{ marginBottom: 16 }} />
-            <Text style={styles.contactCardTitle}>CEO's Office</Text>
-            <Text style={styles.contactCardDesc}>For critical escalations or leadership inquiries.</Text>
-            <TouchableOpacity
-              style={[styles.contactCardButton, { borderColor: '#B3CDE0' }]}
-              onPress={() => Linking.openURL('mailto:harshkumarceo@mahtoji.tech')}
-            >
-              <Text style={{ color: '#FFF', fontWeight: '600', fontSize: 16 }}>Contact CEO Office</Text>
-            </TouchableOpacity>
+        <View style={{ paddingHorizontal: 30, marginTop: 10 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', backgroundColor: '#F8F9FA', padding: 18, borderRadius: 20 }}>
+            <MaterialCommunityIcons name="image-multiple-outline" size={22} color="#666" style={{ marginRight: 12, marginTop: 2 }} />
+            <Text style={{ flex: 1, fontSize: 13, color: '#666', lineHeight: 20 }}>
+              <Text style={{ fontWeight: 'bold', color: '#444' }}>Pro Tip:</Text> Please attach screenshots or photos when reporting bugs to help our engineers fix them faster.
+            </Text>
           </View>
-        </View>
-
-        {/* Info Banner */}
-        <View style={styles.infoBanner}>
-          <MaterialCommunityIcons name="information-outline" size={24} color="#0047AB" style={{ marginRight: 12 }} />
-          <Text style={styles.infoBannerText}>
-            Response Time: 24-48 Hours. Please attach images to clarify problems.
-          </Text>
         </View>
 
       </ScrollView>
@@ -1972,111 +2083,95 @@ function RefundPolicyScreen({ navigation }) {
 }
 
 // --- AboutUsScreen Component ---
+// --- AboutUsScreen Component ---
 function AboutUsScreen({ navigation }) {
-  const EcosystemItem = ({ icon, title, desc }) => (
-    <View style={styles.ecoItem}>
-      <View style={styles.ecoIconBox}>
-        <MaterialCommunityIcons name={icon} size={24} color="#0047AB" />
-      </View>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.ecoTitle}>{title}</Text>
-        <Text style={styles.ecoDesc}>{desc}</Text>
-      </View>
-    </View>
-  );
+  const ecosystmItems = [
+    { title: 'MAHTO', subtitle: 'Worker, Contractor & Shops', icon: 'account-hard-hat', bg: '#E3F2FD', iconColor: '#2196F3' },
+    { title: 'Mine (by MAHTO)', subtitle: 'Full-stack Construction & Reno', icon: 'home-city', bg: '#F3E5F5', iconColor: '#9C27B0' },
+    { title: 'MAHTO Home Loans', subtitle: 'Financing your dream home', icon: 'bank', bg: '#E8F5E9', iconColor: '#4CAF50' },
+    { title: 'MAHTO Properties', subtitle: 'Land & Property Listings', icon: 'terrain', bg: '#FFF3E0', iconColor: '#FF9800' },
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingTop: 10 }}>
         <CustomHeader
           title="About MAHTO"
-          subtitle="The future of home building"
+          subtitle="Building the future of home building"
           navigation={navigation}
           showBack={true}
         />
 
-        {/* Hero Section */}
-        <View style={styles.aboutHero}>
-          <View style={styles.aboutHeroIconContainer}>
-            <MaterialCommunityIcons name="home-group" size={48} color="#FFF" />
-          </View>
-          <Text style={styles.aboutHeroTitle}>MAHTO - Home Building OS</Text>
-          <Text style={styles.aboutHeroSubtitle}>
-            MAHTO is the operating system for home building.
-          </Text>
-        </View>
-
-        {/* Introduction */}
-        <View style={styles.aboutSection}>
-          <Text style={styles.aboutText}>
-            We are building one unified system that brings together everything required to build a home — from land and labor to construction materials, financing, and delivery.
-          </Text>
-          <Text style={[styles.aboutText, { marginTop: 12 }]}>
-            Today, building a home means dealing with fragmented vendors, contractors, workers, and middlemen. <Text style={{ fontWeight: 'bold', color: '#000' }}>MAHTO</Text> simplifies this entire journey into a single, integrated platform — end to end.
-          </Text>
-        </View>
-
-        {/* Ecosystem */}
-        <View style={styles.aboutSection}>
-          <Text style={styles.aboutSectionTitle}>What we’re building</Text>
-          <Text style={styles.aboutSectionSubtitle}>MAHTO Ecosystem</Text>
-
-          <View style={styles.ecosystemContainer}>
-            <EcosystemItem
-              icon="account-hard-hat"
-              title="MAHTO"
-              desc="Worker, Contractor & Shops Marketplace"
-            />
-            <EcosystemItem
-              icon="home-city"
-              title="Mine (by MAHTO)"
-              desc="Full-stack Construction & Renovation Services"
-            />
-            <EcosystemItem
-              icon="bank"
-              title="MAHTO Home Loans"
-              desc="Home Loans Marketplace"
-            />
-            <EcosystemItem
-              icon="terrain"
-              title="MAHTO Land & Properties"
-              desc="Land & Property Listings"
-            />
-          </View>
-
-          <View style={styles.infoNote}>
-            <MaterialCommunityIcons name="information" size={20} color="#0047AB" />
-            <Text style={styles.infoNoteText}>
-              “Full-stack” at MAHTO means from land to lending — not just design to construction.
+        {/* Hero Card */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+          <View style={{ backgroundColor: '#000', borderRadius: 28, padding: 24, elevation: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.2, shadowRadius: 10 }}>
+            <View style={{ width: 60, height: 60, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.15)', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+              <MaterialCommunityIcons name="home-group" size={32} color="#FFF" />
+            </View>
+            <Text style={{ fontSize: 24, fontWeight: '800', color: '#FFF' }}>MAHTO</Text>
+            <Text style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', marginTop: 4, fontWeight: '500' }}>The Home Building OS</Text>
+            <View style={{ height: 1.5, backgroundColor: 'rgba(255,255,255,0.1)', marginVertical: 20 }} />
+            <Text style={{ fontSize: 14, color: '#FFF', lineHeight: 22, opacity: 0.9 }}>
+              MAHTO is building the unified platform that brings together everything required to build a home — from land and labor to construction materials, financing, and delivery.
             </Text>
           </View>
         </View>
 
-        {/* Mission & Vision */}
-        <View style={styles.missionVisionContainer}>
-          <View style={styles.mvCard}>
-            <View style={styles.mvIconCircle}>
-              <MaterialCommunityIcons name="target" size={24} color="#FFF" />
-            </View>
-            <Text style={styles.mvTitle}>Our Mission</Text>
-            <Text style={styles.mvText}>A roof over every head — not a roof, but own roof.</Text>
-            <Text style={styles.mvQuote}>“Sabka sar apni chhaat.”</Text>
-          </View>
-
-          <View style={styles.mvCard}>
-            <View style={[styles.mvIconCircle, { backgroundColor: '#002171' }]}>
-              <MaterialCommunityIcons name="eye-outline" size={24} color="#FFF" />
-            </View>
-            <Text style={styles.mvTitle}>Our Vision</Text>
-            <Text style={styles.mvText}>To raise living standards by becoming the global operating system for home building.</Text>
+        {/* The Problem & Solution */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+          <Text style={{ fontSize: 13, fontWeight: '800', color: '#AAA', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1.2 }}>Our Mission</Text>
+          <View style={{ backgroundColor: '#FFF', borderRadius: 24, padding: 20, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, borderWidth: 1, borderColor: '#F0F0F0' }}>
+            <Text style={{ fontSize: 18, fontWeight: '700', color: '#1A1A1A', marginBottom: 12 }}>"Sabka sar apni chhaat."</Text>
+            <Text style={{ fontSize: 14, color: '#666', lineHeight: 22 }}>
+              Today, building a home is fragmented and complex. We simplify this journey into a single, integrated platform. Our mission is to ensure everyone has a roof over their head — and not just any roof, but their <Text style={{ fontWeight: 'bold', color: '#000' }}>own roof.</Text>
+            </Text>
           </View>
         </View>
 
-        <View style={{ alignItems: 'center', marginVertical: 40 }}>
-          <Text style={{ fontSize: 28, fontWeight: '900', color: '#E0E0E0', letterSpacing: 4 }}>MAHTO</Text>
+        {/* Ecosystem Grid */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+          <Text style={{ fontSize: 13, fontWeight: '800', color: '#AAA', marginBottom: 12, textTransform: 'uppercase', letterSpacing: 1.2 }}>What we're building</Text>
+          <View style={{ backgroundColor: '#FFF', borderRadius: 24, padding: 12, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, borderWidth: 1, borderColor: '#F0F0F0' }}>
+            {ecosystmItems.map((item, index) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: 14,
+                  borderBottomWidth: index === ecosystmItems.length - 1 ? 0 : 1,
+                  borderBottomColor: '#F8F8F8'
+                }}
+              >
+                <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: item.bg, justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                  <MaterialCommunityIcons name={item.icon} size={22} color={item.iconColor} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 15, fontWeight: '700', color: '#1A1A1A' }}>{item.title}</Text>
+                  <Text style={{ fontSize: 12, color: '#999', marginTop: 2, fontWeight: '500' }}>{item.subtitle}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
         </View>
 
+        {/* Vision Card */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 24 }}>
+          <View style={{ backgroundColor: '#002171', borderRadius: 24, padding: 24, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 12 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+              <MaterialCommunityIcons name="eye-outline" size={24} color="#FFF" style={{ marginRight: 12 }} />
+              <Text style={{ fontSize: 18, fontWeight: '800', color: '#FFF' }}>Our Vision</Text>
+            </View>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', lineHeight: 24 }}>
+              To raise global living standards by becoming the operating system for home building. We want to be the foundation upon which the world builds its future dwellings.
+            </Text>
+          </View>
+        </View>
+
+        <View style={{ alignItems: 'center', marginVertical: 20 }}>
+          <Text style={{ fontSize: 24, fontWeight: '900', color: '#F0F0F0', letterSpacing: 6 }}>MAHTO</Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
