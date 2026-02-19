@@ -2385,7 +2385,7 @@ function LoginScreen({ navigation }) {
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 40 }}>
           <Text style={{ color: '#AAA', fontWeight: '500' }}>Don't have an account? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-            <Text style={{ color: '#000', fontWeight: '800' }}>Sign Up</Text>
+            <Text style={{ color: '#000', fontWeight: '800' }}>Create Account</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
