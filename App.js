@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image, TextInput, ActivityIndicator, Alert, Switch, Linking, Modal } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image, TextInput, ActivityIndicator, Alert, Switch, Linking, Modal, ImageBackground } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { translations } from './translations';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const LanguageContext = React.createContext();
 
@@ -47,19 +48,19 @@ const UserProvider = ({ children }) => {
 };
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-// --- Reusable Custom Header Component ---
 function CustomHeader({ title, subtitle, navigation, showBack = false }) {
   return (
     <View style={styles.customHeaderContainer}>
       {showBack && (
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={28} color="#1A1A1A" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
       )}
-      <View style={{ flex: 1, alignItems: showBack ? 'flex-start' : 'center' }}>
+      <View style={{ flex: 1, alignItems: 'flex-start' }}>
         <Text style={styles.screenTitle}>{title}</Text>
-        <Text style={styles.screenSubtitle}>{subtitle}</Text>
+        {subtitle && <Text style={styles.screenSubtitle}>{subtitle}</Text>}
       </View>
     </View>
   );
@@ -69,276 +70,210 @@ function CustomHeader({ title, subtitle, navigation, showBack = false }) {
 function HomeScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
   const { userData } = React.useContext(UserContext);
+
   const services = [
-    {
-      id: 'Construction',
-      title: t('construction'),
-      icon: 'home',
-      description: 'Full-stack construction services for residential and commercial projects.'
-    },
-    {
-      id: 'Renovation',
-      title: t('renovation'),
-      icon: 'auto-fix',
-      description: 'Transform your space with our premium renovation solutions.'
-    },
-    {
-      id: 'Service',
-      title: t('service'),
-      icon: 'hammer-wrench',
-      description: 'Reliable maintenance and repair services at your doorstep.'
-    },
+    { id: 'Construction', title: 'Construction', icon: 'home-variant', color: '#000' },
+    { id: 'Renovation', title: 'Renovation', icon: 'format-paint', color: '#000' },
+    { id: 'Service', title: 'Service', icon: 'hammer-wrench', color: '#000' },
   ];
 
-  const handlePress = (serviceId) => {
-    navigation.navigate(serviceId);
-  };
-
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <View style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <StatusBar style="light" translucent backgroundColor="transparent" />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
-        {/* Stylish Welcome Card */}
-        <View style={styles.welcomeCard}>
-          <View style={styles.welcomeInfo}>
-            <Text style={styles.welcomeText}>{t('welcome')}</Text>
-            <Text style={styles.welcomeBrand}>mine</Text>
-            <Text style={styles.welcomeSubtitle}>by MAHTO</Text>
+        <ImageBackground
+          source={require('./assets/top.png')}
+          style={{ width: '100%', height: 320, justifyContent: 'flex-start' }}
+          imageStyle={{ height: 450, top: 0 }}
+          resizeMode="cover"
+        >
+          <View style={[styles.uberHeader, { marginTop: Platform.OS === 'ios' ? 50 : 30, backgroundColor: 'transparent' }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+                <Image
+                  source={userData.profileImage ? { uri: userData.profileImage } : require('./assets/adaptive-icon.png')}
+                  style={[styles.uberAvatar, { marginRight: 12, borderWidth: 2, borderColor: '#FFF' }]}
+                />
+              </TouchableOpacity>
+              <Text style={{ fontSize: 20, fontWeight: '700', color: '#FFF' }}>Hi, {userData.name.split(' ')[0]}</Text>
+            </View>
           </View>
-          <TouchableOpacity
-            style={styles.profileButtonCard}
-            onPress={() => navigation.navigate('Profile')}
-          >
-            {userData.profileImage ? (
-              <Image source={{ uri: userData.profileImage }} style={{ width: 48, height: 48, borderRadius: 12, borderWidth: 2, borderColor: '#FFF' }} />
-            ) : (
-              <MaterialCommunityIcons name="account-circle" size={48} color="#FFFFFF" />
-            )}
-          </TouchableOpacity>
-        </View>
+        </ImageBackground>
 
-        <Text style={styles.tagline}>{t('tagline')}</Text>
-
-        <View style={styles.servicesContainer}>
-          {services.map((service, index) => (
+        <View style={[styles.uberServiceGrid, { marginTop: 20 }]}>
+          {services.map((service) => (
             <TouchableOpacity
-              key={index}
-              style={styles.card}
-              activeOpacity={0.8}
-              onPress={() => handlePress(service.id)}
+              key={service.id}
+              style={styles.uberServiceCard}
+              onPress={() => navigation.navigate(service.id)}
             >
-              <View style={styles.iconContainer}>
-                {service.id === 'Construction' ? (
-                  <View style={{ width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
-                    <MaterialCommunityIcons name="home" size={24} color="#0047AB" style={{ position: 'absolute', bottom: 0, left: 0 }} />
-                    <MaterialCommunityIcons
-                      name="hammer"
-                      size={20}
-                      color="#0047AB"
-                      style={{
-                        position: 'absolute',
-                        top: -5,
-                        right: -5,
-                        transform: [{ scaleX: -1 }, { rotate: '30deg' }]
-                      }}
-                    />
-                  </View>
-                ) : (
-                  <MaterialCommunityIcons name={service.icon} size={32} color="#0047AB" />
-                )}
+              <View style={styles.uberServiceIconBg}>
+                <MaterialCommunityIcons name={service.icon} size={32} color="#000" />
               </View>
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{service.title}</Text>
-                <Text style={styles.cardDescription}>{service.description}</Text>
-              </View>
-              <MaterialCommunityIcons name="chevron-right" size={24} color="#999" />
+              <Text style={styles.uberServiceTitle}>{service.title}</Text>
             </TouchableOpacity>
           ))}
         </View>
 
+        <View style={styles.uberPromoCard}>
+          <View style={styles.uberPromoTextContainer}>
+            <Text style={styles.uberPromoTitle}>Full-Stack Construction</Text>
+            <Text style={styles.uberPromoDesc}>End-to-end service managed by MAHTO experts.</Text>
+            <TouchableOpacity style={styles.uberPromoBtn} onPress={() => navigation.navigate('AboutUs')}>
+              <Text style={styles.uberPromoBtnText}>How it works</Text>
+              <MaterialCommunityIcons name="arrow-right" size={18} color="#FFF" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.uberPromoIcon}>
+            <MaterialCommunityIcons name="shield-check" size={60} color="#000" opacity={0.1} />
+          </View>
+        </View>
+
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <Text style={[styles.uberSectionTitle, { marginBottom: 16 }]}>The MAHTO Difference</Text>
+          <View style={{ gap: 16 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons name="layers" size={24} color="#000" style={{ marginRight: 12 }} />
+              <View>
+                <Text style={{ fontWeight: '700', fontSize: 16 }}>End-to-End Stack</Text>
+                <Text style={{ color: '#666', fontSize: 13 }}>From plan to possession, one unified team.</Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons name="account-group" size={24} color="#000" style={{ marginRight: 12 }} />
+              <View>
+                <Text style={{ fontWeight: '700', fontSize: 16 }}>Direct Execution</Text>
+                <Text style={{ color: '#666', fontSize: 13 }}>In-house labor and professional engineers.</Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons name="currency-usd" size={24} color="#000" style={{ marginRight: 12 }} />
+              <View>
+                <Text style={{ fontWeight: '700', fontSize: 16 }}>Factory Pricing</Text>
+                <Text style={{ color: '#666', fontSize: 13 }}>Materials sourced directly for maximum value.</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.uberRecentSection}>
+          <Text style={styles.uberSectionTitle}>Your recent projects</Text>
+          <TouchableOpacity style={styles.uberRecentItem}>
+            <View style={styles.uberRecentIcon}>
+              <MaterialCommunityIcons name="history" size={24} color="#000" />
+            </View>
+            <View style={styles.uberRecentContent}>
+              <Text style={styles.uberRecentTitle}>Home Renovation</Text>
+              <Text style={styles.uberRecentSub}>123 Construction St, Delhi</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
+          </TouchableOpacity>
+        </View>
 
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 // --- ProfileScreen Component ---
 function ProfileScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
+  const { userData } = React.useContext(UserContext);
   const [logoutVisible, setLogoutVisible] = useState(false);
-  const [deleteVisible, setDeleteVisible] = useState(false);
-  const [confirmPhone, setConfirmPhone] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const accountItems = [
-    { title: t('editProfile'), icon: 'account-edit', onPress: () => navigation.navigate('EditProfile') },
-    { title: t('notification'), icon: 'bell-outline', onPress: () => navigation.navigate('Notification') },
-    { title: t('languages'), icon: 'translate', onPress: () => navigation.navigate('Languages') },
-  ];
 
-  const informationItems = [
-    { title: 'About Us', icon: 'information-outline', onPress: () => navigation.navigate('AboutUs') },
-    { title: 'Terms & Condition', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
-    { title: 'Privacy Policy', icon: 'shield-check-outline', onPress: () => navigation.navigate('PrivacyPolicy') },
-    { title: 'Refund Policy', icon: 'cash-refund', onPress: () => navigation.navigate('RefundPolicy') },
+  const menuItems = [
+    { title: 'Settings', icon: 'cog-outline', onPress: () => navigation.navigate('EditProfile') },
+    { title: 'Messages', icon: 'email-outline', onPress: () => navigation.navigate('Notification') },
+    { title: 'Legal', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
   ];
-
-  const actionItems = [
-    { title: t('logout'), icon: 'logout', color: '#FF3B30', onPress: () => setLogoutVisible(true) },
-    { title: t('deleteAccount'), icon: 'delete-forever', color: '#FF3B30', onPress: () => setDeleteVisible(true) },
-  ];
-
-  const renderMenuSection = (title, items) => (
-    <View style={styles.sectionContainer}>
-      {title && <Text style={styles.sectionTitle}>{title}</Text>}
-      <View style={styles.profileMenuContainer}>
-        {items.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[styles.menuItem, index === items.length - 1 && styles.lastMenuItem]}
-            onPress={item.onPress} // Added onPress handler
-          >
-            <View style={styles.menuItemLeft}>
-              <View style={[styles.menuIconBox, item.color && { backgroundColor: '#FFEBEE' }]}>
-                <MaterialCommunityIcons
-                  name={item.icon}
-                  size={24}
-                  color={item.color || "#0047AB"}
-                />
-              </View>
-              <Text style={[styles.menuItemText, item.color && { color: item.color }]}>
-                {item.title}
-              </Text>
-            </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
-          </TouchableOpacity>
-        ))}
-      </View>
-    </View>
-  );
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <CustomHeader
-          title={t('myProfile')}
-          subtitle="Manage your account settings" // Could translate
-          navigation={navigation}
-          showBack={true}
-        />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ padding: 20 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+            <View>
+              <Text style={{ fontSize: 32, fontWeight: '700', color: '#000' }}>{userData.name}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, backgroundColor: '#EEE', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12, alignSelf: 'flex-start' }}>
+                <MaterialCommunityIcons name="star" size={16} color="#000" />
+                <Text style={{ marginLeft: 4, fontWeight: '700' }}>5.0</Text>
+              </View>
+            </View>
+            <Image
+              source={userData.profileImage ? { uri: userData.profileImage } : require('./assets/adaptive-icon.png')}
+              style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#F3F3F3' }}
+            />
+          </View>
 
-        {renderMenuSection(t('accountSettings'), accountItems)}
-        {renderMenuSection(t('support'), [
-          { title: t('helpCenter'), icon: 'help-circle-outline', onPress: () => navigation.navigate('HelpCenter') },
-          { title: t('contactUs'), icon: 'email-outline', onPress: () => navigation.navigate('ContactUs') },
-          { title: t('rateUs'), icon: 'star-outline' },
-        ])}
-        {renderMenuSection(t('information'), informationItems)}
-        {renderMenuSection(t('actions'), actionItems)}
+          <View style={{ flexDirection: 'row', gap: 12, marginBottom: 32 }}>
+            <TouchableOpacity style={{ flex: 1, backgroundColor: '#F3F3F3', borderRadius: 12, padding: 16, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="help-circle" size={28} color="#000" />
+              <Text style={{ marginTop: 8, fontWeight: '700', fontSize: 13 }}>Help</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flex: 1, backgroundColor: '#F3F3F3', borderRadius: 12, padding: 16, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="wallet" size={28} color="#000" />
+              <Text style={{ marginTop: 8, fontWeight: '700', fontSize: 13 }}>Payment</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flex: 1, backgroundColor: '#F3F3F3', borderRadius: 12, padding: 16, alignItems: 'center' }}>
+              <MaterialCommunityIcons name="clock" size={28} color="#000" />
+              <Text style={{ marginTop: 8, fontWeight: '700', fontSize: 13 }}>Activity</Text>
+            </TouchableOpacity>
+          </View>
 
+          <View style={{ borderTopWidth: 1, borderTopColor: '#EEE' }}>
+            {menuItems.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20, borderBottomWidth: 1, borderBottomColor: '#EEE' }}
+                onPress={item.onPress}
+              >
+                <MaterialCommunityIcons name={item.icon} size={24} color="#000" style={{ marginRight: 16 }} />
+                <Text style={{ flex: 1, fontSize: 16, fontWeight: '600', color: '#000' }}>{item.title}</Text>
+                <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
+              </TouchableOpacity>
+            ))}
+
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}
+              onPress={() => setLogoutVisible(true)}
+            >
+              <MaterialCommunityIcons name="logout" size={24} color="#FF3B30" style={{ marginRight: 16 }} />
+              <Text style={{ flex: 1, fontSize: 16, fontWeight: '600', color: '#FF3B30' }}>Sign Out</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
 
       {/* Logout Confirmation Modal */}
       <Modal
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         visible={logoutVisible}
         onRequestClose={() => setLogoutVisible(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.logoutCard}>
-            <View style={styles.logoutIconContainer}>
-              <MaterialCommunityIcons name="logout" size={32} color="#FF3B30" />
-            </View>
-            <Text style={styles.logoutTitle}>{t('logout')}</Text>
-            <Text style={styles.logoutMessage}>Are you sure you want to log out?</Text>
+            <Text style={styles.logoutTitle}>Sign out of your account?</Text>
+            <Text style={styles.logoutMessage}>You'll need to sign back in to access your projects.</Text>
 
-            <View style={styles.logoutButtonContainer}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setLogoutVisible(false)}
-              >
-                <Text style={styles.cancelButtonText}>No, Stay</Text>
-              </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.confirmButton}
+              onPress={() => {
+                setLogoutVisible(false);
+                Alert.alert("Signed Out", "You have been signed out successfully.");
+              }}
+            >
+              <Text style={{ color: '#FFF', fontWeight: '700', fontSize: 16 }}>Sign Out</Text>
+            </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.confirmButton}
-                onPress={() => {
-                  setLogoutVisible(false);
-                  Alert.alert("Logged Out", "You have been logged out successfully.");
-                }}
-              >
-                <Text style={styles.confirmButtonText}>Yes, Logout</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Delete Account Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={deleteVisible}
-        onRequestClose={() => setDeleteVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.logoutCard}>
-            <View style={styles.logoutIconContainer}>
-              <MaterialCommunityIcons name="alert-octagon" size={32} color="#FF3B30" />
-            </View>
-            <Text style={styles.logoutTitle}>{t('deleteAccount')}</Text>
-            <Text style={styles.logoutMessage}>
-              This action cannot be undone. Please confirm your details to delete permanently.
-            </Text>
-
-            <View style={styles.modalInputWrapper}>
-              <MaterialCommunityIcons name="phone" size={20} color="#666" style={{ marginRight: 8 }} />
-              <TextInput
-                style={styles.modalInput}
-                placeholder="Phone Number"
-                value={confirmPhone}
-                onChangeText={setConfirmPhone}
-                keyboardType="phone-pad"
-                placeholderTextColor="#999"
-              />
-            </View>
-            <View style={styles.modalInputWrapper}>
-              <MaterialCommunityIcons name="lock-outline" size={20} color="#666" style={{ marginRight: 8 }} />
-              <TextInput
-                style={styles.modalInput}
-                placeholder="Password"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                secureTextEntry
-                placeholderTextColor="#999"
-              />
-            </View>
-
-            <View style={styles.logoutButtonContainer}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setDeleteVisible(false)}
-              >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.confirmButton}
-                onPress={() => {
-                  if (confirmPhone && confirmPassword) {
-                    setDeleteVisible(false);
-                    Alert.alert("Account Deleted", "Your account has been permanently deleted.");
-                    // Logic to navigate to login/welcome
-                  } else {
-                    Alert.alert("Error", "Please enter your phone and password.");
-                  }
-                }}
-              >
-                <Text style={styles.confirmButtonText}>Delete Forever</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setLogoutVisible(false)}
+            >
+              <Text style={{ color: '#000', fontWeight: '700', fontSize: 16 }}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -863,7 +798,7 @@ function CommercialBuildScreen({ navigation }) {
             width: '100%',
             height: 200,
             borderRadius: 20,
-            backgroundColor: '#E3F2FD',
+            backgroundColor: '#F3F3F3',
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: 20,
@@ -888,13 +823,13 @@ function CommercialBuildScreen({ navigation }) {
               marginBottom: 12,
               alignItems: 'center',
               borderWidth: 1,
-              borderColor: '#F0F0F0'
+              backgroundColor: '#F3F3F3'
             }}>
               <View style={{
                 width: 50,
                 height: 50,
                 borderRadius: 25,
-                backgroundColor: '#E3F2FD',
+                backgroundColor: '#F3F3F3',
                 justifyContent: 'center',
                 alignItems: 'center',
                 marginRight: 16
@@ -943,7 +878,7 @@ function IndustrialBuildScreen({ navigation }) {
             width: '100%',
             height: 200,
             borderRadius: 20,
-            backgroundColor: '#E3F2FD',
+            backgroundColor: '#F3F3F3',
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: 20,
@@ -968,13 +903,13 @@ function IndustrialBuildScreen({ navigation }) {
               marginBottom: 12,
               alignItems: 'center',
               borderWidth: 1,
-              borderColor: '#F0F0F0'
+              backgroundColor: '#F3F3F3'
             }}>
               <View style={{
                 width: 50,
                 height: 50,
                 borderRadius: 25,
-                backgroundColor: '#E3F2FD',
+                backgroundColor: '#F3F3F3',
                 justifyContent: 'center',
                 alignItems: 'center',
                 marginRight: 16
@@ -1023,7 +958,7 @@ function ProjectManagementScreen({ navigation }) {
             width: '100%',
             height: 200,
             borderRadius: 20,
-            backgroundColor: '#E3F2FD',
+            backgroundColor: '#F3F3F3',
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: 20,
@@ -1048,13 +983,13 @@ function ProjectManagementScreen({ navigation }) {
               marginBottom: 12,
               alignItems: 'center',
               borderWidth: 1,
-              borderColor: '#F0F0F0'
+              backgroundColor: '#F3F3F3'
             }}>
               <View style={{
                 width: 50,
                 height: 50,
                 borderRadius: 25,
-                backgroundColor: '#E3F2FD',
+                backgroundColor: '#F3F3F3',
                 justifyContent: 'center',
                 alignItems: 'center',
                 marginRight: 16
@@ -1095,7 +1030,7 @@ function ContactUsScreen({ navigation }) {
 
         <View style={{ paddingHorizontal: 4 }}>
           {/* General Support Card */}
-          <View style={[styles.contactCard, { backgroundColor: '#0047AB' }]}>
+          <View style={[styles.contactCard, { backgroundColor: '#000' }]}>
             <MaterialCommunityIcons name="email" size={48} color="#FFF" style={{ marginBottom: 16 }} />
             <Text style={styles.contactCardTitle}>General Support</Text>
             <Text style={styles.contactCardDesc}>For bugs, feature requests, or general queries.</Text>
@@ -1143,18 +1078,12 @@ function ConstructionScreen({ navigation }) {
     { title: 'Project Management', icon: 'clipboard-list', details: 'End-to-end management of your build.', route: 'ProjectManagement' },
   ];
 
-  const handlePress = (item) => {
-    if (item.route) {
-      navigation.navigate(item.route);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <CustomHeader
-          title="Construction Services"
+          title="Construction"
           subtitle="Building your dreams with precision."
           navigation={navigation}
           showBack={true}
@@ -1165,9 +1094,9 @@ function ConstructionScreen({ navigation }) {
             <TouchableOpacity
               key={index}
               style={styles.gridCard}
-              onPress={() => handlePress(item)}
+              onPress={() => item.route && navigation.navigate(item.route)}
             >
-              <MaterialCommunityIcons name={item.icon} size={40} color="#0047AB" style={{ marginBottom: 10 }} />
+              <MaterialCommunityIcons name={item.icon} size={32} color="#000" />
               <Text style={styles.gridTitle}>{item.title}</Text>
               <Text style={styles.gridDetails}>{item.details}</Text>
             </TouchableOpacity>
@@ -1188,18 +1117,12 @@ function RenovationScreen({ navigation }) {
     { title: 'Home Painting', icon: 'format-paint', details: 'Interior and exterior professional painting.', route: 'HomePainting' },
   ];
 
-  const handlePress = (item) => {
-    if (item.route) {
-      navigation.navigate(item.route);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <CustomHeader
-          title="Renovation Services"
+          title="Renovation"
           subtitle="Revitalize your improved space."
           navigation={navigation}
           showBack={true}
@@ -1210,9 +1133,9 @@ function RenovationScreen({ navigation }) {
             <TouchableOpacity
               key={index}
               style={styles.gridCard}
-              onPress={() => handlePress(item)}
+              onPress={() => item.route && navigation.navigate(item.route)}
             >
-              <MaterialCommunityIcons name={item.icon} size={40} color="#0047AB" style={{ marginBottom: 10 }} />
+              <MaterialCommunityIcons name={item.icon} size={32} color="#000" />
               <Text style={styles.gridTitle}>{item.title}</Text>
               <Text style={styles.gridDetails}>{item.details}</Text>
             </TouchableOpacity>
@@ -1238,7 +1161,7 @@ function KitchenRemodelScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Kitchen Remodel" subtitle="The Heart of Your Home." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <MaterialCommunityIcons name="chef-hat" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Culinary Masterpiece</Text>
@@ -1247,8 +1170,8 @@ function KitchenRemodelScreen({ navigation }) {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>What We Offer</Text>
           {steps.map((step, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
                 <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
@@ -1258,7 +1181,7 @@ function KitchenRemodelScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Plan My Kitchen</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1280,7 +1203,7 @@ function BathroomUpgradeScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Bathroom Upgrade" subtitle="Your Personal Spa." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <MaterialCommunityIcons name="shower-head" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Refresh & Relax</Text>
@@ -1289,8 +1212,8 @@ function BathroomUpgradeScreen({ navigation }) {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Features</Text>
           {steps.map((step, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
                 <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
@@ -1300,7 +1223,7 @@ function BathroomUpgradeScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Upgrade Bathroom</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1322,7 +1245,7 @@ function FlooringMakeoverScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Flooring" subtitle="Foundation of Style." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <MaterialCommunityIcons name="floor-plan" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Step into Luxury</Text>
@@ -1331,8 +1254,8 @@ function FlooringMakeoverScreen({ navigation }) {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Options</Text>
           {steps.map((step, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
                 <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
@@ -1342,7 +1265,7 @@ function FlooringMakeoverScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Get Flooring Quote</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1364,7 +1287,7 @@ function FullHomeMakeoverScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Full Home Makeover" subtitle="Complete Transformation." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <MaterialCommunityIcons name="home-modern" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Reimagine Your Home</Text>
@@ -1373,8 +1296,8 @@ function FullHomeMakeoverScreen({ navigation }) {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Our Approach</Text>
           {steps.map((step, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
                 <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
@@ -1384,7 +1307,7 @@ function FullHomeMakeoverScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Start Makeover</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1406,7 +1329,7 @@ function HomePaintingScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Home Painting" subtitle="A Fresh Coat of Life." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <MaterialCommunityIcons name="format-paint" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Vibrant Spaces</Text>
@@ -1415,8 +1338,8 @@ function HomePaintingScreen({ navigation }) {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Services</Text>
           {steps.map((step, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
                 <MaterialCommunityIcons name={step.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
@@ -1426,7 +1349,7 @@ function HomePaintingScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Get Painting Quote</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1443,18 +1366,12 @@ function ServiceScreen({ navigation }) {
     { title: 'General Repairs', icon: 'hammer-wrench', details: 'Fixing the small things before they grow.', route: 'GeneralRepairs' },
   ];
 
-  const handlePress = (item) => {
-    if (item.route) {
-      navigation.navigate(item.route);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <CustomHeader
-          title="Maintenance Services"
+          title="Maintenance"
           subtitle="Reliable repairs when you need them."
           navigation={navigation}
           showBack={true}
@@ -1465,9 +1382,9 @@ function ServiceScreen({ navigation }) {
             <TouchableOpacity
               key={index}
               style={styles.gridCard}
-              onPress={() => handlePress(item)}
+              onPress={() => item.route && navigation.navigate(item.route)}
             >
-              <MaterialCommunityIcons name={item.icon} size={40} color="#0047AB" style={{ marginBottom: 10 }} />
+              <MaterialCommunityIcons name={item.icon} size={32} color="#000" />
               <Text style={styles.gridTitle}>{item.title}</Text>
               <Text style={styles.gridDetails}>{item.details}</Text>
             </TouchableOpacity>
@@ -1494,7 +1411,7 @@ function PlumbingScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Plumbing Services" subtitle="Expert Flow Control." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <MaterialCommunityIcons name="water-pump" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Reliable Plumbing</Text>
@@ -1503,8 +1420,8 @@ function PlumbingScreen({ navigation }) {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Services</Text>
           {services.map((item, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
                 <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
@@ -1514,7 +1431,7 @@ function PlumbingScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Call a Plumber</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1536,7 +1453,7 @@ function ElectricalScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="Electrical Services" subtitle="Powering Your Life." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <MaterialCommunityIcons name="flash" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Expert Electricians</Text>
@@ -1545,8 +1462,8 @@ function ElectricalScreen({ navigation }) {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>What We Do</Text>
           {services.map((item, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
                 <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
@@ -1556,7 +1473,7 @@ function ElectricalScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Book Electrician</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1578,7 +1495,7 @@ function HVACScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="HVAC Services" subtitle="Comfort in All Seasons." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <MaterialCommunityIcons name="air-conditioner" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Climate Control</Text>
@@ -1587,8 +1504,8 @@ function HVACScreen({ navigation }) {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Services</Text>
           {services.map((item, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
                 <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
@@ -1598,7 +1515,7 @@ function HVACScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Schedule Service</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1620,7 +1537,7 @@ function GeneralRepairsScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader title="General Repairs" subtitle="Small Fixes, Big Impact." navigation={navigation} showBack={true} />
         <View style={{ alignItems: 'center', marginBottom: 30 }}>
-          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ width: '100%', height: 200, borderRadius: 20, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
             <MaterialCommunityIcons name="hammer-wrench" size={80} color="#0047AB" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', textAlign: 'center', marginBottom: 10 }}>Home Maintenance</Text>
@@ -1629,8 +1546,8 @@ function GeneralRepairsScreen({ navigation }) {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>What We Fix</Text>
           {services.map((item, index) => (
-            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#F0F0F0' }}>
-              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+            <View key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginBottom: 12, alignItems: 'center', borderWidth: 1, backgroundColor: '#F3F3F3' }}>
+              <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
                 <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" />
               </View>
               <View style={{ flex: 1 }}>
@@ -1640,7 +1557,7 @@ function GeneralRepairsScreen({ navigation }) {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#0047AB', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
+        <TouchableOpacity style={[styles.ctaButton, { backgroundColor: '#000', shadowColor: '#0047AB' }]} onPress={() => navigation.navigate('ContactUs')}>
           <Text style={styles.ctaText}>Request Handyman</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -1758,7 +1675,7 @@ function PrivacyPolicyScreen({ navigation }) {
           <Text style={styles.lastUpdatedText}>Last Updated: February 2026</Text>
 
           <View style={{ marginBottom: 24, padding: 12, backgroundColor: '#E3F2FD', borderRadius: 8 }}>
-            <Text style={{ fontSize: 13, color: '#0047AB', lineHeight: 20 }}>
+            <Text style={{ fontSize: 13, color: '#000', lineHeight: 20 }}>
               At MAHTO, we are committed to protecting your privacy and ensuring the security of your personal information.
             </Text>
           </View>
@@ -1888,7 +1805,7 @@ function AboutUsScreen({ navigation }) {
             We are building one unified system that brings together everything required to build a home — from land and labor to construction materials, financing, and delivery.
           </Text>
           <Text style={[styles.aboutText, { marginTop: 12 }]}>
-            Today, building a home means dealing with fragmented vendors, contractors, workers, and middlemen. <Text style={{ fontWeight: 'bold', color: '#0047AB' }}>MAHTO</Text> simplifies this entire journey into a single, integrated platform — end to end.
+            Today, building a home means dealing with fragmented vendors, contractors, workers, and middlemen. <Text style={{ fontWeight: 'bold', color: '#000' }}>MAHTO</Text> simplifies this entire journey into a single, integrated platform — end to end.
           </Text>
         </View>
 
@@ -1957,7 +1874,44 @@ function AboutUsScreen({ navigation }) {
   );
 }
 
-// --- Main App Component with Navigation ---
+// --- Main Application Components ---
+
+function MainTabs() {
+  const { t } = React.useContext(LanguageContext);
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: '#FFF',
+          borderTopWidth: 1,
+          borderTopColor: '#EEE',
+          height: Platform.OS === 'ios' ? 88 : 64,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 10,
+          paddingTop: 10,
+        },
+        tabBarActiveTintColor: '#000',
+        tabBarInactiveTintColor: '#AAA',
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '500',
+        },
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+          if (route.name === 'Home') iconName = 'home-variant';
+          else if (route.name === 'Activity') iconName = 'clock-outline';
+          else if (route.name === 'Account') iconName = 'account-outline';
+          return <MaterialCommunityIcons name={iconName} size={size + 4} color={color} />;
+        },
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Activity" component={HomeScreen} />
+      <Tab.Screen name="Account" component={ProfileScreen} />
+    </Tab.Navigator>
+  );
+}
+
 export default function App() {
   return (
     <LanguageProvider>
@@ -1966,11 +1920,11 @@ export default function App() {
           <Stack.Navigator
             screenOptions={{
               headerShown: false,
-              headerStyle: { backgroundColor: '#F8F9FA' },
-              contentStyle: { backgroundColor: '#F8F9FA' },
+              headerStyle: { backgroundColor: '#FFF' },
+              contentStyle: { backgroundColor: '#FFF' },
             }}
           >
-            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Root" component={MainTabs} />
             <Stack.Screen name="Construction" component={ConstructionScreen} />
             <Stack.Screen name="ResidentialBuild" component={ResidentialBuildScreen} />
             <Stack.Screen name="CommercialBuild" component={CommercialBuildScreen} />
@@ -2007,765 +1961,363 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
-    paddingTop: Platform.OS === 'android' ? 40 : 0,
+    backgroundColor: '#FFF',
   },
   scrollContent: {
-    padding: 20,
     paddingBottom: 40,
   },
-  // Stylish Welcome Card Styles
-  welcomeCard: {
-    backgroundColor: '#0047AB',
-    borderRadius: 24,
-    padding: 24,
+  // Uber Style Styles
+  uberHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 24,
+  },
+  uberBrand: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: '#000',
+    letterSpacing: -1.5,
+  },
+  uberAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#EEE',
+  },
+  uberGreeting: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#000',
+    paddingHorizontal: 20,
+    marginBottom: 24,
+  },
+  uberSearchContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 32,
+  },
+  uberSearchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 32,
-    marginTop: 20,
-    shadowColor: '#0047AB',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 8,
+    backgroundColor: '#F3F3F3',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 12,
   },
-  welcomeInfo: {
+  uberSearchDot: {
+    width: 8,
+    height: 8,
+    backgroundColor: '#000',
+    borderRadius: 2,
+    marginRight: 12,
+  },
+  uberSearchText: {
     flex: 1,
-  },
-  welcomeText: {
-    fontSize: 16,
-    color: '#E3F2FD',
-    marginBottom: 0,
-    fontWeight: '500',
-  },
-  welcomeBrand: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    letterSpacing: -1,
-  },
-  welcomeSubtitle: {
     fontSize: 18,
-    color: '#FFFFFF', // Clean white
-    marginTop: -5,
-    letterSpacing: 1,
     fontWeight: '600',
+    color: '#555',
   },
-  profileButtonCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    padding: 12,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+  uberSearchRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  tagline: {
+  uberDivider: {
+    width: 1,
+    height: 20,
+    backgroundColor: '#DDD',
+    marginHorizontal: 12,
+  },
+  uberNowText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#000',
+    marginLeft: 6,
+    marginRight: 4,
+  },
+  uberServiceGrid: {
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    marginBottom: 32,
+    gap: 12,
+  },
+  uberServiceCard: {
+    flex: 1,
+    backgroundColor: '#F3F3F3',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  uberServiceIconBg: {
+    marginBottom: 8,
+  },
+  uberServiceTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#0047AB',
-    textAlign: 'center',
-    marginTop: 0,
-    marginBottom: 24,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    backgroundColor: '#E3F2FD',
+    color: '#000',
+  },
+  uberPromoCard: {
+    marginHorizontal: 20,
+    backgroundColor: '#F3F3F3',
+    borderRadius: 16,
+    padding: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    overflow: 'hidden',
+    marginBottom: 32,
+  },
+  uberPromoTextContainer: {
+    flex: 1,
+    zIndex: 1,
+  },
+  uberPromoTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 8,
+  },
+  uberPromoDesc: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 16,
+    lineHeight: 20,
+  },
+  uberPromoBtn: {
+    backgroundColor: '#000',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
-    alignSelf: 'center',
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#BBDEFB',
-  },
-  servicesContainer: {
-    gap: 16,
-    marginTop: 20,
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-    borderWidth: 1,
-    borderColor: '#EEE',
+    alignSelf: 'flex-start',
   },
-  iconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#E3F2FD',
+  uberPromoBtnText: {
+    color: '#FFF',
+    fontWeight: '600',
+    marginRight: 8,
+  },
+  uberPromoIcon: {
+    position: 'absolute',
+    right: -10,
+    bottom: -10,
+  },
+  uberRecentSection: {
+    paddingHorizontal: 20,
+  },
+  uberSectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 16,
+  },
+  uberRecentItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEE',
+  },
+  uberRecentIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#F3F3F3',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
   },
-  cardContent: {
+  uberRecentContent: {
     flex: 1,
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333333',
+  uberRecentTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000',
     marginBottom: 4,
   },
-  cardDescription: {
-    fontSize: 12,
-    color: '#666666',
-  },
-  ctaButton: {
-    marginTop: 40,
-    backgroundColor: '#0047AB',
-    paddingVertical: 16,
-    borderRadius: 30,
-    alignItems: 'center',
-    shadowColor: '#0047AB',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  ctaText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
+  uberRecentSub: {
+    fontSize: 14,
+    color: '#555',
   },
   // Custom Header Styles
   customHeaderContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 40,
-    marginTop: 20,
-    paddingHorizontal: 10,
+    marginBottom: 32,
+    marginTop: 10,
+    paddingHorizontal: 20,
   },
   backButton: {
     marginRight: 16,
-    padding: 8,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
   },
   screenTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 4,
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#000',
   },
   screenSubtitle: {
     fontSize: 16,
-    color: '#666666',
+    color: '#555',
+    marginTop: 4,
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 16,
     justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
   gridCard: {
-    width: '47%', // 2 columns roughly
-    backgroundColor: '#FFFFFF',
+    width: '47%',
+    backgroundColor: '#F3F3F3',
     borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-    borderWidth: 1,
-    borderColor: '#EEE',
-    marginBottom: 16,
+    padding: 20,
+    alignItems: 'flex-start',
+    marginBottom: 4,
   },
   gridTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333333',
-    textAlign: 'center',
+    fontWeight: '700',
+    color: '#000',
+    marginTop: 12,
     marginBottom: 4,
   },
   gridDetails: {
     fontSize: 12,
-    color: '#666666',
-    textAlign: 'center',
+    color: '#555',
+    lineHeight: 18,
   },
-  // Profile Styles
+  // Profile / Account Styles
+  sectionContainer: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 20,
+    paddingHorizontal: 20,
+  },
   profileMenuContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: '#EEE',
+    paddingHorizontal: 20,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+    paddingVertical: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  lastMenuItem: {
-    borderBottomWidth: 0,
-  },
-  sectionContainer: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 12,
-    marginLeft: 4,
+    borderBottomColor: '#EEE',
   },
   menuItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   menuIconBox: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: '#E3F2FD',
-    justifyContent: 'center',
-    alignItems: 'center',
     marginRight: 16,
   },
   menuItemText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#000',
   },
-  // Edit Profile Styles
-  profileHeaderContainer: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  profileImageContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#E3F2FD', // Fallback color
-    position: 'relative',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 8,
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-  },
-  editIconBadge: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    backgroundColor: '#0047AB',
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 3,
-    borderColor: '#FFF',
-  },
+  // Form Styles (Uber-like clean)
   formContainer: {
+    paddingHorizontal: 20,
     marginTop: 10,
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   inputLabel: {
     fontSize: 14,
-    color: '#666',
+    fontWeight: '700',
+    color: '#000',
     marginBottom: 8,
-    fontWeight: '600',
-    marginLeft: 4,
   },
   inputWrapper: {
+    backgroundColor: '#F3F3F3',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    height: 56,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#DDD',
-    paddingHorizontal: 12,
-    height: 50, // Fixed height for standard inputs
-  },
-  inputIcon: {
-    marginRight: 10,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
-  },
-  addressContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  locationButton: {
-    backgroundColor: '#0047AB',
-    width: 50,
-    height: 50,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#0047AB',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
+    color: '#000',
   },
   saveButton: {
-    backgroundColor: '#0047AB',
-    borderRadius: 30,
-    paddingVertical: 18,
+    backgroundColor: '#000',
+    borderRadius: 8,
+    paddingVertical: 16,
     alignItems: 'center',
     marginTop: 20,
-    shadowColor: '#0047AB',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 8,
   },
   saveButtonText: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
+    fontWeight: '700',
+    color: '#FFF',
   },
-  // Contact Us Styles
-  contactCard: {
-    borderRadius: 24,
-    padding: 32,
-    alignItems: 'center',
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  contactCardTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  contactCardDesc: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-    textAlign: 'center',
-    marginBottom: 24,
-    lineHeight: 20,
-  },
-  contactCardButton: {
-    paddingVertical: 14,
-    paddingHorizontal: 32,
+  // CTA Buttons
+  ctaButton: {
+    marginHorizontal: 20,
+    marginTop: 32,
+    backgroundColor: '#000',
+    paddingVertical: 18,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    width: '100%',
     alignItems: 'center',
   },
-  contactCardButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+  ctaText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#FFF',
   },
-  infoBanner: {
-    flexDirection: 'row',
-    backgroundColor: '#F0F4F8',
-    padding: 16,
-    borderRadius: 16,
-    alignItems: 'center',
-    marginTop: 8,
-    marginBottom: 32,
-  },
-  infoBannerText: {
-    flex: 1,
-    fontSize: 13,
-    color: '#555',
-    lineHeight: 18,
-  },
-  // Notification Styles
-  notificationCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#EEE',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  notificationItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-  },
-  notificationTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
-  },
-  notificationSubtitle: {
-    fontSize: 12,
-    color: '#666',
-  },
+  // Utilities
   divider: {
     height: 1,
-    backgroundColor: '#F0F0F0',
-    marginVertical: 8,
+    backgroundColor: '#EEE',
+    marginVertical: 12,
   },
-  // Help Center Styles
-  helpCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#F0F0F0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
-  },
-  iconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#E3F2FD',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16
-  },
-  helpCardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 8
-  },
-  helpCardDesc: {
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 22,
-    marginBottom: 20
-  },
-  helpCardButton: {
-    backgroundColor: '#0047AB',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-  },
-  helpCardButtonText: {
-    color: '#FFF',
-    fontWeight: '600',
-    fontSize: 15
-  },
-  // About Us Styles
-  aboutHero: {
-    alignItems: 'center',
-    paddingVertical: 32,
-    paddingHorizontal: 20,
-    backgroundColor: '#F8F9FA',
-  },
-  aboutHeroIconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#0047AB',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-    elevation: 4,
-    shadowColor: '#0047AB',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-  },
-  aboutHeroTitle: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  aboutHeroSubtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  aboutSection: {
-    padding: 24,
-    backgroundColor: '#FFF',
-    marginBottom: 16,
-    marginHorizontal: 16,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  aboutSectionTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#0047AB',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 4,
-  },
-  aboutSectionSubtitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 20,
-  },
-  aboutText: {
-    fontSize: 16,
-    color: '#444',
-    lineHeight: 26,
-  },
-  ecosystemContainer: {
-    marginTop: 8,
-  },
-  ecoItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    padding: 12,
-    backgroundColor: '#F5F9FF',
-    borderRadius: 12,
-  },
-  ecoIconBox: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: '#FFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  ecoTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 2,
-  },
-  ecoDesc: {
-    fontSize: 13,
-    color: '#666',
-  },
-  infoNote: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#E3F2FD',
-    padding: 12,
-    borderRadius: 12,
-    marginTop: 8,
-  },
-  infoNoteText: {
-    flex: 1,
-    fontSize: 13,
-    color: '#0047AB',
-    fontStyle: 'italic',
-    lineHeight: 18,
-  },
-  missionVisionContainer: {
-    paddingHorizontal: 16,
-  },
-  mvCard: {
-    backgroundColor: '#FFF',
-    borderRadius: 20,
-    padding: 24,
-    marginBottom: 16,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  mvIconCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#0047AB',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  mvTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 8,
-  },
-  mvText: {
-    fontSize: 16,
-    color: '#555',
-    textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 12,
-  },
-  mvQuote: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#0047AB',
-    fontStyle: 'italic',
-  },
-  // Terms Styles
-  termsContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
-    marginTop: 8,
-    borderWidth: 1,
-    borderColor: '#EEE',
-  },
-  lastUpdatedText: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 24,
-    fontStyle: 'italic',
-  },
-  termsSection: {
-    marginBottom: 24,
-  },
-  termsTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 8,
-  },
-  termsText: {
-    fontSize: 14,
-    color: '#555',
-    lineHeight: 22,
-  },
-  termsFooter: {
-    marginTop: 16,
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
-  },
-  termsFooterText: {
-    fontSize: 13,
-    color: '#0047AB',
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-  // Modal Styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
   },
   logoutCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
+    backgroundColor: '#FFF',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     padding: 32,
-    width: '85%',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 10,
-  },
-  logoutIconContainer: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#FFEBEE',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
   },
   logoutTitle: {
     fontSize: 22,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-    marginBottom: 10,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 12,
   },
   logoutMessage: {
     fontSize: 16,
-    color: '#666',
+    color: '#555',
     textAlign: 'center',
-    marginBottom: 30,
-  },
-  logoutButtonContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    gap: 16,
-  },
-  cancelButton: {
-    flex: 1,
-    paddingVertical: 14,
-    borderRadius: 12,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    marginBottom: 32,
   },
   confirmButton: {
-    flex: 1,
-    paddingVertical: 14,
-    borderRadius: 12,
-    backgroundColor: '#FF3B30',
-    alignItems: 'center',
-  },
-  confirmButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FFF',
-  },
-  modalInputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    backgroundColor: '#000',
     width: '100%',
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
+    paddingVertical: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 12,
   },
-  modalInput: {
-    flex: 1,
-    fontSize: 16,
-    color: '#333',
-  }
+  cancelButton: {
+    backgroundColor: '#F3F3F3',
+    width: '100%',
+    paddingVertical: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
 });
