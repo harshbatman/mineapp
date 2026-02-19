@@ -2839,10 +2839,10 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   confirmButton: {
-    backgroundColor: '#000',
+    backgroundColor: '#FF3B30',
     width: '100%',
     paddingVertical: 16,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
     marginBottom: 12,
   },
@@ -2850,7 +2850,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F3F3F3',
     width: '100%',
     paddingVertical: 16,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
   },
 });
