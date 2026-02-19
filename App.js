@@ -33,7 +33,9 @@ const UserProvider = ({ children }) => {
     phone: '+91 9876543210',
     email: 'harsh.batman@example.com',
     address: '123 Construction St, Delhi',
-    profileImage: null
+    profileImage: null,
+    listingsCount: 12,
+    savedCount: 45
   });
 
   const updateUserData = (newData) => {
@@ -72,9 +74,9 @@ function HomeScreen({ navigation }) {
   const { userData } = React.useContext(UserContext);
 
   const services = [
-    { id: 'Construction', title: 'Construction', icon: 'home-variant', color: '#000' },
-    { id: 'Renovation', title: 'Renovation', icon: 'format-paint', color: '#000' },
-    { id: 'Service', title: 'Service', icon: 'hammer-wrench', color: '#000' },
+    { id: 'Construction', title: 'Construction', image: require('./assets/construction.png') },
+    { id: 'Renovation', title: 'Renovation', image: require('./assets/renovation.png') },
+    { id: 'Service', title: 'Service', image: require('./assets/services.png') },
   ];
 
   return (
@@ -83,9 +85,21 @@ function HomeScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
         <ImageBackground
-          source={require('./assets/top.png')}
-          style={{ width: '100%', height: 320, justifyContent: 'flex-start' }}
-          imageStyle={{ height: 450, top: 0 }}
+          source={require('./assets/this.jpg')}
+          style={{
+            width: '100%',
+            height: 320,
+            justifyContent: 'flex-start',
+            borderBottomLeftRadius: 24,
+            borderBottomRightRadius: 24,
+            overflow: 'hidden'
+          }}
+          imageStyle={{
+            height: 320,
+            top: 0,
+            borderBottomLeftRadius: 24,
+            borderBottomRightRadius: 24
+          }}
           resizeMode="cover"
         >
           <View style={[styles.uberHeader, { marginTop: Platform.OS === 'ios' ? 50 : 30, backgroundColor: 'transparent' }]}>
@@ -99,19 +113,28 @@ function HomeScreen({ navigation }) {
               <Text style={{ fontSize: 20, fontWeight: '700', color: '#FFF' }}>Hi, {userData.name.split(' ')[0]}</Text>
             </View>
           </View>
+          <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 20 }}>
+            <Text style={{ fontSize: 36, fontWeight: '900', color: '#FFF', letterSpacing: -1 }}>mine</Text>
+            <Text style={{ fontSize: 18, fontWeight: '600', color: '#FFF', marginTop: -8 }}>By MAHTO</Text>
+          </View>
         </ImageBackground>
 
-        <View style={[styles.uberServiceGrid, { marginTop: 20 }]}>
+        <View style={[styles.uberServiceGrid, { marginTop: 32 }]}>
           {services.map((service) => (
             <TouchableOpacity
               key={service.id}
-              style={styles.uberServiceCard}
+              style={[styles.uberServiceCard, { backgroundColor: '#FFF', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 }]}
               onPress={() => navigation.navigate(service.id)}
             >
-              <View style={styles.uberServiceIconBg}>
-                <MaterialCommunityIcons name={service.icon} size={32} color="#000" />
+              <View style={[styles.uberServiceIconBg, { width: 60, height: 60, justifyContent: 'center', alignItems: 'center' }]}>
+                <Image source={service.image} style={{ width: 56, height: 56 }} resizeMode="contain" />
               </View>
-              <Text style={styles.uberServiceTitle}>{service.title}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+                <Text style={styles.uberServiceTitle}>{service.title}</Text>
+                <View style={{ marginLeft: 4, width: 18, height: 18, borderRadius: 9, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center' }}>
+                  <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
+                </View>
+              </View>
             </TouchableOpacity>
           ))}
         </View>
@@ -186,6 +209,7 @@ function ProfileScreen({ navigation }) {
     { title: 'Settings', icon: 'cog-outline', onPress: () => navigation.navigate('EditProfile') },
     { title: 'Messages', icon: 'email-outline', onPress: () => navigation.navigate('Notification') },
     { title: 'Legal', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
+    { title: 'Rate Us', icon: 'star-outline', onPress: () => Linking.openURL('https://play.google.com/store/apps/details?id=com.mine.app') },
   ];
 
   return (
@@ -205,6 +229,18 @@ function ProfileScreen({ navigation }) {
               source={userData.profileImage ? { uri: userData.profileImage } : require('./assets/adaptive-icon.png')}
               style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#F3F3F3' }}
             />
+          </View>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 32, backgroundColor: '#F9F9F9', paddingVertical: 16, borderRadius: 16 }}>
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ fontSize: 20, fontWeight: '700', color: '#000' }}>{userData.listingsCount}</Text>
+              <Text style={{ fontSize: 13, color: '#666', marginTop: 4 }}>Listings</Text>
+            </View>
+            <View style={{ width: 1, height: '100%', backgroundColor: '#EEE' }} />
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ fontSize: 20, fontWeight: '700', color: '#000' }}>{userData.savedCount}</Text>
+              <Text style={{ fontSize: 13, color: '#666', marginTop: 4 }}>Saved</Text>
+            </View>
           </View>
 
           <View style={{ flexDirection: 'row', gap: 12, marginBottom: 32 }}>
@@ -1875,6 +1911,73 @@ function AboutUsScreen({ navigation }) {
 }
 
 // --- Main Application Components ---
+// --- SavedPropertiesScreen Component ---
+function SavedPropertiesScreen({ navigation }) {
+  const { userData } = React.useContext(UserContext);
+  const savedItems = [
+    { id: 1, title: 'Luxury Villa', location: 'South Delhi', price: '₹5.5 Cr', icon: 'home-modern' },
+    { id: 2, title: 'Modern Office', location: 'Gurugram', price: '₹2.1 Cr', icon: 'office-building' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="Saved Items" subtitle={`${userData.savedCount} items you loved`} navigation={navigation} showBack={true} />
+        <View style={{ paddingHorizontal: 20 }}>
+          {savedItems.map(item => (
+            <TouchableOpacity key={item.id} style={styles.uberRecentItem}>
+              <View style={styles.uberRecentIcon}>
+                <MaterialCommunityIcons name={item.icon} size={24} color="#000" />
+              </View>
+              <View style={styles.uberRecentContent}>
+                <Text style={styles.uberRecentTitle}>{item.title}</Text>
+                <Text style={styles.uberRecentSub}>{item.location} • {item.price}</Text>
+              </View>
+              <MaterialCommunityIcons name="heart" size={24} color="#FF3B30" />
+            </TouchableOpacity>
+          ))}
+          {userData.savedCount > 2 && (
+            <Text style={{ textAlign: 'center', color: '#666', marginTop: 20 }}>+ {userData.savedCount - 2} more items</Text>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- ActivityScreen Component ---
+function ActivityScreen({ navigation }) {
+  const activities = [
+    { id: 1, title: 'Home Renovation', status: 'In Progress', date: 'June 12', icon: 'progress-wrench' },
+    { id: 2, title: 'Consultation', status: 'Completed', date: 'May 05', icon: 'check-circle' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader title="Activity" subtitle="Track your projects" navigation={navigation} showBack={false} />
+        <View style={{ paddingHorizontal: 20 }}>
+          <Text style={[styles.uberSectionTitle, { marginTop: 10 }]}>Past Projects</Text>
+          {activities.map(item => (
+            <TouchableOpacity key={item.id} style={styles.uberRecentItem}>
+              <View style={styles.uberRecentIcon}>
+                <MaterialCommunityIcons name={item.icon} size={24} color="#000" />
+              </View>
+              <View style={styles.uberRecentContent}>
+                <Text style={styles.uberRecentTitle}>{item.title}</Text>
+                <Text style={styles.uberRecentSub}>{item.status} • {item.date}</Text>
+              </View>
+              <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 
 function MainTabs() {
   const { t } = React.useContext(LanguageContext);
@@ -1900,13 +2003,15 @@ function MainTabs() {
           let iconName;
           if (route.name === 'Home') iconName = 'home-variant';
           else if (route.name === 'Activity') iconName = 'clock-outline';
+          else if (route.name === 'Saved') iconName = 'heart-outline';
           else if (route.name === 'Account') iconName = 'account-outline';
           return <MaterialCommunityIcons name={iconName} size={size + 4} color={color} />;
         },
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Activity" component={HomeScreen} />
+      <Tab.Screen name="Activity" component={ActivityScreen} />
+      <Tab.Screen name="Saved" component={SavedPropertiesScreen} />
       <Tab.Screen name="Account" component={ProfileScreen} />
     </Tab.Navigator>
   );
@@ -1951,6 +2056,8 @@ export default function App() {
             <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
             <Stack.Screen name="RefundPolicy" component={RefundPolicyScreen} />
             <Stack.Screen name="AboutUs" component={AboutUsScreen} />
+            <Stack.Screen name="SavedProperties" component={SavedPropertiesScreen} />
+            <Stack.Screen name="ActivityScreen" component={ActivityScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </UserProvider>
