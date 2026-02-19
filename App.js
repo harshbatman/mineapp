@@ -9,6 +9,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { translations } from './translations';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+// Firebase Imports
+import { storage } from './firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 const LanguageContext = React.createContext();
 
 const LanguageProvider = ({ children }) => {
@@ -532,6 +536,7 @@ function EditProfileScreen({ navigation }) {
   const [address, setAddress] = useState(userData.address);
   const [profileImage, setProfileImage] = useState(userData.profileImage);
   const [loadingLocation, setLoadingLocation] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -574,8 +579,31 @@ function EditProfileScreen({ navigation }) {
     }
   };
 
-  const handleSave = () => {
-    updateUserData({ name, phone, email, address, profileImage });
+  const uploadImage = async (uri) => {
+    if (!uri || uri.startsWith('http')) return uri;
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const filename = `profiles/${userData.phone.replace(/[^0-9]/g, '') || Date.now()}.jpg`;
+      const storageRef = ref(storage, filename);
+      await uploadBytes(storageRef, blob);
+      return await getDownloadURL(storageRef);
+    } catch (e) {
+      console.error("Upload failed", e);
+      return uri;
+    }
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    let finalImageUrl = profileImage;
+
+    if (profileImage && !profileImage.startsWith('http')) {
+      finalImageUrl = await uploadImage(profileImage);
+    }
+
+    updateUserData({ name, phone, email, address, profileImage: finalImageUrl });
+    setSaving(false);
     Alert.alert('Success', 'Profile updated successfully!');
     navigation.goBack();
   };
@@ -665,10 +693,15 @@ function EditProfileScreen({ navigation }) {
         <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
           <TouchableOpacity
             onPress={handleSave}
+            disabled={saving}
             activeOpacity={0.8}
             style={{ backgroundColor: '#000', borderRadius: 16, height: 60, justifyContent: 'center', alignItems: 'center', elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 }}
           >
-            <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '700', letterSpacing: 0.5 }}>Save Profile Changes</Text>
+            {saving ? (
+              <ActivityIndicator color="#FFF" />
+            ) : (
+              <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '700', letterSpacing: 0.5 }}>Save Profile Changes</Text>
+            )}
           </TouchableOpacity>
         </View>
 

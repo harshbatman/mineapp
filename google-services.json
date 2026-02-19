@@ -1,0 +1,134 @@
+{
+    "project_info": {
+        "project_number": "94425344059",
+        "project_id": "mahto-b8626",
+        "storage_bucket": "mahto-b8626.firebasestorage.app"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:94425344059:android:c3c1bd1f8c30e708f0d41e",
+                "android_client_info": {
+                    "package_name": "com.harsh.mahto"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "94425344059-bkb1nnbp3a5tpf65uggohvlqhov7kt4q.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyBLI43RC_QN8LthWpN0Fe6yEg62pSIfsPo"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "94425344059-bkb1nnbp3a5tpf65uggohvlqhov7kt4q.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:94425344059:android:a81281a4dba8c3a3f0d41e",
+                "android_client_info": {
+                    "package_name": "com.harshbatman.mineapp"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "94425344059-bkb1nnbp3a5tpf65uggohvlqhov7kt4q.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyBLI43RC_QN8LthWpN0Fe6yEg62pSIfsPo"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "94425344059-bkb1nnbp3a5tpf65uggohvlqhov7kt4q.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:94425344059:android:916e7a3e71403461f0d41e",
+                "android_client_info": {
+                    "package_name": "com.mahto.homeloans"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "94425344059-k5clp4p6dd1qq203fbst8fsnnre806nv.apps.googleusercontent.com",
+                    "client_type": 1,
+                    "android_info": {
+                        "package_name": "com.mahto.homeloans",
+                        "certificate_hash": "3328c3fcdb5135b7de3796d540f15b2762dcd339"
+                    }
+                },
+                {
+                    "client_id": "94425344059-bkb1nnbp3a5tpf65uggohvlqhov7kt4q.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyBLI43RC_QN8LthWpN0Fe6yEg62pSIfsPo"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "94425344059-bkb1nnbp3a5tpf65uggohvlqhov7kt4q.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:94425344059:android:462fde7f7ae81ddff0d41e",
+                "android_client_info": {
+                    "package_name": "com.mahto.landproperties"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "94425344059-bkb1nnbp3a5tpf65uggohvlqhov7kt4q.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyBLI43RC_QN8LthWpN0Fe6yEg62pSIfsPo"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "94425344059-bkb1nnbp3a5tpf65uggohvlqhov7kt4q.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}
