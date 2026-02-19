@@ -121,12 +121,18 @@ function HomeScreen({ navigation }) {
           <View style={[styles.uberHeader, { marginTop: Platform.OS === 'ios' ? 50 : 30, backgroundColor: 'transparent' }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Image
-                  source={userData.profileImage ? { uri: userData.profileImage } : require('./assets/adaptive-icon.png')}
-                  style={[styles.uberAvatar, { marginRight: 12, borderWidth: 2, borderColor: '#FFF' }]}
-                />
+                {userData.profileImage ? (
+                  <Image
+                    source={{ uri: userData.profileImage }}
+                    style={[styles.uberAvatar, { marginRight: 12, borderWidth: 2, borderColor: '#FFF' }]}
+                  />
+                ) : (
+                  <View style={[styles.uberAvatar, { marginRight: 12, borderWidth: 2, borderColor: '#FFF', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F3F3F3' }]}>
+                    <MaterialCommunityIcons name="account" size={24} color="#000" />
+                  </View>
+                )}
               </TouchableOpacity>
-              <Text style={{ fontSize: 20, fontWeight: '700', color: '#FFF' }}>Hi, {userData.name.split(' ')[0]}</Text>
+              <Text style={{ fontSize: 20, fontWeight: '700', color: '#FFF' }}>Hello, {userData.name.split(' ')[0]}</Text>
             </View>
           </View>
           <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 20 }}>
@@ -227,7 +233,6 @@ function ProfileScreen({ navigation }) {
   const menuItems = [
     { title: 'Edit Profile', icon: 'account-edit-outline', onPress: () => navigation.navigate('EditProfile') },
     { title: 'Settings', icon: 'cog-outline', onPress: () => navigation.navigate('Settings') },
-    { title: 'Rate Us', icon: 'star-outline', onPress: () => Linking.openURL('https://play.google.com/store/apps/details?id=com.mine.app') },
   ];
 
   return (
@@ -327,7 +332,12 @@ function SettingsScreen({ navigation }) {
     { title: 'Languages', icon: 'translate', onPress: () => navigation.navigate('Languages') },
     { title: 'About Us', icon: 'information-outline', onPress: () => navigation.navigate('AboutUs') },
     { title: 'Contact Us', icon: 'headphones', onPress: () => navigation.navigate('ContactUs') },
-    { title: 'Help & Support', icon: 'help-circle-outline', onPress: () => navigation.navigate('HelpSupportMenu') },
+    { title: 'Rate Us', icon: 'star-outline', onPress: () => Linking.openURL('https://play.google.com/store/apps/details?id=com.mine.app') },
+    { title: 'FAQ', icon: 'frequently-asked-questions', onPress: () => navigation.navigate('HelpCenter') },
+    { title: 'Terms & Condition', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
+    { title: 'Refund Policy', icon: 'cash-refund', onPress: () => navigation.navigate('RefundPolicy') },
+    { title: 'Privacy Policy', icon: 'shield-lock-outline', onPress: () => navigation.navigate('PrivacyPolicy') },
+    { title: 'Delete Account', icon: 'delete-forever-outline', onPress: () => navigation.navigate('DeleteAccount') },
   ];
 
   return (
@@ -362,39 +372,7 @@ function SettingsScreen({ navigation }) {
   );
 }
 
-// --- HelpSupportMenuScreen Component ---
-function HelpSupportMenuScreen({ navigation }) {
-  const menuItems = [
-    { title: 'FAQ', icon: 'frequently-asked-questions', onPress: () => navigation.navigate('HelpCenter') },
-    { title: 'Terms & Condition', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
-    { title: 'Refund Policy', icon: 'cash-refund', onPress: () => navigation.navigate('RefundPolicy') },
-    { title: 'Privacy Policy', icon: 'shield-lock-outline', onPress: () => navigation.navigate('PrivacyPolicy') },
-    { title: 'Delete Account', icon: 'delete-forever-outline', onPress: () => navigation.navigate('DeleteAccount') },
-  ];
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <CustomHeader title="Help & Support" navigation={navigation} showBack={true} />
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 10 }}>
-        <View style={{ backgroundColor: '#F9F9F9', borderRadius: 16, padding: 8 }}>
-          {menuItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16, paddingHorizontal: 12, borderBottomWidth: index === menuItems.length - 1 ? 0 : 1, borderBottomColor: '#EEE' }}
-              onPress={item.onPress}
-            >
-              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', marginRight: 16, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 }}>
-                <MaterialCommunityIcons name={item.icon} size={22} color="#000" />
-              </View>
-              <Text style={{ flex: 1, fontSize: 16, fontWeight: '600', color: '#000' }}>{item.title}</Text>
-              <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
 
 // --- NotificationInboxScreen Component ---
 function NotificationInboxScreen({ navigation }) {
@@ -2179,13 +2157,19 @@ function MainTabs() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: '#FFF',
-          borderTopWidth: 1,
-          borderTopColor: '#EEE',
-          height: Platform.OS === 'ios' ? 100 : 85,
-          paddingBottom: Platform.OS === 'ios' ? 40 : 25,
-          paddingTop: 10,
+          height: 60,
+          marginBottom: 35,
+          marginHorizontal: 40,
+          borderRadius: 30,
+          borderTopWidth: 0,
+          elevation: 10,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 5 },
+          shadowOpacity: 0.1,
+          shadowRadius: 10,
         },
         tabBarActiveTintColor: '#000',
         tabBarInactiveTintColor: '#AAA',
@@ -2243,7 +2227,7 @@ export default function App() {
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="EditProfile" component={EditProfileScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
-            <Stack.Screen name="HelpSupportMenu" component={HelpSupportMenuScreen} />
+
             <Stack.Screen name="NotificationInbox" component={NotificationInboxScreen} />
             <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
