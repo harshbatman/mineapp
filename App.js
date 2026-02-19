@@ -255,7 +255,7 @@ function ProfileScreen({ navigation }) {
 
           {/* Edit Profile Section */}
           <TouchableOpacity
-            style={{ width: '100%', backgroundColor: '#000', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginTop: 32, marginBottom: 24 }}
+            style={{ width: '100%', backgroundColor: '#000', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginTop: 24, marginBottom: 12 }}
             onPress={() => navigation.navigate('EditProfile')}
           >
             <Text style={{ color: '#FFF', fontWeight: '700', fontSize: 16 }}>Edit Profile</Text>
