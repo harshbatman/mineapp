@@ -2549,6 +2549,18 @@ function LoginScreen({ navigation }) {
     c.code.includes(searchQuery)
   );
 
+  const handleLogin = () => {
+    if (!phone || !password) {
+      Alert.alert("Error", "Please enter both phone and password.");
+      return;
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigation.replace('Root');
+    }, 1500);
+  };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: '#FFF' }]}>
       <StatusBar style="dark" />
