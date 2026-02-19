@@ -225,6 +225,7 @@ function ProfileScreen({ navigation }) {
   const [logoutVisible, setLogoutVisible] = useState(false);
 
   const menuItems = [
+    { title: 'Edit Profile', icon: 'account-edit-outline', onPress: () => navigation.navigate('EditProfile') },
     { title: 'Settings', icon: 'cog-outline', onPress: () => navigation.navigate('EditProfile') },
     { title: 'Messages', icon: 'email-outline', onPress: () => navigation.navigate('Notification') },
     { title: 'Legal', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
@@ -253,13 +254,8 @@ function ProfileScreen({ navigation }) {
             <Text style={{ marginLeft: 4, fontWeight: '700', fontSize: 13 }}>5.0 Rating</Text>
           </View>
 
-          {/* Edit Profile Section */}
-          <TouchableOpacity
-            style={{ width: '100%', backgroundColor: '#000', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginTop: 24, marginBottom: 12 }}
-            onPress={() => navigation.navigate('EditProfile')}
-          >
-            <Text style={{ color: '#FFF', fontWeight: '700', fontSize: 16 }}>Edit Profile</Text>
-          </TouchableOpacity>
+
+          <View style={{ marginBottom: 32 }} />
 
           {/* Settings Section */}
           <View style={{ width: '100%', backgroundColor: '#F9F9F9', borderRadius: 16, padding: 8 }}>
