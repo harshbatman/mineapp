@@ -226,9 +226,7 @@ function ProfileScreen({ navigation }) {
 
   const menuItems = [
     { title: 'Edit Profile', icon: 'account-edit-outline', onPress: () => navigation.navigate('EditProfile') },
-    { title: 'Settings', icon: 'cog-outline', onPress: () => navigation.navigate('EditProfile') },
-    { title: 'Messages', icon: 'email-outline', onPress: () => navigation.navigate('Notification') },
-    { title: 'Legal', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
+    { title: 'Settings', icon: 'cog-outline', onPress: () => navigation.navigate('Settings') },
     { title: 'Rate Us', icon: 'star-outline', onPress: () => Linking.openURL('https://play.google.com/store/apps/details?id=com.mine.app') },
   ];
 
@@ -317,6 +315,96 @@ function ProfileScreen({ navigation }) {
           </View>
         </View>
       </Modal>
+    </SafeAreaView>
+  );
+}
+
+// --- SettingsScreen Component ---
+function SettingsScreen({ navigation }) {
+  const settingsItems = [
+    { title: 'Notification Inbox', icon: 'email-receive-outline', onPress: () => navigation.navigate('NotificationInbox') },
+    { title: 'Notification', icon: 'bell-outline', onPress: () => navigation.navigate('Notification') },
+    { title: 'Languages', icon: 'translate', onPress: () => navigation.navigate('Languages') },
+    { title: 'About Us', icon: 'information-outline', onPress: () => navigation.navigate('AboutUs') },
+    { title: 'Contact Us', icon: 'headphones', onPress: () => navigation.navigate('ContactUs') },
+    { title: 'Help & Support', icon: 'help-circle-outline', onPress: () => navigation.navigate('HelpSupportMenu') },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <CustomHeader
+        title="Settings"
+        subtitle="Manage your app preferences"
+        navigation={navigation}
+        showBack={true}
+      />
+      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
+        <View style={{ paddingHorizontal: 20 }}>
+          <View style={{ backgroundColor: '#F9F9F9', borderRadius: 16, padding: 8 }}>
+            {settingsItems.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16, paddingHorizontal: 12, borderBottomWidth: index === settingsItems.length - 1 ? 0 : 1, borderBottomColor: '#EEE' }}
+                onPress={item.onPress}
+              >
+                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', marginRight: 16, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 }}>
+                  <MaterialCommunityIcons name={item.icon} size={22} color="#000" />
+                </View>
+                <Text style={{ flex: 1, fontSize: 16, fontWeight: '600', color: '#000' }}>{item.title}</Text>
+                <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- HelpSupportMenuScreen Component ---
+function HelpSupportMenuScreen({ navigation }) {
+  const menuItems = [
+    { title: 'FAQ', icon: 'frequently-asked-questions', onPress: () => navigation.navigate('HelpCenter') },
+    { title: 'Terms & Condition', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
+    { title: 'Refund Policy', icon: 'cash-refund', onPress: () => navigation.navigate('RefundPolicy') },
+    { title: 'Privacy Policy', icon: 'shield-lock-outline', onPress: () => navigation.navigate('PrivacyPolicy') },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Help & Support" navigation={navigation} showBack={true} />
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 10 }}>
+        <View style={{ backgroundColor: '#F9F9F9', borderRadius: 16, padding: 8 }}>
+          {menuItems.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16, paddingHorizontal: 12, borderBottomWidth: index === menuItems.length - 1 ? 0 : 1, borderBottomColor: '#EEE' }}
+              onPress={item.onPress}
+            >
+              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', marginRight: 16, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 }}>
+                <MaterialCommunityIcons name={item.icon} size={22} color="#000" />
+              </View>
+              <Text style={{ flex: 1, fontSize: 16, fontWeight: '600', color: '#000' }}>{item.title}</Text>
+              <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- NotificationInboxScreen Component ---
+function NotificationInboxScreen({ navigation }) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Notification Inbox" navigation={navigation} showBack={true} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+        <MaterialCommunityIcons name="email-open-outline" size={80} color="#EEE" />
+        <Text style={{ fontSize: 18, fontWeight: '700', color: '#AAA', marginTop: 16 }}>Your inbox is empty</Text>
+        <Text style={{ fontSize: 14, color: '#CCC', textAlign: 'center', marginTop: 8 }}>We'll notify you here when there's something new.</Text>
+      </View>
     </SafeAreaView>
   );
 }
@@ -2054,6 +2142,9 @@ export default function App() {
             <Stack.Screen name="GeneralRepairs" component={GeneralRepairsScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
+            <Stack.Screen name="HelpSupportMenu" component={HelpSupportMenuScreen} />
+            <Stack.Screen name="NotificationInbox" component={NotificationInboxScreen} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
             <Stack.Screen name="Languages" component={LanguageScreen} />
             <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
