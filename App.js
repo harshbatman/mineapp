@@ -235,42 +235,59 @@ function ProfileScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ padding: 20 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
-            <View>
-              <Text style={{ fontSize: 32, fontWeight: '700', color: '#000' }}>{userData.name}</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, backgroundColor: '#EEE', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12, alignSelf: 'flex-start' }}>
-                <MaterialCommunityIcons name="star" size={16} color="#000" />
-                <Text style={{ marginLeft: 4, fontWeight: '700' }}>5.0</Text>
-              </View>
-            </View>
+        <View style={{ padding: 20, alignItems: 'center' }}>
+          {/* Profile Photo Centered */}
+          <View style={{ position: 'relative', marginBottom: 16 }}>
             <Image
               source={userData.profileImage ? { uri: userData.profileImage } : require('./assets/adaptive-icon.png')}
-              style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#F3F3F3' }}
+              style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: '#F3F3F3' }}
             />
+            <View style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: '#000', padding: 8, borderRadius: 20, borderWidth: 3, borderColor: '#FFF' }}>
+              <MaterialCommunityIcons name="pencil" size={16} color="#FFF" />
+            </View>
           </View>
 
-          <View style={{ borderTopWidth: 1, borderTopColor: '#EEE' }}>
+          <Text style={{ fontSize: 24, fontWeight: '700', color: '#000' }}>{userData.name}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, backgroundColor: '#F3F3F3', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 }}>
+            <MaterialCommunityIcons name="star" size={16} color="#000" />
+            <Text style={{ marginLeft: 4, fontWeight: '700', fontSize: 13 }}>5.0 Rating</Text>
+          </View>
+
+          {/* Edit Profile Section */}
+          <TouchableOpacity
+            style={{ width: '100%', backgroundColor: '#000', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginTop: 32, marginBottom: 24 }}
+            onPress={() => navigation.navigate('EditProfile')}
+          >
+            <Text style={{ color: '#FFF', fontWeight: '700', fontSize: 16 }}>Edit Profile</Text>
+          </TouchableOpacity>
+
+          {/* Settings Section */}
+          <View style={{ width: '100%', backgroundColor: '#F9F9F9', borderRadius: 16, padding: 8 }}>
+            <Text style={{ fontSize: 13, fontWeight: '700', color: '#666', marginLeft: 12, marginTop: 12, marginBottom: 8, textTransform: 'uppercase' }}>Settings & Support</Text>
             {menuItems.map((item, index) => (
               <TouchableOpacity
                 key={index}
-                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20, borderBottomWidth: 1, borderBottomColor: '#EEE' }}
+                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16, paddingHorizontal: 12, borderBottomWidth: index === menuItems.length - 1 ? 0 : 1, borderBottomColor: '#EEE' }}
                 onPress={item.onPress}
               >
-                <MaterialCommunityIcons name={item.icon} size={24} color="#000" style={{ marginRight: 16 }} />
+                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', marginRight: 16, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 }}>
+                  <MaterialCommunityIcons name={item.icon} size={22} color="#000" />
+                </View>
                 <Text style={{ flex: 1, fontSize: 16, fontWeight: '600', color: '#000' }}>{item.title}</Text>
                 <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
               </TouchableOpacity>
             ))}
-
-            <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20 }}
-              onPress={() => setLogoutVisible(true)}
-            >
-              <MaterialCommunityIcons name="logout" size={24} color="#FF3B30" style={{ marginRight: 16 }} />
-              <Text style={{ flex: 1, fontSize: 16, fontWeight: '600', color: '#FF3B30' }}>Sign Out</Text>
-            </TouchableOpacity>
           </View>
+
+          <TouchableOpacity
+            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 20, marginTop: 12 }}
+            onPress={() => setLogoutVisible(true)}
+          >
+            <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFF0F0', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+              <MaterialCommunityIcons name="logout" size={22} color="#FF3B30" />
+            </View>
+            <Text style={{ flex: 1, fontSize: 16, fontWeight: '700', color: '#FF3B30' }}>Sign Out</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
