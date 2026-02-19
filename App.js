@@ -2334,7 +2334,6 @@ function LoginScreen({ navigation }) {
 
         <View style={{ marginBottom: 30 }}>
           <Text style={{ fontSize: 28, fontWeight: '800', color: '#000' }}>Welcome back</Text>
-          <Text style={{ fontSize: 16, color: '#AAA', marginTop: 8, fontWeight: '500' }}>Sign in to continue your journey.</Text>
         </View>
 
         <View style={styles.inputGroup}>
