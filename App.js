@@ -2490,10 +2490,10 @@ function RegisterScreen({ navigation }) {
         <View style={{ alignItems: 'center', marginTop: 40, marginBottom: 40 }}>
           <Text style={{ color: '#AAA', fontWeight: '500', marginBottom: 16 }}>Already have an account?</Text>
           <TouchableOpacity
-            style={[styles.saveButton, { borderRadius: 16, height: 60, width: '100%', backgroundColor: '#F8F9FA', borderWidth: 1, borderColor: '#EEE', elevation: 0, marginTop: 0 }]}
+            style={[styles.saveButton, { borderRadius: 16, height: 60, width: '100%', backgroundColor: '#000', elevation: 6, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 10, marginTop: 0 }]}
             onPress={() => navigation.navigate('Login')}
           >
-            <Text style={[styles.saveButtonText, { color: '#000', fontSize: 16 }]}>Continue with MAHTO ID</Text>
+            <Text style={[styles.saveButtonText, { color: '#FFF', fontSize: 16 }]}>Continue with MAHTO ID</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
