@@ -2305,11 +2305,26 @@ function SavedPropertiesScreen({ navigation }) {
 
 // --- ActivityScreen Component ---
 // --- LoginScreen Component ---
+const COUNTRIES = [
+  { code: '+91', flag: '🇮🇳', name: 'India' },
+  { code: '+1', flag: '🇺🇸', name: 'USA' },
+  { code: '+44', flag: '🇬🇧', name: 'UK' },
+  { code: '+971', flag: '🇦🇪', name: 'UAE' },
+  { code: '+61', flag: '🇦🇺', name: 'Australia' },
+  { code: '+81', flag: '🇯🇵', name: 'Japan' },
+  { code: '+49', flag: '🇩🇪', name: 'Germany' },
+  { code: '+33', flag: '🇫🇷', name: 'France' },
+  { code: '+7', flag: '🇷🇺', name: 'Russia' },
+  { code: '+86', flag: '🇨🇳', name: 'China' },
+];
+
 function LoginScreen({ navigation }) {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
+  const [showPicker, setShowPicker] = useState(false);
 
   const handleLogin = () => {
     if (!phone || !password) {
@@ -2339,10 +2354,17 @@ function LoginScreen({ navigation }) {
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Phone Number</Text>
           <View style={[styles.inputWrapper, { backgroundColor: '#F8F9FA', borderRadius: 16, borderWidth: 1, borderColor: '#EEE' }]}>
-            <MaterialCommunityIcons name="phone-outline" size={22} color="#000" style={{ marginRight: 12 }} />
+            <TouchableOpacity
+              onPress={() => setShowPicker(true)}
+              style={{ flexDirection: 'row', alignItems: 'center', borderRightWidth: 1, borderRightColor: '#EEE', paddingRight: 10, marginRight: 12 }}
+            >
+              <Text style={{ fontSize: 18, marginRight: 4 }}>{selectedCountry.flag}</Text>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: '#000' }}>{selectedCountry.code}</Text>
+              <MaterialCommunityIcons name="chevron-down" size={16} color="#AAA" />
+            </TouchableOpacity>
             <TextInput
               style={styles.input}
-              placeholder="e.g. 9876543210"
+              placeholder="9876543210"
               placeholderTextColor="#AAA"
               value={phone}
               onChangeText={setPhone}
@@ -2350,6 +2372,36 @@ function LoginScreen({ navigation }) {
             />
           </View>
         </View>
+
+        {/* Modal for Country Picker */}
+        <Modal visible={showPicker} transparent animationType="slide">
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
+            <View style={{ backgroundColor: '#FFF', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, maxHeight: 400 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <Text style={{ fontSize: 20, fontWeight: '800' }}>Select Country</Text>
+                <TouchableOpacity onPress={() => setShowPicker(false)}>
+                  <MaterialCommunityIcons name="close" size={24} color="#000" />
+                </TouchableOpacity>
+              </View>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {COUNTRIES.map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#F0F0F0' }}
+                    onPress={() => {
+                      setSelectedCountry(item);
+                      setShowPicker(false);
+                    }}
+                  >
+                    <Text style={{ fontSize: 24, marginRight: 15 }}>{item.flag}</Text>
+                    <Text style={{ flex: 1, fontSize: 16, fontWeight: '600' }}>{item.name}</Text>
+                    <Text style={{ fontSize: 16, color: '#666' }}>{item.code}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </Modal>
 
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Password</Text>
@@ -2399,6 +2451,8 @@ function RegisterScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
+  const [showPicker, setShowPicker] = useState(false);
 
   const handleRegister = () => {
     if (!name || !phone || !password) {
@@ -2448,7 +2502,14 @@ function RegisterScreen({ navigation }) {
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Phone Number</Text>
           <View style={[styles.inputWrapper, { backgroundColor: '#F8F9FA', borderRadius: 16, borderWidth: 1, borderColor: '#EEE' }]}>
-            <MaterialCommunityIcons name="phone-outline" size={22} color="#000" style={{ marginRight: 12 }} />
+            <TouchableOpacity
+              onPress={() => setShowPicker(true)}
+              style={{ flexDirection: 'row', alignItems: 'center', borderRightWidth: 1, borderRightColor: '#EEE', paddingRight: 10, marginRight: 12 }}
+            >
+              <Text style={{ fontSize: 18, marginRight: 4 }}>{selectedCountry.flag}</Text>
+              <Text style={{ fontSize: 16, fontWeight: '700', color: '#000' }}>{selectedCountry.code}</Text>
+              <MaterialCommunityIcons name="chevron-down" size={16} color="#AAA" />
+            </TouchableOpacity>
             <TextInput
               style={styles.input}
               placeholder="e.g. 9876543210"
@@ -2459,6 +2520,36 @@ function RegisterScreen({ navigation }) {
             />
           </View>
         </View>
+
+        {/* Modal for Country Picker */}
+        <Modal visible={showPicker} transparent animationType="slide">
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
+            <View style={{ backgroundColor: '#FFF', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, maxHeight: 400 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <Text style={{ fontSize: 20, fontWeight: '800' }}>Select Country</Text>
+                <TouchableOpacity onPress={() => setShowPicker(false)}>
+                  <MaterialCommunityIcons name="close" size={24} color="#000" />
+                </TouchableOpacity>
+              </View>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {COUNTRIES.map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#F0F0F0' }}
+                    onPress={() => {
+                      setSelectedCountry(item);
+                      setShowPicker(false);
+                    }}
+                  >
+                    <Text style={{ fontSize: 24, marginRight: 15 }}>{item.flag}</Text>
+                    <Text style={{ flex: 1, fontSize: 16, fontWeight: '600' }}>{item.name}</Text>
+                    <Text style={{ fontSize: 16, color: '#666' }}>{item.code}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </Modal>
 
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Password</Text>
