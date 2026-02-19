@@ -33,13 +33,13 @@ const UserContext = React.createContext();
 
 const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState({
-    name: 'Harsh Mahto',
-    phone: '+91 9876543210',
-    email: 'harsh.batman@example.com',
-    address: '123 Construction St, Delhi',
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
     profileImage: null,
-    listingsCount: 12,
-    savedCount: 45
+    listingsCount: 0,
+    savedCount: 0
   });
 
   const updateUserData = (newData) => {
@@ -2569,6 +2569,7 @@ const COUNTRIES = [
 ];
 
 function LoginScreen({ navigation }) {
+  const { updateUserData } = React.useContext(UserContext);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -2590,6 +2591,7 @@ function LoginScreen({ navigation }) {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      updateUserData({ phone: `${selectedCountry.code} ${phone}` });
       navigation.replace('Root');
     }, 1500);
   };
@@ -2721,6 +2723,7 @@ function LoginScreen({ navigation }) {
 
 // --- RegisterScreen Component ---
 function RegisterScreen({ navigation }) {
+  const { updateUserData } = React.useContext(UserContext);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -2743,6 +2746,7 @@ function RegisterScreen({ navigation }) {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      updateUserData({ name, phone: `${selectedCountry.code} ${phone}` });
       Alert.alert("Success", "Account created successfully!", [
         { text: "OK", onPress: () => navigation.navigate('Login') }
       ]);
@@ -2760,10 +2764,12 @@ function RegisterScreen({ navigation }) {
           <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
 
-        <View style={{ marginBottom: 40, alignItems: 'center' }}>
-          <Text style={{ fontSize: 42, fontWeight: '950', color: '#000', letterSpacing: -2 }}>mine</Text>
-          <Text style={{ fontSize: 16, fontWeight: '700', color: '#666', marginTop: -5, textTransform: 'uppercase', letterSpacing: 2 }}>By MAHTO</Text>
-          <Text style={{ fontSize: 24, fontWeight: '800', color: '#000', marginTop: 20 }}>Create Account</Text>
+        <View style={{ marginBottom: 40 }}>
+          <View style={{ alignItems: 'center', width: '100%' }}>
+            <Text style={{ fontSize: 42, fontWeight: '950', color: '#000', letterSpacing: -2 }}>mine</Text>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: '#666', marginTop: -5, textTransform: 'uppercase', letterSpacing: 2 }}>By MAHTO</Text>
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: '800', color: '#000', marginTop: 30 }}>Create Account</Text>
         </View>
 
         <View style={styles.inputGroup}>
