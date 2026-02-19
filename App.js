@@ -2484,7 +2484,7 @@ function RegisterScreen({ navigation }) {
           onPress={handleRegister}
           disabled={loading}
         >
-          {loading ? <ActivityIndicator color="#FFF" /> : <Text style={[styles.saveButtonText, { fontSize: 18 }]}>Get Started</Text>}
+          {loading ? <ActivityIndicator color="#FFF" /> : <Text style={[styles.saveButtonText, { fontSize: 18 }]}>Create Account</Text>}
         </TouchableOpacity>
 
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
