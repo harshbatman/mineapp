@@ -389,7 +389,7 @@ function EditProfileScreen({ navigation }) {
         />
 
         <View style={styles.profileHeaderContainer}>
-          <View style={styles.profileImageContainer}>
+          <TouchableOpacity style={styles.profileImageContainer} onPress={pickImage} activeOpacity={0.8}>
             {profileImage ? (
               <Image source={{ uri: profileImage }} style={styles.profileImage} />
             ) : (
@@ -397,10 +397,10 @@ function EditProfileScreen({ navigation }) {
                 <MaterialCommunityIcons name="account" size={80} color="#0047AB" />
               </View>
             )}
-            <TouchableOpacity style={styles.editIconBadge} onPress={pickImage}>
+            <View style={styles.editIconBadge}>
               <MaterialCommunityIcons name="camera" size={20} color="#FFF" />
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.formContainer}>
