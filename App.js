@@ -249,10 +249,6 @@ function ProfileScreen({ navigation }) {
           </View>
 
           <Text style={{ fontSize: 24, fontWeight: '700', color: '#000' }}>{userData.name}</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, backgroundColor: '#F3F3F3', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 }}>
-            <MaterialCommunityIcons name="star" size={16} color="#000" />
-            <Text style={{ marginLeft: 4, fontWeight: '700', fontSize: 13 }}>5.0 Rating</Text>
-          </View>
 
 
           <View style={{ marginBottom: 32 }} />
