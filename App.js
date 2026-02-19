@@ -369,6 +369,7 @@ function HelpSupportMenuScreen({ navigation }) {
     { title: 'Terms & Condition', icon: 'file-document-outline', onPress: () => navigation.navigate('TermsCondition') },
     { title: 'Refund Policy', icon: 'cash-refund', onPress: () => navigation.navigate('RefundPolicy') },
     { title: 'Privacy Policy', icon: 'shield-lock-outline', onPress: () => navigation.navigate('PrivacyPolicy') },
+    { title: 'Delete Account', icon: 'delete-forever-outline', onPress: () => navigation.navigate('DeleteAccount') },
   ];
 
   return (
@@ -405,6 +406,105 @@ function NotificationInboxScreen({ navigation }) {
         <Text style={{ fontSize: 18, fontWeight: '700', color: '#AAA', marginTop: 16 }}>Your inbox is empty</Text>
         <Text style={{ fontSize: 14, color: '#CCC', textAlign: 'center', marginTop: 8 }}>We'll notify you here when there's something new.</Text>
       </View>
+    </SafeAreaView>
+  );
+}
+
+// --- DeleteAccountScreen Component ---
+function DeleteAccountScreen({ navigation }) {
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleDelete = () => {
+    if (!phone || !password) {
+      Alert.alert("Error", "Please enter your phone and password to confirm.");
+      return;
+    }
+
+    Alert.alert(
+      "Confirm Deletion",
+      "Are you absolutely sure you want to permanently delete your account? This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete Permanently",
+          style: "destructive",
+          onPress: () => {
+            setLoading(true);
+            setTimeout(() => {
+              setLoading(false);
+              Alert.alert("Account Deleted", "Your account has been permanently removed.");
+              // Reset navigation to a hypothetical landing/auth screen or logout
+              navigation.navigate('Root');
+            }, 2000);
+          }
+        }
+      ]
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Delete Account" navigation={navigation} showBack={true} />
+      <ScrollView contentContainerStyle={{ padding: 20 }}>
+        <View style={{ alignItems: 'center', marginBottom: 24, marginTop: 20 }}>
+          <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: '#FFF0F0', justifyContent: 'center', alignItems: 'center', marginBottom: 16 }}>
+            <MaterialCommunityIcons name="alert-octagon" size={60} color="#FF3B30" />
+          </View>
+          <Text style={{ fontSize: 24, fontWeight: '700', color: '#000' }}>Account Deletion</Text>
+          <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', marginTop: 8, lineHeight: 20 }}>
+            This action is permanent. All your data, including projects, saved properties, and history, will be lost forever.
+          </Text>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Confirm Phone Number</Text>
+          <View style={[styles.inputWrapper, { backgroundColor: '#F9F9F9', borderHorizontalWidth: 1, borderColor: '#EEE' }]}>
+            <MaterialCommunityIcons name="phone" size={20} color="#666" style={{ marginRight: 10 }} />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter phone number"
+              value={phone}
+              onChangeText={setPhone}
+              keyboardType="phone-pad"
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Confirm Password</Text>
+          <View style={[styles.inputWrapper, { backgroundColor: '#F9F9F9', borderHorizontalWidth: 1, borderColor: '#EEE' }]}>
+            <MaterialCommunityIcons name="lock" size={20} color="#666" style={{ marginRight: 10 }} />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter password"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={[styles.saveButton, { backgroundColor: '#FF3B30', marginTop: 24, shadowColor: '#FF3B30', shadowOpacity: 0.3, shadowRadius: 8, elevation: 4 }]}
+          onPress={handleDelete}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#FFF" />
+          ) : (
+            <Text style={styles.saveButtonText}>Permanently Delete Account</Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{ marginTop: 20, alignItems: 'center' }}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={{ color: '#666', fontWeight: '600' }}>Cancel and Go Back</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -2145,6 +2245,7 @@ export default function App() {
             <Stack.Screen name="Settings" component={SettingsScreen} />
             <Stack.Screen name="HelpSupportMenu" component={HelpSupportMenuScreen} />
             <Stack.Screen name="NotificationInbox" component={NotificationInboxScreen} />
+            <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
             <Stack.Screen name="Languages" component={LanguageScreen} />
             <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
