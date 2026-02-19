@@ -73,6 +73,22 @@ function HomeScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
   const { userData } = React.useContext(UserContext);
 
+  const fullText = "Build Your Dream Home";
+  const [displayText, setDisplayText] = useState('');
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDisplayText((prev) => {
+        if (prev.length < fullText.length) {
+          return fullText.substring(0, prev.length + 1);
+        } else {
+          return ""; // Loop back to start
+        }
+      });
+    }, 150);
+    return () => clearInterval(timer);
+  }, []);
+
   const services = [
     { id: 'Construction', title: 'Construction', image: require('./assets/construction.png') },
     { id: 'Renovation', title: 'Renovation', image: require('./assets/renovation.png') },
@@ -117,8 +133,8 @@ function HomeScreen({ navigation }) {
             <Text style={{ fontSize: 36, fontWeight: '900', color: '#FFF', letterSpacing: -1 }}>mine</Text>
             <Text style={{ fontSize: 18, fontWeight: '600', color: '#FFF', marginTop: -8 }}>By MAHTO</Text>
           </View>
-          <View style={{ paddingHorizontal: 20, marginBottom: 4, alignItems: 'center' }}>
-            <Text style={{ fontSize: 32, fontWeight: '800', color: '#FFF' }}>Build Your Dream Home</Text>
+          <View style={{ paddingHorizontal: 20, marginBottom: 4, alignItems: 'center', height: 40 }}>
+            <Text style={{ fontSize: 32, fontWeight: '800', color: '#FFF' }}>{displayText}</Text>
           </View>
         </ImageBackground>
 
