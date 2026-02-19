@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image, TextInput, ActivityIndicator, Alert, Switch, Linking, Modal, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Platform, Image, TextInput, ActivityIndicator, Alert, Switch, Linking, Modal, ImageBackground, BackHandler } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Location from 'expo-location';
@@ -31,6 +32,8 @@ const LanguageProvider = ({ children }) => {
 
 const UserContext = React.createContext();
 
+const SESSION_KEY = '@mineapp_user_session';
+
 const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState({
     name: '',
@@ -42,12 +45,50 @@ const UserProvider = ({ children }) => {
     savedCount: 0
   });
 
-  const updateUserData = (newData) => {
+  const updateUserData = useCallback((newData) => {
     setUserData(prev => ({ ...prev, ...newData }));
-  };
+  }, []);
+
+  // Save full session to AsyncStorage
+  const saveSession = useCallback(async (data) => {
+    try {
+      const merged = { ...userData, ...data };
+      await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(merged));
+      setUserData(merged);
+    } catch (e) {
+      console.error('Failed to save session', e);
+    }
+  }, [userData]);
+
+  // Load session from AsyncStorage (called by App on startup)
+  const loadSession = useCallback(async () => {
+    try {
+      const raw = await AsyncStorage.getItem(SESSION_KEY);
+      if (raw) {
+        setUserData(JSON.parse(raw));
+        return true; // session found
+      }
+    } catch (e) {
+      console.error('Failed to load session', e);
+    }
+    return false; // no session
+  }, []);
+
+  // Clear session (called on Sign Out)
+  const logout = useCallback(async () => {
+    try {
+      await AsyncStorage.removeItem(SESSION_KEY);
+      setUserData({
+        name: '', phone: '', email: '', address: '',
+        profileImage: null, listingsCount: 0, savedCount: 0
+      });
+    } catch (e) {
+      console.error('Failed to clear session', e);
+    }
+  }, []);
 
   return (
-    <UserContext.Provider value={{ userData, updateUserData }}>
+    <UserContext.Provider value={{ userData, updateUserData, saveSession, loadSession, logout }}>
       {children}
     </UserContext.Provider>
   );
@@ -195,19 +236,7 @@ function HomeScreen({ navigation }) {
           </View>
         </View>
 
-        <View style={styles.uberRecentSection}>
-          <Text style={styles.uberSectionTitle}>Your recent projects</Text>
-          <TouchableOpacity style={styles.uberRecentItem}>
-            <View style={styles.uberRecentIcon}>
-              <MaterialCommunityIcons name="history" size={24} color="#000" />
-            </View>
-            <View style={styles.uberRecentContent}>
-              <Text style={styles.uberRecentTitle}>Home Renovation</Text>
-              <Text style={styles.uberRecentSub}>123 Construction St, Delhi</Text>
-            </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color="#CCC" />
-          </TouchableOpacity>
-        </View>
+
 
         <View style={styles.uberPromoCard}>
           <View style={styles.uberPromoTextContainer}>
@@ -231,7 +260,7 @@ function HomeScreen({ navigation }) {
 // --- ProfileScreen Component ---
 function ProfileScreen({ navigation }) {
   const { t } = React.useContext(LanguageContext);
-  const { userData } = React.useContext(UserContext);
+  const { userData, logout } = React.useContext(UserContext);
   const [logoutVisible, setLogoutVisible] = useState(false);
 
   const menuItems = [
@@ -307,9 +336,10 @@ function ProfileScreen({ navigation }) {
 
             <TouchableOpacity
               style={styles.confirmButton}
-              onPress={() => {
+              onPress={async () => {
                 setLogoutVisible(false);
-                Alert.alert("Signed Out", "You have been signed out successfully.");
+                await logout();
+                navigation.replace('Login');
               }}
             >
               <Text style={{ color: '#FFF', fontWeight: '700', fontSize: 16 }}>Sign Out</Text>
@@ -2569,7 +2599,7 @@ const COUNTRIES = [
 ];
 
 function LoginScreen({ navigation }) {
-  const { updateUserData } = React.useContext(UserContext);
+  const { saveSession } = React.useContext(UserContext);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -2583,15 +2613,15 @@ function LoginScreen({ navigation }) {
     c.code.includes(searchQuery)
   );
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!phone || !password) {
       Alert.alert("Error", "Please enter both phone and password.");
       return;
     }
     setLoading(true);
-    setTimeout(() => {
+    setTimeout(async () => {
+      await saveSession({ phone: `${selectedCountry.code} ${phone}` });
       setLoading(false);
-      updateUserData({ phone: `${selectedCountry.code} ${phone}` });
       navigation.replace('Root');
     }, 1500);
   };
@@ -2723,7 +2753,7 @@ function LoginScreen({ navigation }) {
 
 // --- RegisterScreen Component ---
 function RegisterScreen({ navigation }) {
-  const { updateUserData } = React.useContext(UserContext);
+  const { saveSession } = React.useContext(UserContext);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -2738,18 +2768,17 @@ function RegisterScreen({ navigation }) {
     c.code.includes(searchQuery)
   );
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!name || !phone || !password) {
       Alert.alert("Error", "All fields are required.");
       return;
     }
     setLoading(true);
-    setTimeout(() => {
+    setTimeout(async () => {
+      await saveSession({ name, phone: `${selectedCountry.code} ${phone}` });
       setLoading(false);
-      updateUserData({ name, phone: `${selectedCountry.code} ${phone}` });
-      Alert.alert("Success", "Account created successfully!", [
-        { text: "OK", onPress: () => navigation.navigate('Login') }
-      ]);
+      // Auto-login: go directly to Root, no need to log in again
+      navigation.replace('Root');
     }, 1500);
   };
 
@@ -2899,8 +2928,7 @@ function RegisterScreen({ navigation }) {
 
 function ActivityScreen({ navigation }) {
   const activities = [
-    { id: 1, title: 'Home Renovation', status: 'In Progress', date: 'June 12', icon: 'progress-wrench' },
-    { id: 2, title: 'Consultation', status: 'Completed', date: 'May 05', icon: 'check-circle' },
+    { id: 1, title: 'Consultation', status: 'Completed', date: 'May 05', icon: 'check-circle' },
   ];
 
   return (
@@ -2929,8 +2957,19 @@ function ActivityScreen({ navigation }) {
 }
 
 
-function MainTabs() {
+function MainTabs({ navigation }) {
   const { t } = React.useContext(LanguageContext);
+
+  // Exit app on hardware back press when on main tabs (do not go back to Login)
+  useEffect(() => {
+    const onBackPress = () => {
+      BackHandler.exitApp();
+      return true; // prevent default back behaviour
+    };
+    const sub = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => sub.remove();
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -2973,55 +3012,86 @@ function MainTabs() {
   );
 }
 
+// Inner App that has access to UserContext
+function AppNavigator() {
+  const { loadSession } = React.useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const found = await loadSession();
+      setIsLoggedIn(found);
+      setIsLoading(false);
+    };
+    checkSession();
+  }, []);
+
+  if (isLoading) {
+    // Splash while checking stored session
+    return (
+      <View style={{ flex: 1, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontSize: 42, fontWeight: '950', color: '#000', letterSpacing: -2 }}>mine</Text>
+        <Text style={{ fontSize: 16, fontWeight: '700', color: '#666', marginTop: -5, textTransform: 'uppercase', letterSpacing: 2 }}>By MAHTO</Text>
+        <ActivityIndicator style={{ marginTop: 32 }} size="large" color="#000" />
+      </View>
+    );
+  }
+
+  return (
+    <Stack.Navigator
+      initialRouteName={isLoggedIn ? 'Root' : 'Login'}
+      screenOptions={{
+        headerShown: false,
+        headerStyle: { backgroundColor: '#FFF' },
+        contentStyle: { backgroundColor: '#FFF' },
+      }}
+    >
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="Root" component={MainTabs} />
+      <Stack.Screen name="Construction" component={ConstructionScreen} />
+      <Stack.Screen name="ResidentialBuild" component={ResidentialBuildScreen} />
+      <Stack.Screen name="CommercialBuild" component={CommercialBuildScreen} />
+      <Stack.Screen name="IndustrialBuild" component={IndustrialBuildScreen} />
+      <Stack.Screen name="ProjectManagement" component={ProjectManagementScreen} />
+      <Stack.Screen name="Renovation" component={RenovationScreen} />
+      <Stack.Screen name="KitchenRemodel" component={KitchenRemodelScreen} />
+      <Stack.Screen name="BathroomUpgrade" component={BathroomUpgradeScreen} />
+      <Stack.Screen name="FlooringMakeover" component={FlooringMakeoverScreen} />
+      <Stack.Screen name="FullHomeMakeover" component={FullHomeMakeoverScreen} />
+      <Stack.Screen name="HomePainting" component={HomePaintingScreen} />
+      <Stack.Screen name="Service" component={ServiceScreen} />
+      <Stack.Screen name="Plumbing" component={PlumbingScreen} />
+      <Stack.Screen name="Electrical" component={ElectricalScreen} />
+      <Stack.Screen name="HVAC" component={HVACScreen} />
+      <Stack.Screen name="GeneralRepairs" component={GeneralRepairsScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+
+      <Stack.Screen name="NotificationInbox" component={NotificationInboxScreen} />
+      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} />
+      <Stack.Screen name="Notification" component={NotificationScreen} />
+      <Stack.Screen name="Languages" component={LanguageScreen} />
+      <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+      <Stack.Screen name="ContactUs" component={ContactUsScreen} />
+      <Stack.Screen name="TermsCondition" component={TermsConditionScreen} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Screen name="RefundPolicy" component={RefundPolicyScreen} />
+      <Stack.Screen name="AboutUs" component={AboutUsScreen} />
+      <Stack.Screen name="SavedProperties" component={SavedPropertiesScreen} />
+      <Stack.Screen name="ActivityScreen" component={ActivityScreen} />
+    </Stack.Navigator>
+  );
+}
+
 export default function App() {
   return (
     <LanguageProvider>
       <UserProvider>
         <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Login"
-            screenOptions={{
-              headerShown: false,
-              headerStyle: { backgroundColor: '#FFF' },
-              contentStyle: { backgroundColor: '#FFF' },
-            }}
-          >
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen name="Root" component={MainTabs} />
-            <Stack.Screen name="Construction" component={ConstructionScreen} />
-            <Stack.Screen name="ResidentialBuild" component={ResidentialBuildScreen} />
-            <Stack.Screen name="CommercialBuild" component={CommercialBuildScreen} />
-            <Stack.Screen name="IndustrialBuild" component={IndustrialBuildScreen} />
-            <Stack.Screen name="ProjectManagement" component={ProjectManagementScreen} />
-            <Stack.Screen name="Renovation" component={RenovationScreen} />
-            <Stack.Screen name="KitchenRemodel" component={KitchenRemodelScreen} />
-            <Stack.Screen name="BathroomUpgrade" component={BathroomUpgradeScreen} />
-            <Stack.Screen name="FlooringMakeover" component={FlooringMakeoverScreen} />
-            <Stack.Screen name="FullHomeMakeover" component={FullHomeMakeoverScreen} />
-            <Stack.Screen name="HomePainting" component={HomePaintingScreen} />
-            <Stack.Screen name="Service" component={ServiceScreen} />
-            <Stack.Screen name="Plumbing" component={PlumbingScreen} />
-            <Stack.Screen name="Electrical" component={ElectricalScreen} />
-            <Stack.Screen name="HVAC" component={HVACScreen} />
-            <Stack.Screen name="GeneralRepairs" component={GeneralRepairsScreen} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-            <Stack.Screen name="Settings" component={SettingsScreen} />
-
-            <Stack.Screen name="NotificationInbox" component={NotificationInboxScreen} />
-            <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} />
-            <Stack.Screen name="Notification" component={NotificationScreen} />
-            <Stack.Screen name="Languages" component={LanguageScreen} />
-            <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
-            <Stack.Screen name="ContactUs" component={ContactUsScreen} />
-            <Stack.Screen name="TermsCondition" component={TermsConditionScreen} />
-            <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
-            <Stack.Screen name="RefundPolicy" component={RefundPolicyScreen} />
-            <Stack.Screen name="AboutUs" component={AboutUsScreen} />
-            <Stack.Screen name="SavedProperties" component={SavedPropertiesScreen} />
-            <Stack.Screen name="ActivityScreen" component={ActivityScreen} />
-          </Stack.Navigator>
+          <AppNavigator />
         </NavigationContainer>
       </UserProvider>
     </LanguageProvider>
