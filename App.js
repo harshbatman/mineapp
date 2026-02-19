@@ -2023,7 +2023,7 @@ function MainTabs() {
           if (route.name === 'Home') iconName = 'home-variant';
           else if (route.name === 'Activity') iconName = 'clock-outline';
           else if (route.name === 'Saved') iconName = 'heart-outline';
-          else if (route.name === 'Account') iconName = 'account-outline';
+          else if (route.name === 'Profile') iconName = 'account-outline';
           return <MaterialCommunityIcons name={iconName} size={size + 4} color={color} />;
         },
       })}
@@ -2031,7 +2031,7 @@ function MainTabs() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Activity" component={ActivityScreen} />
       <Tab.Screen name="Saved" component={SavedPropertiesScreen} />
-      <Tab.Screen name="Account" component={ProfileScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
