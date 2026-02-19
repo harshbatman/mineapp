@@ -2592,6 +2592,7 @@ function LoginScreen({ navigation }) {
               value={phone}
               onChangeText={setPhone}
               keyboardType="phone-pad"
+              maxLength={10}
             />
           </View>
         </View>
@@ -2764,6 +2765,7 @@ function RegisterScreen({ navigation }) {
               value={phone}
               onChangeText={setPhone}
               keyboardType="phone-pad"
+              maxLength={10}
             />
           </View>
         </View>
