@@ -238,14 +238,17 @@ function ProfileScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingTop: 60, paddingHorizontal: 20, alignItems: 'center' }}>
           {/* Profile Photo Centered */}
-          <View style={{ position: 'relative', marginBottom: 16 }}>
-            <Image
-              source={userData.profileImage ? { uri: userData.profileImage } : require('./assets/adaptive-icon.png')}
-              style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: '#F3F3F3' }}
-            />
-            <View style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: '#000', padding: 8, borderRadius: 20, borderWidth: 3, borderColor: '#FFF' }}>
-              <MaterialCommunityIcons name="pencil" size={16} color="#FFF" />
-            </View>
+          <View style={{ marginBottom: 16 }}>
+            {userData.profileImage ? (
+              <Image
+                source={{ uri: userData.profileImage }}
+                style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: '#F3F3F3' }}
+              />
+            ) : (
+              <View style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center' }}>
+                <MaterialCommunityIcons name="account" size={80} color="#000" />
+              </View>
+            )}
           </View>
 
           <Text style={{ fontSize: 24, fontWeight: '700', color: '#000' }}>{userData.name}</Text>
