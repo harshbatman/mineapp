@@ -2379,7 +2379,7 @@ function LoginScreen({ navigation }) {
           onPress={handleLogin}
           disabled={loading}
         >
-          {loading ? <ActivityIndicator color="#FFF" /> : <Text style={[styles.saveButtonText, { fontSize: 18 }]}>Login with MAHTO ID</Text>}
+          {loading ? <ActivityIndicator color="#FFF" /> : <Text style={[styles.saveButtonText, { fontSize: 18 }]}>Continue with MAHTO ID</Text>}
         </TouchableOpacity>
 
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 40 }}>
