@@ -235,7 +235,7 @@ function ProfileScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ padding: 20, alignItems: 'center' }}>
+        <View style={{ paddingTop: 60, paddingHorizontal: 20, alignItems: 'center' }}>
           {/* Profile Photo Centered */}
           <View style={{ position: 'relative', marginBottom: 16 }}>
             <Image
