@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
+import { Image as ExpoImage } from 'expo-image';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { translations } from './translations';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -1180,7 +1181,7 @@ function ResidentialBuildScreen({ navigation }) {
                   <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{step.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {step.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -1290,7 +1291,7 @@ function CommercialBuildScreen({ navigation }) {
                   <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{step.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {step.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -1403,7 +1404,7 @@ function IndustrialBuildScreen({ navigation }) {
                   <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{step.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {step.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -1513,7 +1514,7 @@ function ProjectManagementScreen({ navigation }) {
                   <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{item.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {item.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -1637,10 +1638,11 @@ function ContactUsScreen({ navigation }) {
 // --- ConstructionScreen Component ---
 function ConstructionScreen({ navigation }) {
   const constructionServices = [
-    { title: 'Residential Building', icon: 'home-city-outline', details: 'Custom homes built from the ground up.', route: 'ResidentialBuild', color: '#4CAF50', bg: '#E8F5E9' },
-    { title: 'Commercial Projects', icon: 'office-building', details: 'Offices, retail spaces, and warehouses.', route: 'CommercialBuild', color: '#2196F3', bg: '#E3F2FD' },
-    { title: 'Industrial Construction', icon: 'factory', details: 'Heavy-duty construction for industrial needs.', route: 'IndustrialBuild', color: '#FF9800', bg: '#FFF3E0' },
-    { title: 'Project Management', icon: 'clipboard-list-outline', details: 'End-to-end management of your build.', route: 'ProjectManagement', color: '#9C27B0', bg: '#F3E5F5' },
+    { title: 'Home Construction', icon: 'home-city-outline', image: require('./assets/res_const.png'), details: 'Custom homes built from the ground up.', route: 'ResidentialBuild', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Residential Building', icon: 'domain', image: require('./assets/res_building.png'), details: 'Multi-story apartment & residential complexes.', route: 'ResidentialBuild', color: '#00BCD4', bg: '#E0F7FA' },
+    { title: 'Commercial Projects', icon: 'office-building', image: require('./assets/com_const.png'), details: 'Offices, retail spaces, and warehouses.', route: 'CommercialBuild', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Industrial Construction', icon: 'factory', image: require('./assets/ind_const.png'), details: 'Heavy-duty construction for industrial needs.', route: 'IndustrialBuild', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Project Management', icon: 'clipboard-list-outline', image: require('./assets/proj_mgmt.png'), details: 'End-to-end management of your build.', route: 'ProjectManagement', color: '#9C27B0', bg: '#F3E5F5' },
   ];
 
   return (
@@ -1701,18 +1703,22 @@ function ConstructionScreen({ navigation }) {
                 }}
               >
                 <View style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 20,
-                  backgroundColor: item.bg,
+                  width: 100,
+                  height: 100,
+                  borderRadius: 28,
+                  backgroundColor: item.image ? 'transparent' : item.bg,
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginBottom: 16,
                 }}>
-                  <MaterialCommunityIcons name={item.icon} size={32} color={item.color} />
+                  {item.image ? (
+                    <ExpoImage source={item.image} style={{ width: 100, height: 100, borderRadius: 24 }} contentFit="cover" />
+                  ) : (
+                    <MaterialCommunityIcons name={item.icon} size={64} color={item.color} />
+                  )}
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', letterSpacing: -0.2, flexShrink: 1 }}>{item.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {item.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -1731,11 +1737,11 @@ function ConstructionScreen({ navigation }) {
 // --- RenovationScreen Component ---
 function RenovationScreen({ navigation }) {
   const renovationServices = [
-    { title: 'Kitchen Remodel', icon: 'silverware-fork-knife', details: 'Modern designs for your home heart.', route: 'KitchenRemodel', color: '#FF9800', bg: '#FFF3E0' },
-    { title: 'Bathroom Upgrade', icon: 'shower', details: 'Spa-like retreats & functional layouts.', route: 'BathroomUpgrade', color: '#2196F3', bg: '#E3F2FD' },
-    { title: 'Flooring', icon: 'floor-plan', details: 'Hardwood, tile, & vinyl installation.', route: 'FlooringMakeover', color: '#795548', bg: '#EFEBE9' },
-    { title: 'Full Home Makeover', icon: 'home-circle-outline', details: 'Complete living space transformation.', route: 'FullHomeMakeover', color: '#4CAF50', bg: '#E8F5E9' },
-    { title: 'Home Painting', icon: 'format-paint', details: 'Professional interior & exterior work.', route: 'HomePainting', color: '#E91E63', bg: '#FCE4EC' },
+    { title: 'Kitchen Remodel', icon: 'silverware-fork-knife', image: require('./assets/kitchen.jpg'), details: 'Modern designs for your home heart.', route: 'KitchenRemodel', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Bathroom Upgrade', icon: 'shower', image: require('./assets/bathroom.jpg'), details: 'Spa-like retreats & functional layouts.', route: 'BathroomUpgrade', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Flooring', icon: 'floor-plan', image: require('./assets/flooring.jpg'), details: 'Hardwood, tile, & vinyl installation.', route: 'FlooringMakeover', color: '#795548', bg: '#EFEBE9' },
+    { title: 'Full Home Makeover', icon: 'home-circle-outline', image: require('./assets/makeover.jpg'), details: 'Complete living space transformation.', route: 'FullHomeMakeover', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Home Painting', icon: 'format-paint', image: require('./assets/painting.jpg'), details: 'Professional interior & exterior work.', route: 'HomePainting', color: '#E91E63', bg: '#FCE4EC' },
   ];
 
   return (
@@ -1796,18 +1802,22 @@ function RenovationScreen({ navigation }) {
                 }}
               >
                 <View style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 20,
-                  backgroundColor: item.bg,
+                  width: 100,
+                  height: 100,
+                  borderRadius: 28,
+                  backgroundColor: item.image ? 'transparent' : item.bg,
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginBottom: 16,
                 }}>
-                  <MaterialCommunityIcons name={item.icon} size={32} color={item.color} />
+                  {item.image ? (
+                    <ExpoImage source={item.image} style={{ width: 100, height: 100, borderRadius: 24 }} contentFit="cover" />
+                  ) : (
+                    <MaterialCommunityIcons name={item.icon} size={64} color={item.color} />
+                  )}
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', letterSpacing: -0.2, flexShrink: 1 }}>{item.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {item.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -1889,7 +1899,7 @@ function KitchenRemodelScreen({ navigation }) {
                   <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{step.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {step.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -1992,7 +2002,7 @@ function BathroomUpgradeScreen({ navigation }) {
                   <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{step.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {step.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -2095,7 +2105,7 @@ function FlooringMakeoverScreen({ navigation }) {
                   <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{step.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {step.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -2198,7 +2208,7 @@ function FullHomeMakeoverScreen({ navigation }) {
                   <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{step.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {step.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -2301,7 +2311,7 @@ function HomePaintingScreen({ navigation }) {
                   <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{step.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {step.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -2416,7 +2426,7 @@ function ServiceScreen({ navigation }) {
                   <MaterialCommunityIcons name={item.icon} size={32} color={item.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', letterSpacing: -0.2, flexShrink: 1 }}>{item.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {item.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -2499,7 +2509,7 @@ function PlumbingScreen({ navigation }) {
                   <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{item.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {item.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -2602,7 +2612,7 @@ function ElectricalScreen({ navigation }) {
                   <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{item.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {item.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -2705,7 +2715,7 @@ function HVACScreen({ navigation }) {
                   <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{item.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {item.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
@@ -2808,7 +2818,7 @@ function GeneralRepairsScreen({ navigation }) {
                   <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{item.title}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {item.title}</Text>
                   <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
                     <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
                   </View>
