@@ -1737,11 +1737,11 @@ function ConstructionScreen({ navigation }) {
 // --- RenovationScreen Component ---
 function RenovationScreen({ navigation }) {
   const renovationServices = [
-    { title: 'Kitchen Remodel', icon: 'silverware-fork-knife', image: require('./assets/kitchen.jpg'), details: 'Modern designs for your home heart.', route: 'KitchenRemodel', color: '#FF9800', bg: '#FFF3E0' },
-    { title: 'Bathroom Upgrade', icon: 'shower', image: require('./assets/bathroom.jpg'), details: 'Spa-like retreats & functional layouts.', route: 'BathroomUpgrade', color: '#2196F3', bg: '#E3F2FD' },
-    { title: 'Flooring', icon: 'floor-plan', image: require('./assets/flooring.jpg'), details: 'Hardwood, tile, & vinyl installation.', route: 'FlooringMakeover', color: '#795548', bg: '#EFEBE9' },
-    { title: 'Full Home Makeover', icon: 'home-circle-outline', image: require('./assets/makeover.jpg'), details: 'Complete living space transformation.', route: 'FullHomeMakeover', color: '#4CAF50', bg: '#E8F5E9' },
-    { title: 'Home Painting', icon: 'format-paint', image: require('./assets/painting.jpg'), details: 'Professional interior & exterior work.', route: 'HomePainting', color: '#E91E63', bg: '#FCE4EC' },
+    { title: 'Kitchen Remodel', icon: 'silverware-fork-knife', image: require('./assets/kitchen.png'), details: 'Modern designs for your home heart.', route: 'KitchenRemodel', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Bathroom Upgrade', icon: 'shower', image: require('./assets/bathroom.png'), details: 'Spa-like retreats & functional layouts.', route: 'BathroomUpgrade', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Flooring', icon: 'floor-plan', image: require('./assets/flooring.png'), details: 'Hardwood, tile, & vinyl installation.', route: 'FlooringMakeover', color: '#795548', bg: '#EFEBE9' },
+    { title: 'Full Home Makeover', icon: 'home-circle-outline', image: require('./assets/fullhome.png'), details: 'Complete living space transformation.', route: 'FullHomeMakeover', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Home Painting', icon: 'format-paint', image: require('./assets/painting.png'), details: 'Professional interior & exterior work.', route: 'HomePainting', color: '#E91E63', bg: '#FCE4EC' },
   ];
 
   return (
