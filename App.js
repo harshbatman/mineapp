@@ -2351,10 +2351,10 @@ function HomePaintingScreen({ navigation }) {
 // --- ServiceScreen Component ---
 function ServiceScreen({ navigation }) {
   const serviceOptions = [
-    { title: 'Plumbing', icon: 'water-pump', details: 'Leak repairs, installs, & maintenance.', route: 'Plumbing', color: '#2196F3', bg: '#E3F2FD' },
-    { title: 'Electrical', icon: 'flash', details: 'Wiring, lighting, & safety checks.', route: 'Electrical', color: '#FFB300', bg: '#FFF8E1' },
-    { title: 'HVAC', icon: 'air-conditioner', details: 'Heating, ventilation, & air systems.', route: 'HVAC', color: '#4CAF50', bg: '#E8F5E9' },
-    { title: 'General Repairs', icon: 'hammer-wrench', details: 'Small fixes before they grow.', route: 'GeneralRepairs', color: '#E91E63', bg: '#FCE4EC' },
+    { title: 'Plumbing', icon: 'water-pump', image: require('./assets/plumbing.png'), details: 'Leak repairs, installs, & maintenance.', route: 'Plumbing', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Electrical', icon: 'flash', image: require('./assets/electrical.png'), details: 'Wiring, lighting, & safety checks.', route: 'Electrical', color: '#FFB300', bg: '#FFF8E1' },
+    { title: 'HVAC', icon: 'air-conditioner', image: require('./assets/hvac.png'), details: 'Heating, ventilation, & air systems.', route: 'HVAC', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'General Repairs', icon: 'hammer-wrench', image: require('./assets/genral.png'), details: 'Small fixes before they grow.', route: 'GeneralRepairs', color: '#E91E63', bg: '#FCE4EC' },
   ];
 
   return (
@@ -2415,15 +2415,19 @@ function ServiceScreen({ navigation }) {
                 }}
               >
                 <View style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 20,
-                  backgroundColor: item.bg,
+                  width: 100,
+                  height: 100,
+                  borderRadius: 28,
+                  backgroundColor: item.image ? 'transparent' : item.bg,
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginBottom: 16,
                 }}>
-                  <MaterialCommunityIcons name={item.icon} size={32} color={item.color} />
+                  {item.image ? (
+                    <ExpoImage source={item.image} style={{ width: 100, height: 100, borderRadius: 24 }} contentFit="cover" />
+                  ) : (
+                    <MaterialCommunityIcons name={item.icon} size={64} color={item.color} />
+                  )}
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 8, width: '100%' }}>
                   <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {item.title}</Text>
