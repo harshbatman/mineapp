@@ -309,58 +309,46 @@ function HomeScreen({ navigation }) {
         </TouchableOpacity>
 
         {/* ---- Ideas Section ---- */}
-        <View style={{ marginBottom: 36 }}>
-          <View style={{ paddingHorizontal: 20, marginBottom: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <View>
-              <Text style={{ fontSize: 22, fontWeight: '900', color: '#1A1A1A', letterSpacing: -0.5 }}>💡 Ideas</Text>
-              <Text style={{ fontSize: 13, color: '#888', fontWeight: '500', marginTop: 2 }}>Get inspired for your next project</Text>
+        <TouchableOpacity
+          activeOpacity={0.88}
+          onPress={() => navigation.navigate('IdeasGallery')}
+          style={{
+            marginHorizontal: 20,
+            marginBottom: 36,
+            borderRadius: 24,
+            backgroundColor: '#1A1A2E',
+            padding: 24,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.2,
+            shadowRadius: 16,
+            elevation: 8,
+            overflow: 'hidden',
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <View style={{ backgroundColor: 'rgba(255,215,0,0.15)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, alignSelf: 'flex-start', marginBottom: 10 }}>
+              <Text style={{ color: '#FFD700', fontSize: 10, fontWeight: '900', letterSpacing: 1, textTransform: 'uppercase' }}>Inspiration</Text>
+            </View>
+            <Text style={{ fontSize: 22, fontWeight: '900', color: '#FFF', marginBottom: 6, letterSpacing: -0.5 }}>💡 Ideas</Text>
+            <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 20, fontWeight: '500', marginBottom: 16 }}>
+              Explore home, kitchen, bathroom, lawn & more design ideas.
+            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ color: '#FFD700', fontWeight: '700', fontSize: 13, marginRight: 6 }}>Browse Ideas</Text>
+              <MaterialCommunityIcons name="arrow-right-circle" size={18} color="#FFD700" />
             </View>
           </View>
+          <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: 'rgba(255,215,0,0.15)', justifyContent: 'center', alignItems: 'center', marginLeft: 16 }}>
+            <Text style={{ fontSize: 32 }}>🛋️</Text>
+          </View>
+          {/* Decorative background circle */}
+          <View style={{ position: 'absolute', right: -30, bottom: -30, width: 120, height: 120, borderRadius: 60, backgroundColor: 'rgba(255,255,255,0.04)' }} />
+        </TouchableOpacity>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingLeft: 20, paddingRight: 8 }}
-          >
-            {[
-              { label: 'Living Room', image: require('./assets/idea_livingroom.jpg') },
-              { label: 'Kitchen', image: require('./assets/idea_kitchen.jpg') },
-              { label: 'Bathroom', image: require('./assets/idea_bathroom.jpg') },
-              { label: 'Dining Table', image: require('./assets/idea_dining.jpg') },
-              { label: 'Home Library', image: require('./assets/idea_library.jpg') },
-              { label: 'Lawn & Garden', image: require('./assets/idea_lawn.jpg') },
-              { label: 'Bedroom', image: require('./assets/idea_bedroom.jpg') },
-            ].map((idea, index) => (
-              <TouchableOpacity
-                key={index}
-                activeOpacity={0.88}
-                onPress={() => navigation.navigate('IdeasGallery', { activeLabel: idea.label })}
-                style={{
-                  width: 160,
-                  marginRight: 14,
-                  borderRadius: 20,
-                  overflow: 'hidden',
-                  backgroundColor: '#FFF',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 6 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 12,
-                  elevation: 5,
-                }}
-              >
-                <Image
-                  source={idea.image}
-                  style={{ width: 160, height: 120 }}
-                  resizeMode="cover"
-                />
-                <View style={{ padding: 12, backgroundColor: '#FFF' }}>
-                  <Text style={{ fontSize: 13, fontWeight: '800', color: '#1A1A1A' }}>{idea.label}</Text>
-                  <Text style={{ fontSize: 11, color: '#999', marginTop: 2 }}>Tap to explore</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
 
       </Animated.ScrollView>
     </View>
