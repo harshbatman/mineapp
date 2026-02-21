@@ -142,6 +142,7 @@ function HomeScreen({ navigation }) {
 
   const fullText = "Build Your Dream Home For Your Family";
   const [displayText, setDisplayText] = useState('');
+  const [selectedIdea, setSelectedIdea] = useState(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -323,17 +324,18 @@ function HomeScreen({ navigation }) {
             contentContainerStyle={{ paddingLeft: 20, paddingRight: 8 }}
           >
             {[
-              { label: 'Living Room', image: require('./assets/idea_livingroom.jpg'), color: '#E3F2FD' },
-              { label: 'Kitchen', image: require('./assets/idea_kitchen.jpg'), color: '#FFF3E0' },
-              { label: 'Bathroom', image: require('./assets/idea_bathroom.jpg'), color: '#E8F5E9' },
-              { label: 'Dining Table', image: require('./assets/idea_dining.jpg'), color: '#FCE4EC' },
-              { label: 'Home Library', image: require('./assets/idea_library.jpg'), color: '#F3E5F5' },
-              { label: 'Lawn & Garden', image: require('./assets/idea_lawn.jpg'), color: '#E0F7FA' },
-              { label: 'Bedroom', image: require('./assets/idea_bedroom.jpg'), color: '#FFFDE7' },
+              { label: 'Living Room', image: require('./assets/idea_livingroom.jpg') },
+              { label: 'Kitchen', image: require('./assets/idea_kitchen.jpg') },
+              { label: 'Bathroom', image: require('./assets/idea_bathroom.jpg') },
+              { label: 'Dining Table', image: require('./assets/idea_dining.jpg') },
+              { label: 'Home Library', image: require('./assets/idea_library.jpg') },
+              { label: 'Lawn & Garden', image: require('./assets/idea_lawn.jpg') },
+              { label: 'Bedroom', image: require('./assets/idea_bedroom.jpg') },
             ].map((idea, index) => (
               <TouchableOpacity
                 key={index}
                 activeOpacity={0.88}
+                onPress={() => setSelectedIdea(idea)}
                 style={{
                   width: 160,
                   marginRight: 14,
@@ -360,6 +362,36 @@ function HomeScreen({ navigation }) {
             ))}
           </ScrollView>
         </View>
+
+        {/* Full-screen image viewer modal */}
+        <Modal
+          visible={selectedIdea !== null}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setSelectedIdea(null)}
+        >
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.92)', justifyContent: 'center', alignItems: 'center' }}>
+            {selectedIdea && (
+              <>
+                <View style={{ width: '100%', paddingHorizontal: 20, paddingTop: 50, paddingBottom: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Text style={{ fontSize: 20, fontWeight: '900', color: '#FFF', letterSpacing: -0.5 }}>{selectedIdea.label}</Text>
+                  <TouchableOpacity
+                    onPress={() => setSelectedIdea(null)}
+                    style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.15)', justifyContent: 'center', alignItems: 'center' }}
+                  >
+                    <MaterialCommunityIcons name="close" size={20} color="#FFF" />
+                  </TouchableOpacity>
+                </View>
+                <Image
+                  source={selectedIdea.image}
+                  style={{ width: '95%', height: '70%', borderRadius: 20 }}
+                  resizeMode="cover"
+                />
+                <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, marginTop: 16 }}>Tap ✕ to close</Text>
+              </>
+            )}
+          </View>
+        </Modal>
 
       </Animated.ScrollView>
     </View>
