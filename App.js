@@ -364,7 +364,13 @@ const ALL_IDEAS = [
   { label: 'Home Library', icon: 'bookshelf', color: '#795548', bg: '#EFEBE9' },
   { label: 'Lawn & Garden', icon: 'flower-outline', color: '#4CAF50', bg: '#E8F5E9' },
   { label: 'Bedroom', icon: 'bed-outline', color: '#E91E63', bg: '#FCE4EC' },
-  { label: 'Front Elevation', icon: 'home-city', color: '#607D8B', bg: '#ECEFF1', image: require('./assets/raj.png') },
+  {
+    label: 'Front Elevation', icon: 'home-city', color: '#607D8B', bg: '#ECEFF1', images: [
+      require('./assets/raj.png'),
+      require('./assets/harsh.jpeg'),
+      require('./assets/mahto.jpeg'),
+    ]
+  },
 ];
 
 function IdeasGalleryScreen({ navigation }) {
@@ -393,7 +399,7 @@ function IdeasGalleryScreen({ navigation }) {
             <TouchableOpacity
               key={index}
               activeOpacity={0.85}
-              onPress={() => idea.image ? setSelectedIdea(idea) : null}
+              onPress={() => idea.images ? setSelectedIdea(idea) : null}
               style={{
                 width: cardWidth,
                 marginBottom: 16,
@@ -407,33 +413,37 @@ function IdeasGalleryScreen({ navigation }) {
                 shadowRadius: 12,
                 elevation: 4,
                 borderWidth: 1,
-                borderColor: idea.image ? idea.color + '55' : '#F0F2F5',
+                borderColor: idea.images ? idea.color + '55' : '#F0F2F5',
               }}
             >
               <View style={{ width: 64, height: 64, borderRadius: 20, backgroundColor: idea.bg, justifyContent: 'center', alignItems: 'center', marginBottom: 14 }}>
                 <MaterialCommunityIcons name={idea.icon} size={32} color={idea.color} />
               </View>
               <Text style={{ fontSize: 14, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', marginBottom: 4 }}>{idea.label}</Text>
-              <Text style={{ fontSize: 11, color: idea.image ? idea.color : '#AAA', fontWeight: '600' }}>
-                {idea.image ? 'Tap to view →' : 'Coming soon'}
+              <Text style={{ fontSize: 11, color: idea.images ? idea.color : '#AAA', fontWeight: '600' }}>
+                {idea.images ? `Tap to view (${idea.images.length} photos) →` : 'Coming soon'}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
 
-      {/* Full-screen image viewer modal */}
+      {/* Full-screen gallery modal */}
       <Modal
         visible={selectedIdea !== null}
         transparent={true}
         animationType="fade"
         onRequestClose={() => setSelectedIdea(null)}
       >
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.95)', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.95)' }}>
           {selectedIdea && (
             <>
-              <View style={{ width: '100%', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 40, paddingBottom: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{ fontSize: 20, fontWeight: '900', color: '#FFF', letterSpacing: -0.5 }}>{selectedIdea.label}</Text>
+              {/* Modal Header */}
+              <View style={{ paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 40, paddingBottom: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View>
+                  <Text style={{ fontSize: 20, fontWeight: '900', color: '#FFF', letterSpacing: -0.5 }}>{selectedIdea.label}</Text>
+                  <Text style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{selectedIdea.images.length} Photos · Swipe to browse</Text>
+                </View>
                 <TouchableOpacity
                   onPress={() => setSelectedIdea(null)}
                   style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.18)', justifyContent: 'center', alignItems: 'center' }}
@@ -441,12 +451,28 @@ function IdeasGalleryScreen({ navigation }) {
                   <MaterialCommunityIcons name="close" size={22} color="#FFF" />
                 </TouchableOpacity>
               </View>
-              <Image
-                source={selectedIdea.image}
-                style={{ width: '95%', height: '70%', borderRadius: 20 }}
-                resizeMode="contain"
-              />
-              <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 16, fontWeight: '500' }}>Tap ✕ to close</Text>
+
+              {/* Horizontal scrollable images */}
+              <ScrollView
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ alignItems: 'center' }}
+                style={{ flex: 1 }}
+              >
+                {selectedIdea.images.map((img, idx) => (
+                  <View key={idx} style={{ width: Dimensions.get('window').width, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 12 }}>
+                    <Image
+                      source={img}
+                      style={{ width: '100%', height: Dimensions.get('window').height * 0.65, borderRadius: 20 }}
+                      resizeMode="contain"
+                    />
+                    <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 12 }}>{idx + 1} / {selectedIdea.images.length}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+
+              <Text style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11, textAlign: 'center', paddingBottom: 24 }}>← Swipe left/right to view all · Tap ✕ to close</Text>
             </>
           )}
         </View>
