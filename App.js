@@ -357,13 +357,13 @@ function HomeScreen({ navigation }) {
 
 // --- IdeasGalleryScreen Component ---
 const ALL_IDEAS = [
-  { label: 'Living Room', icon: 'sofa-outline', color: '#2196F3', bg: '#E3F2FD' },
-  { label: 'Kitchen', icon: 'countertop-outline', color: '#FF9800', bg: '#FFF3E0' },
-  { label: 'Bathroom', icon: 'shower', color: '#00BCD4', bg: '#E0F7FA' },
-  { label: 'Dining Table', icon: 'table-furniture', color: '#9C27B0', bg: '#F3E5F5' },
-  { label: 'Home Library', icon: 'bookshelf', color: '#795548', bg: '#EFEBE9' },
-  { label: 'Lawn & Garden', icon: 'flower-outline', color: '#4CAF50', bg: '#E8F5E9' },
-  { label: 'Bedroom', icon: 'bed-outline', color: '#E91E63', bg: '#FCE4EC' },
+  { label: 'Living Room', icon: 'sofa-outline', color: '#2196F3', bg: '#E3F2FD', images: [require('./assets/livingroom.png')] },
+  { label: 'Kitchen', icon: 'countertop-outline', color: '#FF9800', bg: '#FFF3E0', images: [require('./assets/kitchen.png')] },
+  { label: 'Bathroom', icon: 'shower', color: '#00BCD4', bg: '#E0F7FA', images: [require('./assets/bathroom.png')] },
+  { label: 'Dining Table', icon: 'table-furniture', color: '#9C27B0', bg: '#F3E5F5', images: [require('./assets/diningtable.png')] },
+  { label: 'Home Library', icon: 'bookshelf', color: '#795548', bg: '#EFEBE9', images: [require('./assets/homelibrary.png')] },
+  { label: 'Lawn & Garden', icon: 'flower-outline', color: '#4CAF50', bg: '#E8F5E9', images: [require('./assets/lawngarden.png')] },
+  { label: 'Bedroom', icon: 'bed-outline', color: '#E91E63', bg: '#FCE4EC', images: [require('./assets/bedroom.png')] },
   {
     label: 'Front Elevation', icon: 'home-city', color: '#607D8B', bg: '#ECEFF1', images: [
       require('./assets/raj.png'),
