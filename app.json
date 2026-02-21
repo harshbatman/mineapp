@@ -4,19 +4,25 @@
     "slug": "mine-app",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/mine.jpg",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/mine.jpg",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/mine.jpg"
     },
     "android": {
       "package": "com.harshbatman.mineapp",
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/mine.jpg",
+        "backgroundColor": "#000000"
+      }
     },
     "web": {}
   }
