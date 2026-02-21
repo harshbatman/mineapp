@@ -156,8 +156,8 @@ function HomeScreen({ navigation }) {
   }, []);
 
   const services = [
-    { id: 'Construction', title: 'Construction', image: require('./assets/construction.png') },
-    { id: 'Renovation', title: 'Renovation', image: require('./assets/renovation.png') },
+    { id: 'Construction', title: 'Construction', image: require('./assets/construction_3d.png') },
+    { id: 'Renovation', title: 'Renovation', image: require('./assets/renovation_3d.png') },
     { id: 'Service', title: 'Service', image: require('./assets/services.png') },
   ];
 
@@ -222,8 +222,8 @@ function HomeScreen({ navigation }) {
               style={[styles.uberServiceCard, { backgroundColor: '#FFF', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 }]}
               onPress={() => navigation.navigate(service.id)}
             >
-              <View style={[styles.uberServiceIconBg, { width: 60, height: 60, justifyContent: 'center', alignItems: 'center' }]}>
-                <Image source={service.image} style={{ width: 45, height: 45 }} resizeMode="contain" />
+              <View style={[styles.uberServiceIconBg, { width: 100, height: 100, justifyContent: 'center', alignItems: 'center' }]}>
+                <Image source={service.image} style={{ width: 90, height: 90 }} resizeMode="contain" />
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
                 <Text style={styles.uberServiceTitle}>{service.title}</Text>
@@ -303,7 +303,7 @@ function HomeScreen({ navigation }) {
             <MaterialCommunityIcons name="hard-hat" size={160} color="#FFF" />
           </View>
           <View style={{ width: 80, height: 80, borderRadius: 20, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', marginLeft: 16, overflow: 'hidden' }}>
-            <Image source={require('./assets/construction.png')} style={{ width: 74, height: 74 }} resizeMode="contain" />
+            <Image source={require('./assets/construction_3d.png')} style={{ width: 74, height: 74 }} resizeMode="contain" />
           </View>
         </TouchableOpacity>
 
