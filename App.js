@@ -376,7 +376,6 @@ const ALL_IDEAS = [
 function IdeasGalleryScreen({ navigation }) {
   const { width } = Dimensions.get('window');
   const cardWidth = (width - 48) / 2;
-  const [selectedIdea, setSelectedIdea] = useState(null);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
@@ -399,7 +398,7 @@ function IdeasGalleryScreen({ navigation }) {
             <TouchableOpacity
               key={index}
               activeOpacity={0.85}
-              onPress={() => idea.images ? setSelectedIdea(idea) : null}
+              onPress={() => idea.images ? navigation.navigate('IdeaDetail', { idea }) : null}
               style={{
                 width: cardWidth,
                 marginBottom: 16,
@@ -421,60 +420,87 @@ function IdeasGalleryScreen({ navigation }) {
               </View>
               <Text style={{ fontSize: 14, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', marginBottom: 4 }}>{idea.label}</Text>
               <Text style={{ fontSize: 11, color: idea.images ? idea.color : '#AAA', fontWeight: '600' }}>
-                {idea.images ? `Tap to view (${idea.images.length} photos) →` : 'Coming soon'}
+                {idea.images ? `View ${idea.images.length} Designs →` : 'Coming soon'}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
+    </SafeAreaView>
+  );
+}
 
-      {/* Full-screen gallery modal */}
+// --- IdeaDetailScreen Component ---
+function IdeaDetailScreen({ navigation, route }) {
+  const { idea } = route.params;
+  const { width } = Dimensions.get('window');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const imageWidth = (width - 48) / 2;
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <StatusBar style="dark" />
+
+      {/* Header */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 48, paddingBottom: 14, backgroundColor: '#FFF', borderBottomWidth: 1, borderBottomColor: '#F0F0F0' }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#F0F2F5', justifyContent: 'center', alignItems: 'center', marginRight: 14 }}>
+          <MaterialCommunityIcons name="arrow-left" size={22} color="#1A1A1A" />
+        </TouchableOpacity>
+        <View>
+          <Text style={{ fontSize: 20, fontWeight: '900', color: '#1A1A1A', letterSpacing: -0.5 }}>{idea.label}</Text>
+          <Text style={{ fontSize: 12, color: '#888', fontWeight: '500', marginTop: 1 }}>{idea.images.length} Design Inspirations</Text>
+        </View>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 16 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+          {idea.images.map((img, index) => (
+            <TouchableOpacity
+              key={index}
+              activeOpacity={0.9}
+              onPress={() => setSelectedImage(img)}
+              style={{
+                width: imageWidth,
+                height: 200,
+                marginBottom: 16,
+                borderRadius: 16,
+                overflow: 'hidden',
+                backgroundColor: '#F3F3F3',
+                elevation: 3,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+              }}
+            >
+              <Image source={img} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+
+      {/* Full-screen viewer modal */}
       <Modal
-        visible={selectedIdea !== null}
+        visible={selectedImage !== null}
         transparent={true}
         animationType="fade"
-        onRequestClose={() => setSelectedIdea(null)}
+        onRequestClose={() => setSelectedImage(null)}
       >
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.95)' }}>
-          {selectedIdea && (
-            <>
-              {/* Modal Header */}
-              <View style={{ paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 40, paddingBottom: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <View>
-                  <Text style={{ fontSize: 20, fontWeight: '900', color: '#FFF', letterSpacing: -0.5 }}>{selectedIdea.label}</Text>
-                  <Text style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{selectedIdea.images.length} Photos · Swipe to browse</Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => setSelectedIdea(null)}
-                  style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.18)', justifyContent: 'center', alignItems: 'center' }}
-                >
-                  <MaterialCommunityIcons name="close" size={22} color="#FFF" />
-                </TouchableOpacity>
-              </View>
-
-              {/* Horizontal scrollable images */}
-              <ScrollView
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ alignItems: 'center' }}
-                style={{ flex: 1 }}
-              >
-                {selectedIdea.images.map((img, idx) => (
-                  <View key={idx} style={{ width: Dimensions.get('window').width, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 12 }}>
-                    <Image
-                      source={img}
-                      style={{ width: '100%', height: Dimensions.get('window').height * 0.65, borderRadius: 20 }}
-                      resizeMode="contain"
-                    />
-                    <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 12 }}>{idx + 1} / {selectedIdea.images.length}</Text>
-                  </View>
-                ))}
-              </ScrollView>
-
-              <Text style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11, textAlign: 'center', paddingBottom: 24 }}>← Swipe left/right to view all · Tap ✕ to close</Text>
-            </>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.95)', justifyContent: 'center', alignItems: 'center' }}>
+          <TouchableOpacity
+            style={{ position: 'absolute', top: Platform.OS === 'ios' ? 60 : 40, right: 20, zIndex: 10, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.2)', justifyContent: 'center', alignItems: 'center' }}
+            onPress={() => setSelectedImage(null)}
+          >
+            <MaterialCommunityIcons name="close" size={24} color="#FFF" />
+          </TouchableOpacity>
+          {selectedImage && (
+            <Image
+              source={selectedImage}
+              style={{ width: '100%', height: '80%' }}
+              resizeMode="contain"
+            />
           )}
+          <Text style={{ color: '#FFF', marginTop: 20, fontSize: 12, opacity: 0.6 }}>Tap anywhere or ✕ to close</Text>
         </View>
       </Modal>
     </SafeAreaView>
@@ -4234,9 +4260,9 @@ function AppNavigator() {
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
       <Stack.Screen name="RefundPolicy" component={RefundPolicyScreen} />
       <Stack.Screen name="AboutUs" component={AboutUsScreen} />
-      <Stack.Screen name="SavedProperties" component={SavedPropertiesScreen} />
       <Stack.Screen name="ActivityScreen" component={ActivityScreen} />
       <Stack.Screen name="IdeasGallery" component={IdeasGalleryScreen} />
+      <Stack.Screen name="IdeaDetail" component={IdeaDetailScreen} />
     </Stack.Navigator>
   );
 }
