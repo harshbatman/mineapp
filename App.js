@@ -12,8 +12,10 @@ import { translations } from './translations';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // Firebase Imports
-import { storage } from './firebase';
+import { auth, db, storage } from './firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 const LanguageContext = React.createContext();
 const ScrollContext = React.createContext();
@@ -98,6 +100,7 @@ const UserProvider = ({ children }) => {
   // Clear session (called on Sign Out)
   const logout = useCallback(async () => {
     try {
+      await auth.signOut();
       await AsyncStorage.removeItem(SESSION_KEY);
       setUserData({
         name: '', phone: '', email: '', address: '',
@@ -870,10 +873,13 @@ function EditProfileScreen({ navigation }) {
 
   const uploadImage = async (uri) => {
     if (!uri || uri.startsWith('http')) return uri;
+    const user = auth.currentUser;
+    if (!user) return uri;
+
     try {
       const response = await fetch(uri);
       const blob = await response.blob();
-      const filename = `profiles/${userData.phone.replace(/[^0-9]/g, '') || Date.now()}.jpg`;
+      const filename = `profiles/${user.uid}.jpg`;
       const storageRef = ref(storage, filename);
       await uploadBytes(storageRef, blob);
       return await getDownloadURL(storageRef);
@@ -887,14 +893,34 @@ function EditProfileScreen({ navigation }) {
     setSaving(true);
     let finalImageUrl = profileImage;
 
-    if (profileImage && !profileImage.startsWith('http')) {
-      finalImageUrl = await uploadImage(profileImage);
-    }
+    try {
+      if (profileImage && !profileImage.startsWith('http')) {
+        finalImageUrl = await uploadImage(profileImage);
+      }
 
-    updateUserData({ name, phone, email, address, profileImage: finalImageUrl });
-    setSaving(false);
-    Alert.alert('Success', 'Profile updated successfully!');
-    navigation.goBack();
+      const updatedData = {
+        name,
+        phone,
+        email,
+        address,
+        profileImage: finalImageUrl
+      };
+
+      // Push to Firestore if logged in
+      const user = auth.currentUser;
+      if (user) {
+        await updateDoc(doc(db, "users", user.uid), updatedData);
+      }
+
+      updateUserData(updatedData);
+      setSaving(false);
+      Alert.alert('Success', 'Profile updated successfully!');
+      navigation.goBack();
+    } catch (error) {
+      setSaving(false);
+      console.error(error);
+      Alert.alert('Error', 'Failed to save changes: ' + error.message);
+    }
   };
 
   const renderInputCard = (title, items) => (
@@ -3732,11 +3758,36 @@ function LoginScreen({ navigation }) {
       return;
     }
     setLoading(true);
-    setTimeout(async () => {
-      await saveSession({ phone: `${selectedCountry.code} ${phone}` });
+    try {
+      // Internal email format: 918595399383@mahto.app
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+      const cleanCode = selectedCountry.code.replace(/[^0-9]/g, '');
+      const internalEmail = `${cleanCode}${cleanPhone}@mahto.app`;
+
+      const userCredential = await signInWithEmailAndPassword(auth, internalEmail, password);
+      const user = userCredential.user;
+
+      // Fetch profile photo for Ecosystem Sync (Photo Only)
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const cloudData = userDoc.data();
+        // Only sync the photo as per ecosystem rules
+        await saveSession({
+          phone: `${selectedCountry.code} ${phone}`,
+          email: internalEmail,
+          profileImage: cloudData.profileImage || null
+        });
+      } else {
+        await saveSession({ phone: `${selectedCountry.code} ${phone}`, email: internalEmail });
+      }
+
       setLoading(false);
       navigation.replace('Root');
-    }, 1500);
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
+      Alert.alert("Login Failed", error.message);
+    }
   };
 
   return (
@@ -3887,12 +3938,38 @@ function RegisterScreen({ navigation }) {
       return;
     }
     setLoading(true);
-    setTimeout(async () => {
-      await saveSession({ name, phone: `${selectedCountry.code} ${phone}` });
+    try {
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+      const cleanCode = selectedCountry.code.replace(/[^0-9]/g, '');
+      const internalEmail = `${cleanCode}${cleanPhone}@mahto.app`;
+
+      const userCredential = await createUserWithEmailAndPassword(auth, internalEmail, password);
+      const user = userCredential.user;
+
+      const newUser = {
+        uid: user.uid,
+        name,
+        phoneNumber: `${selectedCountry.code}${phone.replace(/[^0-9]/g, '')}`,
+        phone: `${selectedCountry.code} ${phone}`,
+        email: internalEmail,
+        createdAt: Date.now(),
+        profileImage: null,
+        photoURL: null,
+        address: '',
+        isProfileSetup: true
+      };
+
+      // Save to Firestore
+      await setDoc(doc(db, "users", user.uid), newUser);
+
+      await saveSession(newUser);
       setLoading(false);
-      // Auto-login: go directly to Root, no need to log in again
       navigation.replace('Root');
-    }, 1500);
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
+      Alert.alert("Registration Failed", error.message);
+    }
   };
 
   return (
@@ -4194,17 +4271,36 @@ function MainTabs({ navigation }) {
 
 // Inner App that has access to UserContext
 function AppNavigator() {
-  const { loadSession } = React.useContext(UserContext);
+  const { loadSession, updateUserData } = React.useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const checkSession = async () => {
-      const found = await loadSession();
-      setIsLoggedIn(found);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in, fetch from Firestore
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const cloudData = userDoc.data();
+          await loadSession(); // Load app-specific data
+          // Ecosystem Sync: Only pull the profile photo from the cloud
+          if (cloudData.profileImage) {
+            updateUserData({ profileImage: cloudData.profileImage });
+          }
+          setIsLoggedIn(true);
+        } else {
+          // No doc? Still count as logged in if auth exists, but maybe a new user
+          setIsLoggedIn(true);
+        }
+      } else {
+        // No Firebase user
+        const foundLocal = await loadSession();
+        setIsLoggedIn(foundLocal);
+      }
       setIsLoading(false);
-    };
-    checkSession();
+    });
+
+    return unsubscribe;
   }, []);
 
   if (isLoading) {
