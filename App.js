@@ -357,18 +357,18 @@ function HomeScreen({ navigation }) {
 
 // --- IdeasGalleryScreen Component ---
 const ALL_IDEAS = [
-  { label: 'Living Room', image: require('./assets/idea_livingroom.jpg') },
-  { label: 'Kitchen', image: require('./assets/idea_kitchen.jpg') },
-  { label: 'Bathroom', image: require('./assets/idea_bathroom.jpg') },
-  { label: 'Dining Table', image: require('./assets/idea_dining.jpg') },
-  { label: 'Home Library', image: require('./assets/idea_library.jpg') },
-  { label: 'Lawn & Garden', image: require('./assets/idea_lawn.jpg') },
-  { label: 'Bedroom', image: require('./assets/idea_bedroom.jpg') },
+  { label: 'Living Room', icon: 'sofa-outline', color: '#2196F3', bg: '#E3F2FD' },
+  { label: 'Kitchen', icon: 'countertop-outline', color: '#FF9800', bg: '#FFF3E0' },
+  { label: 'Bathroom', icon: 'shower', color: '#00BCD4', bg: '#E0F7FA' },
+  { label: 'Dining Table', icon: 'table-furniture', color: '#9C27B0', bg: '#F3E5F5' },
+  { label: 'Home Library', icon: 'bookshelf', color: '#795548', bg: '#EFEBE9' },
+  { label: 'Lawn & Garden', icon: 'flower-outline', color: '#4CAF50', bg: '#E8F5E9' },
+  { label: 'Bedroom', icon: 'bed-outline', color: '#E91E63', bg: '#FCE4EC' },
+  { label: 'Front Elevation', icon: 'home-city', color: '#607D8B', bg: '#ECEFF1' },
 ];
 
-function IdeasGalleryScreen({ navigation, route }) {
+function IdeasGalleryScreen({ navigation }) {
   const { width } = Dimensions.get('window');
-  const [selectedImage, setSelectedImage] = useState(null);
   const cardWidth = (width - 48) / 2;
 
   return (
@@ -382,7 +382,7 @@ function IdeasGalleryScreen({ navigation, route }) {
         </TouchableOpacity>
         <View>
           <Text style={{ fontSize: 20, fontWeight: '900', color: '#1A1A1A', letterSpacing: -0.5 }}>💡 Ideas</Text>
-          <Text style={{ fontSize: 12, color: '#888', fontWeight: '500', marginTop: 1 }}>Get inspired for your next project</Text>
+          <Text style={{ fontSize: 12, color: '#888', fontWeight: '500', marginTop: 1 }}>Choose a category to get inspired</Text>
         </View>
       </View>
 
@@ -391,67 +391,36 @@ function IdeasGalleryScreen({ navigation, route }) {
           {ALL_IDEAS.map((idea, index) => (
             <TouchableOpacity
               key={index}
-              activeOpacity={0.88}
-              onPress={() => setSelectedImage(idea)}
+              activeOpacity={0.85}
               style={{
                 width: cardWidth,
                 marginBottom: 16,
                 borderRadius: 20,
-                overflow: 'hidden',
                 backgroundColor: '#FFF',
+                padding: 20,
+                alignItems: 'center',
                 shadowColor: '#000',
-                shadowOffset: { width: 0, height: 6 },
-                shadowOpacity: 0.08,
-                shadowRadius: 14,
-                elevation: 5,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.07,
+                shadowRadius: 12,
+                elevation: 4,
+                borderWidth: 1,
+                borderColor: '#F0F2F5',
               }}
             >
-              <Image
-                source={idea.image}
-                style={{ width: cardWidth, height: index % 3 === 0 ? 180 : 130 }}
-                resizeMode="cover"
-              />
-              <View style={{ padding: 12 }}>
-                <Text style={{ fontSize: 13, fontWeight: '800', color: '#1A1A1A' }}>{idea.label}</Text>
-                <Text style={{ fontSize: 11, color: '#999', marginTop: 2 }}>Tap to view</Text>
+              <View style={{ width: 64, height: 64, borderRadius: 20, backgroundColor: idea.bg, justifyContent: 'center', alignItems: 'center', marginBottom: 14 }}>
+                <MaterialCommunityIcons name={idea.icon} size={32} color={idea.color} />
               </View>
+              <Text style={{ fontSize: 14, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', marginBottom: 4 }}>{idea.label}</Text>
+              <Text style={{ fontSize: 11, color: '#AAA', fontWeight: '500' }}>Coming soon</Text>
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
-
-      {/* Full-screen image modal */}
-      <Modal
-        visible={selectedImage !== null}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setSelectedImage(null)}
-      >
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.95)', justifyContent: 'center', alignItems: 'center' }}>
-          {selectedImage && (
-            <>
-              <View style={{ width: '100%', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 40, paddingBottom: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{ fontSize: 20, fontWeight: '900', color: '#FFF', letterSpacing: -0.5 }}>{selectedImage.label}</Text>
-                <TouchableOpacity
-                  onPress={() => setSelectedImage(null)}
-                  style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.18)', justifyContent: 'center', alignItems: 'center' }}
-                >
-                  <MaterialCommunityIcons name="close" size={22} color="#FFF" />
-                </TouchableOpacity>
-              </View>
-              <Image
-                source={selectedImage.image}
-                style={{ width: '94%', height: '68%', borderRadius: 24 }}
-                resizeMode="cover"
-              />
-              <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 20, fontWeight: '500' }}>Tap ✕ to close</Text>
-            </>
-          )}
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 }
+
 
 // --- ProfileScreen Component ---
 function ProfileScreen({ navigation }) {
