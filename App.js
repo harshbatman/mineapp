@@ -1638,11 +1638,11 @@ function ContactUsScreen({ navigation }) {
 // --- ConstructionScreen Component ---
 function ConstructionScreen({ navigation }) {
   const constructionServices = [
-    { title: 'Home Construction', icon: 'home-city-outline', image: require('./assets/res_const.png'), details: 'Custom homes built from the ground up.', route: 'ResidentialBuild', color: '#4CAF50', bg: '#E8F5E9' },
-    { title: 'Residential Building', icon: 'domain', image: require('./assets/res_building.png'), details: 'Multi-story apartment & residential complexes.', route: 'ResidentialBuild', color: '#00BCD4', bg: '#E0F7FA' },
-    { title: 'Commercial Projects', icon: 'office-building', image: require('./assets/com_const.png'), details: 'Offices, retail spaces, and warehouses.', route: 'CommercialBuild', color: '#2196F3', bg: '#E3F2FD' },
-    { title: 'Industrial Construction', icon: 'factory', image: require('./assets/ind_const.png'), details: 'Heavy-duty construction for industrial needs.', route: 'IndustrialBuild', color: '#FF9800', bg: '#FFF3E0' },
-    { title: 'Project Management', icon: 'clipboard-list-outline', image: require('./assets/proj_mgmt.png'), details: 'End-to-end management of your build.', route: 'ProjectManagement', color: '#9C27B0', bg: '#F3E5F5' },
+    { title: 'Home Construction', icon: 'home-city-outline', image: require('./assets/homeconstruction.png'), details: 'Custom homes built from the ground up.', route: 'ResidentialBuild', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Residential Building', icon: 'domain', image: require('./assets/resendential.png'), details: 'Multi-story apartment & residential complexes.', route: 'ResidentialBuild', color: '#00BCD4', bg: '#E0F7FA' },
+    { title: 'Commercial Projects', icon: 'office-building', image: require('./assets/commercial.png'), details: 'Offices, retail spaces, and warehouses.', route: 'CommercialBuild', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Industrial Construction', icon: 'factory', image: require('./assets/industrial.png'), details: 'Heavy-duty construction for industrial needs.', route: 'IndustrialBuild', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Project Management', icon: 'clipboard-list-outline', image: require('./assets/management.png'), details: 'End-to-end management of your build.', route: 'ProjectManagement', color: '#9C27B0', bg: '#F3E5F5' },
   ];
 
   return (
