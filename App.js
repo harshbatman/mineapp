@@ -1474,7 +1474,7 @@ function ResidentialBuildScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('HomeConstructionForm')}
+          onPress={() => navigation.navigate('ResidentialBuildingForm')}
         >
           <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
@@ -1581,7 +1581,7 @@ function HomeConstructionScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ResidentialBuildingForm')}
+          onPress={() => navigation.navigate('HomeConstructionForm')}
         >
           <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
