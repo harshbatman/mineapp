@@ -1392,7 +1392,114 @@ function ResidentialBuildScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <CustomHeader
-          title="Residential Build"
+          title="Residential Building"
+          subtitle="Your Dream Home, Our Expertise."
+          navigation={navigation}
+          showBack={true}
+        />
+
+        {/* Hero Section */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+          <View style={{
+            backgroundColor: '#0047AB',
+            borderRadius: 24,
+            padding: 28,
+            shadowColor: '#0047AB',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.35,
+            shadowRadius: 20,
+            elevation: 10,
+            alignItems: 'center',
+          }}>
+            <MaterialCommunityIcons name="home-city-outline" size={64} color="#FFF" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>Custom Homes</Text>
+            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
+              From modern villas to cozy cottages, we specialize in building residential properties that stand the test of time.
+            </Text>
+          </View>
+        </View>
+
+        {/* Steps Section as Stylish Cards */}
+        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>How We Work</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {steps.map((step, index) => (
+              <View key={index} style={{
+                width: '47.5%',
+                backgroundColor: '#FFF',
+                padding: 18,
+                borderRadius: 22,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 8 },
+                shadowOpacity: 0.08,
+                shadowRadius: 12,
+                elevation: 5,
+                borderWidth: 1,
+                borderColor: '#F5F5F5',
+              }}>
+                <View style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: step.bg,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                  <MaterialCommunityIcons name={step.icon} size={26} color={step.color} />
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {step.title}</Text>
+                </View>
+                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{step.desc}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 20,
+            backgroundColor: '#1A1A1A',
+            paddingVertical: 18,
+            borderRadius: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 12,
+            elevation: 8,
+            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+          onPress={() => navigation.navigate('ResidentialBuildForm')}
+        >
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
+        </TouchableOpacity>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- HomeConstructionScreen Component ---
+function HomeConstructionScreen({ navigation }) {
+  const steps = [
+    { title: 'Consultation', desc: 'Discuss your vision and budget.', icon: 'account-voice', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Design & Planning', desc: 'Architectural drawings & 3D modeling.', icon: 'pencil-ruler', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Construction', desc: 'Building with premium quality materials.', icon: 'hammer-wrench', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Handover', desc: 'Final inspection & key delivery.', icon: 'key-variant', color: '#9C27B0', bg: '#F3E5F5' },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <CustomHeader
+          title="Home Construction"
           subtitle="Your Dream Home, Our Expertise."
           navigation={navigation}
           showBack={true}
@@ -1537,14 +1644,14 @@ function ResidentialBuildFormScreen({ navigation }) {
             <Text style={{ fontSize: 14, color: '#666', marginBottom: 10, fontWeight: '700', textTransform: 'uppercase' }}>Plot Size</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
               <TextInput
-                style={[styles.input, { flex: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0, marginBottom: 0, height: 56, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9' }]}
+                style={[styles.input, { flex: 1, borderTopLeftRadius: 16, borderBottomLeftRadius: 16, borderTopRightRadius: 0, borderBottomRightRadius: 0, paddingHorizontal: 16, marginBottom: 0, height: 56, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9' }]}
                 value={plotSize}
                 onChangeText={setPlotSize}
                 placeholder="Enter size e.g. 150"
                 keyboardType="numeric"
                 placeholderTextColor="#AAA"
               />
-              <TouchableOpacity onPress={() => setUnit(unit === 'Sq Yard' ? 'Gaz' : 'Sq Yard')} style={{ backgroundColor: '#0047AB', height: 56, paddingHorizontal: 20, borderTopRightRadius: 10, borderBottomRightRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+              <TouchableOpacity onPress={() => setUnit(unit === 'Sq Yard' ? 'Gaz' : 'Sq Yard')} style={{ backgroundColor: '#0047AB', height: 56, paddingHorizontal: 20, borderTopRightRadius: 16, borderBottomRightRadius: 16, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ fontWeight: '800', color: '#FFF' }}>{unit} ▾</Text>
               </TouchableOpacity>
             </View>
@@ -1618,19 +1725,24 @@ function ResidentialBuildFormScreen({ navigation }) {
             <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20, color: '#1A1A1A' }}>3. Finishing Style</Text>
 
             {[
-              { id: 'Basic', title: 'Basic Finish', desc: 'Standard materials, budget-friendly choices suitable for rentals.', icon: 'home-outline' },
-              { id: 'Standard', title: 'Standard Finish', desc: 'Good quality materials with modern touches for personal living.', icon: 'home' },
-              { id: 'Premium', title: 'Premium Finish', desc: 'High-end luxury materials, top-tier fixtures and imported tiles.', icon: 'home-variant' },
+              { id: 'Basic', title: 'Basic Finish', desc: 'Cost-effective materials, reliable durability ideal for rental properties.', icon: 'shield-home-outline', color: '#607D8B', bg: '#F5F7F8', tag: 'ECONOMY', tagColor: '#78909C' },
+              { id: 'Standard', title: 'Standard Finish', desc: 'Modern aesthetics with quality branded fittings for personal living.', icon: 'home-modern', color: '#2196F3', bg: '#E3F2FD', tag: 'POPULAR', tagColor: '#2196F3' },
+              { id: 'Premium', title: 'Premium Finish', desc: 'Luxury Italian marble, high-end fixtures, and smart home ready.', icon: 'crown-outline', color: '#FFB300', bg: '#FFF8E1', tag: 'LUXURY', tagColor: '#FF9800' },
             ].map(f => (
-              <TouchableOpacity key={f.id} activeOpacity={0.9} onPress={() => setFinish(f.id)} style={{ flexDirection: 'row', alignItems: 'center', padding: 20, borderRadius: 20, marginBottom: 16, backgroundColor: finish === f.id ? '#E8F4FF' : '#FFF', borderWidth: 2, borderColor: finish === f.id ? '#0047AB' : '#F0F0F0', elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6 }}>
-                <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: finish === f.id ? '#0047AB' : '#F5F5F5', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+              <TouchableOpacity key={f.id} activeOpacity={0.9} onPress={() => setFinish(f.id)} style={{ flexDirection: 'row', alignItems: 'flex-start', padding: 20, borderRadius: 20, marginBottom: 16, backgroundColor: finish === f.id ? f.bg : '#FFF', borderWidth: 2, borderColor: finish === f.id ? f.color : '#F0F0F0', elevation: finish === f.id ? 8 : 2, shadowColor: finish === f.id ? f.color : '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: finish === f.id ? 0.25 : 0.05, shadowRadius: 8 }}>
+                <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: finish === f.id ? f.color : '#F5F5F5', justifyContent: 'center', alignItems: 'center', marginRight: 16, marginTop: 2 }}>
                   <MaterialCommunityIcons name={f.icon} size={30} color={finish === f.id ? '#FFF' : '#888'} />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 17, fontWeight: '800', color: finish === f.id ? '#0047AB' : '#1A1A1A', marginBottom: 6 }}>{f.title}</Text>
-                  <Text style={{ fontSize: 13, color: '#666', lineHeight: 18 }}>{f.desc}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 6 }}>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: finish === f.id ? f.color : '#1A1A1A' }}>{f.title}</Text>
+                    <View style={{ backgroundColor: finish === f.id ? f.color : '#F0F0F0', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>
+                      <Text style={{ fontSize: 9, fontWeight: '900', color: finish === f.id ? '#FFF' : f.tagColor, letterSpacing: 0.5 }}>{f.tag}</Text>
+                    </View>
+                  </View>
+                  <Text style={{ fontSize: 13, color: finish === f.id ? '#444' : '#666', lineHeight: 20, fontWeight: '500' }}>{f.desc}</Text>
                 </View>
-                {finish === f.id && <MaterialCommunityIcons name="check-circle" size={26} color="#0047AB" style={{ marginLeft: 10 }} />}
+                {finish === f.id && <MaterialCommunityIcons name="check-circle" size={26} color={f.color} style={{ marginLeft: 10, alignSelf: 'center' }} />}
               </TouchableOpacity>
             ))}
 
@@ -1650,62 +1762,110 @@ function ResidentialBuildFormScreen({ navigation }) {
 
         {step === 4 && (
           <Animated.View>
-            <View style={{ alignItems: 'center', marginBottom: 24 }}>
-              <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#E8F5E9', justifyContent: 'center', alignItems: 'center', marginBottom: 12 }}>
-                <MaterialCommunityIcons name="check-decagram" size={36} color="#4CAF50" />
+            <View style={{ alignItems: 'center', marginBottom: 28, marginTop: 10 }}>
+              <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: '#0047AB', justifyContent: 'center', alignItems: 'center', marginBottom: 16, elevation: 8, shadowColor: '#0047AB', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 12 }}>
+                <MaterialCommunityIcons name="clipboard-check-multiple-outline" size={36} color="#FFF" />
               </View>
-              <Text style={{ fontSize: 24, fontWeight: '900', color: '#1A1A1A', textAlign: 'center' }}>Review Your Plan</Text>
-              <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', marginTop: 4 }}>Almost there. Verify your requirements.</Text>
+              <Text style={{ fontSize: 26, fontWeight: '900', color: '#1A1A1A', textAlign: 'center', letterSpacing: -0.5 }}>Final Review</Text>
+              <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', marginTop: 6, fontWeight: '500' }}>Verify your requirements before finalizing.</Text>
             </View>
 
-            <View style={{ backgroundColor: '#FFF', borderRadius: 20, padding: 24, borderWidth: 1, borderColor: '#EEE', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 10 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#F0F0F0', paddingBottom: 16, marginBottom: 16 }}>
-                <View>
-                  <Text style={{ fontSize: 13, fontWeight: '800', color: '#888', textTransform: 'uppercase', letterSpacing: 1 }}>Plot</Text>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginTop: 4 }}>{plotSize} {unit}</Text>
-                  <Text style={{ fontSize: 14, color: '#666', marginTop: 2 }}>{facing}-Facing</Text>
+            <View style={{ marginBottom: 32 }}>
+              {/* Plot Section */}
+              <View style={{ backgroundColor: '#FFF', borderRadius: 20, padding: 20, marginBottom: 16, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                    <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: '#FFF3E0', justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
+                      <MaterialCommunityIcons name="map-marker-radius-outline" size={20} color="#FF9800" />
+                    </View>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: '#1A1A1A' }}>Plot Details</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => setStep(1)} style={{ padding: 6, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
+                    <MaterialCommunityIcons name="pencil-outline" size={18} color="#0047AB" />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => setStep(1)} style={{ padding: 8, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
-                  <MaterialCommunityIcons name="pencil-outline" size={20} color="#0047AB" />
-                </TouchableOpacity>
-              </View>
 
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#F0F0F0', paddingBottom: 16, marginBottom: 16 }}>
-                <View>
-                  <Text style={{ fontSize: 13, fontWeight: '800', color: '#888', textTransform: 'uppercase', letterSpacing: 1 }}>Structure</Text>
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 4, gap: 8 }}>
-                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#1A1A1A', backgroundColor: '#F9F9F9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>{floors} Floor{floors !== 1 ? 's' : ''}</Text>
-                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#1A1A1A', backgroundColor: '#F9F9F9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>{bedrooms} Bed{bedrooms !== 1 ? 's' : ''}</Text>
-                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#1A1A1A', backgroundColor: '#F9F9F9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>{bathrooms} Bath{bathrooms !== 1 ? 's' : ''}</Text>
-                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#1A1A1A', backgroundColor: '#F9F9F9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>{kitchens} Kitchen{kitchens !== 1 ? 's' : ''}</Text>
-                    {basement && <Text style={{ fontSize: 14, fontWeight: '700', color: '#1A1A1A', backgroundColor: '#F9F9F9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6, color: '#0047AB' }}>+ Basement</Text>}
+                <View style={{ flexDirection: 'row', backgroundColor: '#F9F9F9', borderRadius: 12, padding: 12 }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 12, color: '#888', fontWeight: '700', textTransform: 'uppercase', marginBottom: 4 }}>Size</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '900', color: '#1A1A1A' }}>{plotSize || 'N/A'} <Text style={{ fontSize: 13, color: '#666', fontWeight: '600' }}>{unit}</Text></Text>
+                  </View>
+                  <View style={{ width: 1, backgroundColor: '#E0E0E0', marginHorizontal: 12 }} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 12, color: '#888', fontWeight: '700', textTransform: 'uppercase', marginBottom: 4 }}>Facing</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '900', color: '#1A1A1A' }}>{facing || 'N/A'}</Text>
                   </View>
                 </View>
-                <TouchableOpacity onPress={() => setStep(2)} style={{ padding: 8, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
-                  <MaterialCommunityIcons name="pencil-outline" size={20} color="#0047AB" />
-                </TouchableOpacity>
               </View>
 
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <View>
-                  <Text style={{ fontSize: 13, fontWeight: '800', color: '#888', textTransform: 'uppercase', letterSpacing: 1 }}>Finishing</Text>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginTop: 4 }}>{finish} Style</Text>
+              {/* Structure Section */}
+              <View style={{ backgroundColor: '#FFF', borderRadius: 20, padding: 20, marginBottom: 16, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                    <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: '#E3F2FD', justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
+                      <MaterialCommunityIcons name="home-city-outline" size={20} color="#2196F3" />
+                    </View>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: '#1A1A1A' }}>Structure</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => setStep(2)} style={{ padding: 6, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
+                    <MaterialCommunityIcons name="pencil-outline" size={18} color="#0047AB" />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => setStep(3)} style={{ padding: 8, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
-                  <MaterialCommunityIcons name="pencil-outline" size={20} color="#0047AB" />
-                </TouchableOpacity>
+
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+                  <View style={{ backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, flexDirection: 'row', alignItems: 'center' }}>
+                    <MaterialCommunityIcons name="layers-outline" size={16} color="#666" style={{ marginRight: 6 }} />
+                    <Text style={{ fontSize: 15, fontWeight: '800', color: '#1A1A1A' }}>{floors} <Text style={{ fontSize: 13, fontWeight: '600', color: '#666' }}>Floor{floors !== 1 ? 's' : ''}</Text></Text>
+                  </View>
+                  <View style={{ backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, flexDirection: 'row', alignItems: 'center' }}>
+                    <MaterialCommunityIcons name="bed-outline" size={16} color="#666" style={{ marginRight: 6 }} />
+                    <Text style={{ fontSize: 15, fontWeight: '800', color: '#1A1A1A' }}>{bedrooms} <Text style={{ fontSize: 13, fontWeight: '600', color: '#666' }}>Bed{bedrooms !== 1 ? 's' : ''}</Text></Text>
+                  </View>
+                  <View style={{ backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, flexDirection: 'row', alignItems: 'center' }}>
+                    <MaterialCommunityIcons name="shower" size={16} color="#666" style={{ marginRight: 6 }} />
+                    <Text style={{ fontSize: 15, fontWeight: '800', color: '#1A1A1A' }}>{bathrooms} <Text style={{ fontSize: 13, fontWeight: '600', color: '#666' }}>Bath{bathrooms !== 1 ? 's' : ''}</Text></Text>
+                  </View>
+                  <View style={{ backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, flexDirection: 'row', alignItems: 'center' }}>
+                    <MaterialCommunityIcons name="countertop-outline" size={16} color="#666" style={{ marginRight: 6 }} />
+                    <Text style={{ fontSize: 15, fontWeight: '800', color: '#1A1A1A' }}>{kitchens} <Text style={{ fontSize: 13, fontWeight: '600', color: '#666' }}>Kitchen{kitchens !== 1 ? 's' : ''}</Text></Text>
+                  </View>
+                  {basement && (
+                    <View style={{ backgroundColor: '#E8F5E9', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialCommunityIcons name="stairs-down" size={16} color="#4CAF50" style={{ marginRight: 6 }} />
+                      <Text style={{ fontSize: 15, fontWeight: '800', color: '#2E7D32' }}>Basement <Text style={{ fontSize: 13, fontWeight: '600', color: '#4CAF50' }}>Included</Text></Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+
+              {/* Finishing Section */}
+              <View style={{ backgroundColor: '#FFF', borderRadius: 20, padding: 20, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: '#F3E5F5', justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
+                      <MaterialCommunityIcons name="palette-outline" size={20} color="#9C27B0" />
+                    </View>
+                    <View>
+                      <Text style={{ fontSize: 18, fontWeight: '900', color: '#1A1A1A' }}>Finishing</Text>
+                      <Text style={{ fontSize: 14, color: '#0047AB', fontWeight: '800', marginTop: 2 }}>{finish || 'Not Selected'} Style</Text>
+                    </View>
+                  </View>
+                  <TouchableOpacity onPress={() => setStep(3)} style={{ padding: 6, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
+                    <MaterialCommunityIcons name="pencil-outline" size={18} color="#0047AB" />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
 
-            <TouchableOpacity style={{ backgroundColor: '#2196F3', borderRadius: 24, height: 60, justifyContent: 'center', alignItems: 'center', marginTop: 32, shadowColor: '#2196F3', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6, flexDirection: 'row' }} onPress={() => {
+            <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 24, height: 60, justifyContent: 'center', alignItems: 'center', shadowColor: '#1A1A1A', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6, flexDirection: 'row' }} onPress={() => {
               Alert.alert(
                 "Plan Submitted!",
                 "Your project requirements have been sent to our estimation team. We'll be in touch soon.",
                 [{ text: "OK", onPress: () => navigation.navigate('Root') }]
               );
             }}>
-              <MaterialCommunityIcons name="paperclip" size={22} color="#FFF" style={{ marginRight: 8, transform: [{ rotate: '45deg' }] }} />
-              <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '900', letterSpacing: 0.5 }}>Submit Plan</Text>
+              <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '900', letterSpacing: 0.5, marginRight: 8 }}>Submit Plan</Text>
+              <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
             </TouchableOpacity>
           </Animated.View>
         )}
@@ -2133,7 +2293,7 @@ function ContactUsScreen({ navigation }) {
 // --- ConstructionScreen Component ---
 function ConstructionScreen({ navigation }) {
   const constructionServices = [
-    { title: 'Home Construction', icon: 'home-city-outline', image: require('./assets/homeconstruction.png'), details: 'Custom homes built from the ground up.', route: 'ResidentialBuild', color: '#4CAF50', bg: '#E8F5E9' },
+    { title: 'Home Construction', icon: 'home-city-outline', image: require('./assets/homeconstruction.png'), details: 'Custom homes built from the ground up.', route: 'HomeConstruction', color: '#4CAF50', bg: '#E8F5E9' },
     { title: 'Residential Building', icon: 'domain', image: require('./assets/resendential.png'), details: 'Multi-story apartment & residential complexes.', route: 'ResidentialBuild', color: '#00BCD4', bg: '#E0F7FA' },
     { title: 'Commercial Projects', icon: 'office-building', image: require('./assets/commercial.png'), details: 'Offices, retail spaces, and warehouses.', route: 'CommercialBuild', color: '#2196F3', bg: '#E3F2FD' },
     { title: 'Industrial Construction', icon: 'factory', image: require('./assets/industrial.png'), details: 'Heavy-duty construction for industrial needs.', route: 'IndustrialBuild', color: '#FF9800', bg: '#FFF3E0' },
@@ -4693,6 +4853,7 @@ function AppNavigator() {
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="Root" component={MainTabs} />
       <Stack.Screen name="Construction" component={ConstructionScreen} />
+      <Stack.Screen name="HomeConstruction" component={HomeConstructionScreen} />
       <Stack.Screen name="ResidentialBuild" component={ResidentialBuildScreen} />
       <Stack.Screen name="ResidentialBuildForm" component={ResidentialBuildFormScreen} />
       <Stack.Screen name="CommercialBuild" component={CommercialBuildScreen} />
