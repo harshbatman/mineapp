@@ -5691,7 +5691,7 @@ function RegisterScreen({ navigation }) {
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 25, paddingTop: 60 }}>
         <TouchableOpacity
           style={[styles.backButton, { marginBottom: 30 }]}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.replace('Welcome')}
         >
           <MaterialCommunityIcons name="arrow-left" size={22} color="#000" />
         </TouchableOpacity>
@@ -6176,7 +6176,7 @@ function WelcomeScreen({ navigation }) {
       </Animated.View>
 
       {/* Get Started Button */}
-      <Animated.View style={{ width: '100%', opacity: fadeAnim, transform: [{ translateY: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [30, 0] }) }] }}>
+      <Animated.View style={{ position: 'absolute', bottom: 100, left: 30, right: 30, opacity: fadeAnim, transform: [{ translateY: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [30, 0] }) }] }}>
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={() => navigation.replace('Register')}
