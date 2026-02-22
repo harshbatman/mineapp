@@ -5472,15 +5472,17 @@ function LoginScreen({ navigation }) {
       const userCredential = await signInWithEmailAndPassword(auth, internalEmail, password);
       const user = userCredential.user;
 
-      // Fetch profile photo for Ecosystem Sync (Photo Only)
+      // Fetch full profile data from Firestore for session restore
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
         const cloudData = userDoc.data();
-        // Only sync the photo as per ecosystem rules
+        // Full data sync: restore all saved profile fields
         await saveSession({
-          phone: `${selectedCountry.code} ${phone}`,
+          name: cloudData.name || '',
+          phone: cloudData.phone || `${selectedCountry.code} ${phone}`,
           email: internalEmail,
-          profileImage: cloudData.profileImage || null
+          address: cloudData.address || '',
+          profileImage: cloudData.mineProfileImage || cloudData.profileImage || null,
         });
       } else {
         await saveSession({ phone: `${selectedCountry.code} ${phone}`, email: internalEmail });
