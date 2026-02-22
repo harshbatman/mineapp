@@ -1451,9 +1451,6 @@ function ResidentialBuildScreen({ navigation }) {
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
                   <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {step.title}</Text>
-                  <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
-                    <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
-                  </View>
                 </View>
                 <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{step.desc}</Text>
               </View>
