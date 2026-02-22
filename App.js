@@ -361,7 +361,7 @@ function HomeScreen({ navigation }) {
 // --- IdeasGalleryScreen Component ---
 const ALL_IDEAS = [
   { label: 'Living Room', icon: 'sofa-outline', color: '#2196F3', bg: '#E3F2FD', images: [require('./assets/livingroom.png'), require('./assets/lr1.png'), require('./assets/lr2.png'), require('./assets/lr3.png'), require('./assets/lr4.png'), require('./assets/lr5.png')] },
-  { label: 'Kitchen', icon: 'countertop-outline', color: '#FF9800', bg: '#FFF3E0', images: [require('./assets/kitchen.png')] },
+  { label: 'Kitchen', icon: 'countertop-outline', color: '#FF9800', bg: '#FFF3E0', images: [require('./assets/kitchen.png'), require('./assets/k1.png'), require('./assets/k2.png'), require('./assets/k3.png')] },
   { label: 'Bathroom', icon: 'shower', color: '#00BCD4', bg: '#E0F7FA', images: [require('./assets/bathroom.png')] },
   { label: 'Dining Table', icon: 'table-furniture', color: '#9C27B0', bg: '#F3E5F5', images: [require('./assets/diningtable.png')] },
   { label: 'Home Library', icon: 'bookshelf', color: '#795548', bg: '#EFEBE9', images: [require('./assets/homelibrary.png')] },
