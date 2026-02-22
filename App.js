@@ -58,11 +58,11 @@ const AlertProvider = ({ children }) => {
       <Modal visible={visible} transparent animationType="fade">
         <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center', padding: 25 }}>
           <View style={{ backgroundColor: '#FFF', width: '100%', borderRadius: 28, padding: 32, alignItems: 'center', elevation: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.3, shadowRadius: 16 }}>
-            <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: config.type === 'error' ? '#FFF0F0' : '#F0F7FF', justifyContent: 'center', alignItems: 'center', marginBottom: 24 }}>
+            <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: config.type === 'error' ? '#FFF0F0' : config.type === 'success' ? '#F0FFF0' : '#F0F7FF', justifyContent: 'center', alignItems: 'center', marginBottom: 24 }}>
               <MaterialCommunityIcons
-                name={config.type === 'error' ? "alert-circle-outline" : "information-outline"}
+                name={config.type === 'error' ? "alert-circle-outline" : config.type === 'success' ? "check-circle-outline" : "information-outline"}
                 size={42}
-                color={config.type === 'error' ? "#FF3B30" : "#007AFF"}
+                color={config.type === 'error' ? "#FF3B30" : config.type === 'success' ? "#4CAF50" : "#007AFF"}
               />
             </View>
             <Text style={{ fontSize: 24, fontWeight: '900', color: '#1A1A1A', marginBottom: 12, textAlign: 'center' }}>{config.title}</Text>
