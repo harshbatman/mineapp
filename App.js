@@ -370,9 +370,11 @@ function PremiumServicesScreen({ navigation }) {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
       <StatusBar style="dark" />
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 48, paddingBottom: 14, backgroundColor: '#FFF', borderBottomWidth: 1, borderBottomColor: '#F0F0F0' }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={22} color="#1A1A1A" />
-        </TouchableOpacity>
+        {navigation.canGoBack() && (
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <MaterialCommunityIcons name="arrow-left" size={22} color="#1A1A1A" />
+          </TouchableOpacity>
+        )}
         <View>
           <Text style={{ fontSize: 20, fontWeight: '900', color: '#1A1A1A', letterSpacing: -0.5 }}>Premium Services</Text>
           <Text style={{ fontSize: 12, color: '#888', fontWeight: '500', marginTop: 1 }}>Full-stack management by experts</Text>
@@ -1475,12 +1477,241 @@ function ResidentialBuildScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('ResidentialBuildForm')}
         >
           <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
 
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- ResidentialBuildFormScreen Component ---
+function ResidentialBuildFormScreen({ navigation }) {
+  const [step, setStep] = useState(1);
+  const [plotSize, setPlotSize] = useState('');
+  const [unit, setUnit] = useState('Sq Yard'); // Sq Yard or Gaz
+  const [facing, setFacing] = useState('');
+
+  const [floors, setFloors] = useState(1);
+  const [bedrooms, setBedrooms] = useState(1);
+  const [bathrooms, setBathrooms] = useState(1);
+  const [kitchens, setKitchens] = useState(1);
+  const [basement, setBasement] = useState(false);
+
+  const [finish, setFinish] = useState(''); // Basic, Standard, Premium
+
+  const renderStepIcon = (current) => (
+    <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 20, alignItems: 'center' }}>
+      {[1, 2, 3, 4].map((s, idx) => (
+        <React.Fragment key={s}>
+          <View style={{
+            width: 32, height: 32, borderRadius: 16,
+            backgroundColor: step >= s ? '#0047AB' : '#E0E0E0',
+            justifyContent: 'center', alignItems: 'center',
+            elevation: step === s ? 4 : 0, shadowColor: '#0047AB', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 4
+          }}>
+            {step > s ? (
+              <MaterialCommunityIcons name="check" size={18} color="#FFF" />
+            ) : (
+              <Text style={{ color: step >= s ? '#FFF' : '#888', fontWeight: '800', fontSize: 14 }}>{s}</Text>
+            )}
+          </View>
+          {idx < 3 && (
+            <View style={{ height: 2, width: 30, backgroundColor: step > s ? '#0047AB' : '#E0E0E0', marginHorizontal: 4 }} />
+          )}
+        </React.Fragment>
+      ))}
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Plan Your Project" subtitle="Tell us about your requirements" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20, paddingBottom: 60 }}>
+        {renderStepIcon(step)}
+
+        {step === 1 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20, color: '#1A1A1A' }}>1. Plot Details</Text>
+
+            <Text style={{ fontSize: 14, color: '#666', marginBottom: 10, fontWeight: '700', textTransform: 'uppercase' }}>Plot Size</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
+              <TextInput
+                style={[styles.input, { flex: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0, marginBottom: 0, height: 56, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9' }]}
+                value={plotSize}
+                onChangeText={setPlotSize}
+                placeholder="Enter size e.g. 150"
+                keyboardType="numeric"
+                placeholderTextColor="#AAA"
+              />
+              <TouchableOpacity onPress={() => setUnit(unit === 'Sq Yard' ? 'Gaz' : 'Sq Yard')} style={{ backgroundColor: '#0047AB', height: 56, paddingHorizontal: 20, borderTopRightRadius: 10, borderBottomRightRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ fontWeight: '800', color: '#FFF' }}>{unit} ▾</Text>
+              </TouchableOpacity>
+            </View>
+
+            <Text style={{ fontSize: 14, color: '#666', marginBottom: 12, fontWeight: '700', textTransform: 'uppercase' }}>Plot Facing</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 32 }}>
+              {['North', 'East', 'West', 'South', 'Other'].map(f => (
+                <TouchableOpacity key={f} onPress={() => setFacing(f)} style={{ paddingVertical: 12, paddingHorizontal: 20, borderRadius: 24, backgroundColor: facing === f ? '#0047AB' : '#F5F5F5', borderWidth: 1, borderColor: facing === f ? '#0047AB' : '#E9E9E9' }}>
+                  <Text style={{ color: facing === f ? '#FFF' : '#444', fontWeight: '700' }}>{f}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <TouchableOpacity style={{ backgroundColor: '#0047AB', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', shadowColor: '#0047AB', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
+              if (!plotSize || !facing) { Alert.alert('Missing Details', 'Please complete all plot details to proceed.'); return; }
+              setStep(2);
+            }}>
+              <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800', letterSpacing: 0.5 }}>Continue</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+
+        {step === 2 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20, color: '#1A1A1A' }}>2. Structure Requirements</Text>
+
+            {[
+              { label: 'Number of Floors', val: floors, setVal: setFloors, icon: 'home-variant-outline' },
+              { label: 'Bedrooms', val: bedrooms, setVal: setBedrooms, icon: 'bed-outline' },
+              { label: 'Bathrooms', val: bathrooms, setVal: setBathrooms, icon: 'shower' },
+              { label: 'Kitchens', val: kitchens, setVal: setKitchens, icon: 'countertop-outline' },
+            ].map((item, idx) => (
+              <View key={idx} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#FFF', padding: 20, borderRadius: 16, marginBottom: 14, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6, borderWidth: 1, borderColor: '#F0F0F0' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <MaterialCommunityIcons name={item.icon} size={24} color="#0047AB" style={{ marginRight: 12 }} />
+                  <Text style={{ fontSize: 16, fontWeight: '700', color: '#1A1A1A' }}>{item.label}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#F9F9F9', borderRadius: 24, padding: 4, borderWidth: 1, borderColor: '#EEE' }}>
+                  <TouchableOpacity onPress={() => item.val > 0 && item.setVal(item.val - 1)} style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', elevation: 2, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 2, shadowOffset: { width: 0, height: 1 } }}>
+                    <MaterialCommunityIcons name="minus" size={18} color="#333" />
+                  </TouchableOpacity>
+                  <Text style={{ fontSize: 16, fontWeight: '800', width: 40, textAlign: 'center', color: '#0047AB' }}>{item.val}</Text>
+                  <TouchableOpacity onPress={() => item.setVal(item.val + 1)} style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#0047AB', justifyContent: 'center', alignItems: 'center', elevation: 2, shadowColor: '#0047AB', shadowOpacity: 0.2, shadowRadius: 2, shadowOffset: { width: 0, height: 1 } }}>
+                    <MaterialCommunityIcons name="plus" size={18} color="#FFF" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+
+            <TouchableOpacity onPress={() => setBasement(!basement)} activeOpacity={0.8} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: basement ? '#E3F2FD' : '#FFF', padding: 20, borderRadius: 16, marginTop: 8, marginBottom: 28, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6, borderWidth: 1, borderColor: basement ? '#0047AB' : '#F0F0F0' }}>
+              <MaterialCommunityIcons name={basement ? "checkbox-marked" : "checkbox-blank-outline"} size={26} color={basement ? "#0047AB" : "#BBB"} />
+              <View style={{ marginLeft: 14 }}>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: basement ? '#0047AB' : '#1A1A1A' }}>Include Basement</Text>
+                <Text style={{ fontSize: 12, color: '#666', marginTop: 2 }}>Add extra underground space.</Text>
+              </View>
+            </TouchableOpacity>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TouchableOpacity style={{ backgroundColor: '#F0F0F0', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(1)}>
+                <Text style={{ color: '#444', fontSize: 16, fontWeight: '700' }}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: '#0047AB', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47, shadowColor: '#0047AB', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => setStep(3)}>
+                <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Continue</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        )}
+
+        {step === 3 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20, color: '#1A1A1A' }}>3. Finishing Style</Text>
+
+            {[
+              { id: 'Basic', title: 'Basic Finish', desc: 'Standard materials, budget-friendly choices suitable for rentals.', icon: 'home-outline' },
+              { id: 'Standard', title: 'Standard Finish', desc: 'Good quality materials with modern touches for personal living.', icon: 'home' },
+              { id: 'Premium', title: 'Premium Finish', desc: 'High-end luxury materials, top-tier fixtures and imported tiles.', icon: 'home-variant' },
+            ].map(f => (
+              <TouchableOpacity key={f.id} activeOpacity={0.9} onPress={() => setFinish(f.id)} style={{ flexDirection: 'row', alignItems: 'center', padding: 20, borderRadius: 20, marginBottom: 16, backgroundColor: finish === f.id ? '#E8F4FF' : '#FFF', borderWidth: 2, borderColor: finish === f.id ? '#0047AB' : '#F0F0F0', elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6 }}>
+                <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: finish === f.id ? '#0047AB' : '#F5F5F5', justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+                  <MaterialCommunityIcons name={f.icon} size={30} color={finish === f.id ? '#FFF' : '#888'} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 17, fontWeight: '800', color: finish === f.id ? '#0047AB' : '#1A1A1A', marginBottom: 6 }}>{f.title}</Text>
+                  <Text style={{ fontSize: 13, color: '#666', lineHeight: 18 }}>{f.desc}</Text>
+                </View>
+                {finish === f.id && <MaterialCommunityIcons name="check-circle" size={26} color="#0047AB" style={{ marginLeft: 10 }} />}
+              </TouchableOpacity>
+            ))}
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 }}>
+              <TouchableOpacity style={{ backgroundColor: '#F0F0F0', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(2)}>
+                <Text style={{ color: '#444', fontSize: 16, fontWeight: '700' }}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: '#0047AB', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47, shadowColor: '#0047AB', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
+                if (!finish) { Alert.alert('Selection Required', 'Please select a finishing style.'); return; }
+                setStep(4);
+              }}>
+                <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Review Plan</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        )}
+
+        {step === 4 && (
+          <Animated.View>
+            <View style={{ alignItems: 'center', marginBottom: 24 }}>
+              <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#E8F5E9', justifyContent: 'center', alignItems: 'center', marginBottom: 12 }}>
+                <MaterialCommunityIcons name="check-decagram" size={36} color="#4CAF50" />
+              </View>
+              <Text style={{ fontSize: 24, fontWeight: '900', color: '#1A1A1A', textAlign: 'center' }}>Review Your Plan</Text>
+              <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', marginTop: 4 }}>Almost there. Verify your requirements.</Text>
+            </View>
+
+            <View style={{ backgroundColor: '#FFF', borderRadius: 20, padding: 24, borderWidth: 1, borderColor: '#EEE', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 10 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#F0F0F0', paddingBottom: 16, marginBottom: 16 }}>
+                <View>
+                  <Text style={{ fontSize: 13, fontWeight: '800', color: '#888', textTransform: 'uppercase', letterSpacing: 1 }}>Plot</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginTop: 4 }}>{plotSize} {unit}</Text>
+                  <Text style={{ fontSize: 14, color: '#666', marginTop: 2 }}>{facing}-Facing</Text>
+                </View>
+                <TouchableOpacity onPress={() => setStep(1)} style={{ padding: 8, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
+                  <MaterialCommunityIcons name="pencil-outline" size={20} color="#0047AB" />
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#F0F0F0', paddingBottom: 16, marginBottom: 16 }}>
+                <View>
+                  <Text style={{ fontSize: 13, fontWeight: '800', color: '#888', textTransform: 'uppercase', letterSpacing: 1 }}>Structure</Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 4, gap: 8 }}>
+                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#1A1A1A', backgroundColor: '#F9F9F9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>{floors} Floor{floors !== 1 ? 's' : ''}</Text>
+                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#1A1A1A', backgroundColor: '#F9F9F9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>{bedrooms} Bed{bedrooms !== 1 ? 's' : ''}</Text>
+                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#1A1A1A', backgroundColor: '#F9F9F9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>{bathrooms} Bath{bathrooms !== 1 ? 's' : ''}</Text>
+                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#1A1A1A', backgroundColor: '#F9F9F9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>{kitchens} Kitchen{kitchens !== 1 ? 's' : ''}</Text>
+                    {basement && <Text style={{ fontSize: 14, fontWeight: '700', color: '#1A1A1A', backgroundColor: '#F9F9F9', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6, color: '#0047AB' }}>+ Basement</Text>}
+                  </View>
+                </View>
+                <TouchableOpacity onPress={() => setStep(2)} style={{ padding: 8, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
+                  <MaterialCommunityIcons name="pencil-outline" size={20} color="#0047AB" />
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View>
+                  <Text style={{ fontSize: 13, fontWeight: '800', color: '#888', textTransform: 'uppercase', letterSpacing: 1 }}>Finishing</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', marginTop: 4 }}>{finish} Style</Text>
+                </View>
+                <TouchableOpacity onPress={() => setStep(3)} style={{ padding: 8, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
+                  <MaterialCommunityIcons name="pencil-outline" size={20} color="#0047AB" />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <TouchableOpacity style={{ backgroundColor: '#2196F3', borderRadius: 24, height: 60, justifyContent: 'center', alignItems: 'center', marginTop: 32, shadowColor: '#2196F3', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6, flexDirection: 'row' }} onPress={() => {
+              Alert.alert(
+                "Plan Submitted!",
+                "Your project requirements have been sent to our estimation team. We'll be in touch soon.",
+                [{ text: "OK", onPress: () => navigation.navigate('Root') }]
+              );
+            }}>
+              <MaterialCommunityIcons name="paperclip" size={22} color="#FFF" style={{ marginRight: 8, transform: [{ rotate: '45deg' }] }} />
+              <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '900', letterSpacing: 0.5 }}>Submit Plan</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -4161,6 +4392,98 @@ function RegisterScreen({ navigation }) {
   );
 }
 
+// --- TrackStatusScreen Component ---
+function TrackStatusScreen({ navigation }) {
+  // Since the user hasn't submitted actual backend data yet, show an empty state by default
+  const statuses = [];
+
+  if (statuses.length === 0) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <StatusBar style="dark" />
+        <CustomHeader title="Track Status" subtitle="Your project progress" navigation={navigation} showBack={false} />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+          <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: '#F0F4F8', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+            <MaterialCommunityIcons name="clipboard-alert-outline" size={50} color="#90CAF9" />
+          </View>
+          <Text style={{ fontSize: 22, fontWeight: '800', color: '#1A1A1A', textAlign: 'center', marginBottom: 8 }}>No Active Projects</Text>
+          <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', lineHeight: 22, paddingHorizontal: 20 }}>
+            You haven't submitted any projects yet. When you start a build or renovation, your progress will appear here.
+          </Text>
+
+          <TouchableOpacity
+            style={{ marginTop: 32, backgroundColor: '#0047AB', paddingHorizontal: 32, paddingVertical: 14, borderRadius: 24, shadowColor: '#0047AB', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }}
+            onPress={() => navigation.navigate('Home')}
+          >
+            <Text style={{ color: '#FFF', fontWeight: '800', fontSize: 16 }}>Explore Services</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  const completedCount = statuses.filter(s => s.completed).length;
+  const progressPercent = Math.round((completedCount / statuses.length) * 100);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      <CustomHeader title="Track Status" subtitle="Your project progress" navigation={navigation} showBack={false} />
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20, paddingBottom: 100 }}>
+        <View style={{ backgroundColor: '#0047AB', borderRadius: 24, padding: 24, marginBottom: 24, elevation: 6, shadowColor: '#0047AB', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 10 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View>
+              <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1 }}>Active Project</Text>
+              <Text style={{ fontSize: 24, color: '#FFF', fontWeight: '900', marginTop: 4 }}>Residential Build</Text>
+            </View>
+            <View style={{ width: 48, height: 48, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 24, justifyContent: 'center', alignItems: 'center' }}>
+              <MaterialCommunityIcons name="home-city" size={24} color="#FFF" />
+            </View>
+          </View>
+
+          <View style={{ marginTop: 24 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+              <Text style={{ color: '#FFF', fontWeight: '600' }}>Overall Progress</Text>
+              <Text style={{ color: '#FFF', fontWeight: '900' }}>{progressPercent}%</Text>
+            </View>
+            <View style={{ height: 8, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 4, overflow: 'hidden' }}>
+              <View style={{ width: `${progressPercent}%`, height: '100%', backgroundColor: '#FFD700', borderRadius: 4 }} />
+            </View>
+          </View>
+        </View>
+
+        <Text style={{ fontSize: 18, fontWeight: '800', color: '#1A1A1A', marginBottom: 16 }}>Timeline</Text>
+        <View style={{ backgroundColor: '#FFF', borderRadius: 24, padding: 20, elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 10, borderWidth: 1, borderColor: '#F0F0F0' }}>
+          {statuses.map((item, index) => (
+            <View key={index} style={{ flexDirection: 'row', marginBottom: index === statuses.length - 1 ? 0 : 20 }}>
+              <View style={{ alignItems: 'center', width: 30, marginRight: 16 }}>
+                <View style={{ width: 24, height: 24, borderRadius: 12, backgroundColor: item.completed ? '#4CAF50' : '#E0E0E0', justifyContent: 'center', alignItems: 'center', zIndex: 1, elevation: item.completed ? 2 : 0 }}>
+                  {item.completed ? (
+                    <MaterialCommunityIcons name="check" size={14} color="#FFF" />
+                  ) : (
+                    <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: '#FFF' }} />
+                  )}
+                </View>
+                {index < statuses.length - 1 && (
+                  <View style={{ width: 2, height: 50, backgroundColor: statuses[index + 1].completed ? '#4CAF50' : '#E0E0E0', marginTop: -4, marginBottom: -4 }} />
+                )}
+              </View>
+
+              <View style={{ flex: 1, paddingBottom: index === statuses.length - 1 ? 0 : 8 }}>
+                <Text style={{ fontSize: 16, fontWeight: '800', color: item.completed ? '#1A1A1A' : '#888' }}>{item.title}</Text>
+                <Text style={{ fontSize: 12, color: '#666', marginTop: 2, fontWeight: '500' }}>{item.date}</Text>
+                <Text style={{ fontSize: 13, color: item.completed ? '#444' : '#AAA', marginTop: 6, lineHeight: 18 }}>{item.desc}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 function ActivityScreen({ navigation }) {
   const { onScroll } = React.useContext(ScrollContext);
   const activities = [
@@ -4262,8 +4585,9 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
           };
 
           const iconName = route.name === 'Home' ? 'home-variant' :
-            route.name === 'Activity' ? 'clock-outline' :
-              route.name === 'Saved' ? 'heart-outline' : 'account-outline';
+            route.name === 'TrackStatus' ? 'timeline-check' :
+              route.name === 'FullStack' ? 'layers-triple-outline' :
+                route.name === 'Profile' ? 'account-outline' : 'rhombus-medium';
 
           if (isCollapsed && !isFocused) return null;
 
@@ -4307,8 +4631,8 @@ function MainTabs({ navigation }) {
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Activity" component={ActivityScreen} />
-      <Tab.Screen name="Saved" component={SavedPropertiesScreen} />
+      <Tab.Screen name="TrackStatus" component={TrackStatusScreen} />
+      <Tab.Screen name="FullStack" component={PremiumServicesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
@@ -4373,6 +4697,7 @@ function AppNavigator() {
       <Stack.Screen name="Root" component={MainTabs} />
       <Stack.Screen name="Construction" component={ConstructionScreen} />
       <Stack.Screen name="ResidentialBuild" component={ResidentialBuildScreen} />
+      <Stack.Screen name="ResidentialBuildForm" component={ResidentialBuildFormScreen} />
       <Stack.Screen name="CommercialBuild" component={CommercialBuildScreen} />
       <Stack.Screen name="IndustrialBuild" component={IndustrialBuildScreen} />
       <Stack.Screen name="ProjectManagement" component={ProjectManagementScreen} />
