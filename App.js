@@ -2668,12 +2668,302 @@ function IndustrialBuildScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('IndustrialBuildForm')}
         >
-          <Text style={{ color: '#000', fontSize: 17, fontWeight: '900', marginRight: 10, letterSpacing: 0.5 }}>Consult Engineers</Text>
+          <Text style={{ color: '#000', fontSize: 17, fontWeight: '900', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
           <MaterialCommunityIcons name="arrow-right" size={24} color="#000" />
         </TouchableOpacity>
 
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- IndustrialBuildFormScreen Component ---
+function IndustrialBuildFormScreen({ navigation }) {
+  const [step, setStep] = useState(1);
+  const [plotSize, setPlotSize] = useState('');
+  const [unit, setUnit] = useState('Acres'); // Acres, Sq Meter
+  const [zone, setZone] = useState('');
+
+  const [floors, setFloors] = useState(1);
+  const [type, setType] = useState('Manufacturing'); // Manufacturing, Warehouse, Assembly, Logistics
+  const [heavyMachinery, setHeavyMachinery] = useState(false);
+  const [highVoltage, setHighVoltage] = useState(false);
+
+  const [finish, setFinish] = useState('');
+
+  const renderStepIcon = (current) => (
+    <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 20, alignItems: 'center' }}>
+      {[1, 2, 3, 4].map((s, idx) => (
+        <React.Fragment key={s}>
+          <View style={{
+            width: 32, height: 32, borderRadius: 16,
+            backgroundColor: step >= s ? '#FFB300' : '#E0E0E0',
+            justifyContent: 'center', alignItems: 'center',
+            elevation: step === s ? 4 : 0, shadowColor: '#FFB300', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 4
+          }}>
+            {step > s ? (
+              <MaterialCommunityIcons name="check" size={18} color="#000" />
+            ) : (
+              <Text style={{ color: step >= s ? '#000' : '#888', fontWeight: '900', fontSize: 14 }}>{s}</Text>
+            )}
+          </View>
+          {idx < 3 && (
+            <View style={{ height: 2, width: 30, backgroundColor: step > s ? '#FFB300' : '#E0E0E0', marginHorizontal: 4 }} />
+          )}
+        </React.Fragment>
+      ))}
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Industrial Project" subtitle="Heavy-duty construction details" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20, paddingBottom: 60 }}>
+        {renderStepIcon(step)}
+
+        {step === 1 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20, color: '#1A1A1A' }}>1. Site Details</Text>
+
+            <Text style={{ fontSize: 14, color: '#666', marginBottom: 10, fontWeight: '700', textTransform: 'uppercase' }}>Land Area</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
+              <TextInput
+                style={[styles.input, { flex: 1, borderTopLeftRadius: 16, borderBottomLeftRadius: 16, borderTopRightRadius: 0, borderBottomRightRadius: 0, paddingHorizontal: 16, marginBottom: 0, height: 56, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9' }]}
+                value={plotSize}
+                onChangeText={setPlotSize}
+                placeholder="Enter size e.g. 5"
+                keyboardType="numeric"
+                placeholderTextColor="#AAA"
+              />
+              <TouchableOpacity onPress={() => setUnit(unit === 'Acres' ? 'Sq Meter' : 'Acres')} style={{ backgroundColor: '#1A1A1A', height: 56, paddingHorizontal: 20, borderTopRightRadius: 16, borderBottomRightRadius: 16, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ fontWeight: '800', color: '#FFF' }}>{unit} ▾</Text>
+              </TouchableOpacity>
+            </View>
+
+            <Text style={{ fontSize: 14, color: '#666', marginBottom: 12, fontWeight: '700', textTransform: 'uppercase' }}>Zoning Type</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 32 }}>
+              {['Industrial Park', 'SEZ', 'Open Terrain', 'Coastal', 'Highway'].map(z => (
+                <TouchableOpacity key={z} onPress={() => setZone(z)} style={{ paddingVertical: 12, paddingHorizontal: 20, borderRadius: 24, backgroundColor: zone === z ? '#FFB300' : '#F5F5F5', borderWidth: 1, borderColor: zone === z ? '#FFB300' : '#E9E9E9' }}>
+                  <Text style={{ color: zone === z ? '#000' : '#444', fontWeight: '800' }}>{z}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', shadowColor: '#1A1A1A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
+              if (!plotSize || !zone) { Alert.alert('Missing Details', 'Please complete all site details to proceed.'); return; }
+              setStep(2);
+            }}>
+              <Text style={{ color: '#FFB300', fontSize: 16, fontWeight: '900', letterSpacing: 0.5 }}>Continue</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+
+        {step === 2 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20, color: '#1A1A1A' }}>2. Facility Requirements</Text>
+
+            <Text style={{ fontSize: 14, color: '#666', marginBottom: 12, fontWeight: '700', textTransform: 'uppercase' }}>Primary Use Case</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 24 }}>
+              {['Manufacturing', 'Warehouse / Cold Storage', 'Assembly Plant', 'Logistics Hub'].map(t => (
+                <TouchableOpacity key={t} onPress={() => setType(t)} style={{ width: '48%', backgroundColor: type === t ? '#FFF8E1' : '#FFF', paddingVertical: 16, paddingHorizontal: 12, borderRadius: 16, elevation: type === t ? 4 : 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: type === t ? 0.1 : 0.05, shadowRadius: 6, borderWidth: 1, borderColor: type === t ? '#FFB300' : '#F0F0F0', alignItems: 'center' }}>
+                  <MaterialCommunityIcons name={t === 'Manufacturing' ? "factory" : t === 'Warehouse / Cold Storage' ? "warehouse" : t === 'Assembly Plant' ? "robot-industrial" : "truck-delivery"} size={28} color={type === t ? '#FF9800' : '#888'} style={{ marginBottom: 8 }} />
+                  <Text style={{ fontSize: 15, fontWeight: '800', color: type === t ? '#1A1A1A' : '#444', textAlign: 'center' }}>{t}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#FFF', padding: 20, borderRadius: 16, marginBottom: 20, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6, borderWidth: 1, borderColor: '#F0F0F0' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <MaterialCommunityIcons name="layers-outline" size={24} color="#1A1A1A" style={{ marginRight: 12 }} />
+                <Text style={{ fontSize: 16, fontWeight: '900', color: '#1A1A1A' }}>Total Floor Levels</Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#F9F9F9', borderRadius: 24, padding: 4, borderWidth: 1, borderColor: '#EEE' }}>
+                <TouchableOpacity onPress={() => floors > 1 && setFloors(floors - 1)} style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', elevation: 2, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 2, shadowOffset: { width: 0, height: 1 } }}>
+                  <MaterialCommunityIcons name="minus" size={18} color="#333" />
+                </TouchableOpacity>
+                <Text style={{ fontSize: 16, fontWeight: '900', width: 40, textAlign: 'center', color: '#1A1A1A' }}>{floors}</Text>
+                <TouchableOpacity onPress={() => setFloors(floors + 1)} style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#1A1A1A', justifyContent: 'center', alignItems: 'center', elevation: 2, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 2, shadowOffset: { width: 0, height: 1 } }}>
+                  <MaterialCommunityIcons name="plus" size={18} color="#FFF" />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <Text style={{ fontSize: 14, color: '#666', marginBottom: 12, fontWeight: '700', textTransform: 'uppercase' }}>Special Infrastructure</Text>
+            <View style={{ flexDirection: 'column', gap: 12, marginBottom: 32 }}>
+              <TouchableOpacity onPress={() => setHeavyMachinery(!heavyMachinery)} activeOpacity={0.8} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: heavyMachinery ? '#FFF8E1' : '#FFF', padding: 16, borderRadius: 16, elevation: heavyMachinery ? 3 : 1, borderWidth: 1, borderColor: heavyMachinery ? '#FFB300' : '#F0F0F0' }}>
+                <MaterialCommunityIcons name={heavyMachinery ? "checkbox-marked" : "checkbox-blank-outline"} size={26} color={heavyMachinery ? "#FF9800" : "#BBB"} style={{ marginRight: 12 }} />
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 15, fontWeight: '800', color: heavyMachinery ? '#1A1A1A' : '#444' }}>Heavy Machinery Foundation</Text>
+                  <Text style={{ fontSize: 12, color: '#666', marginTop: 2 }}>Reinforced flooring and vibration isolation</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => setHighVoltage(!highVoltage)} activeOpacity={0.8} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: highVoltage ? '#FFF8E1' : '#FFF', padding: 16, borderRadius: 16, elevation: highVoltage ? 3 : 1, borderWidth: 1, borderColor: highVoltage ? '#FFB300' : '#F0F0F0' }}>
+                <MaterialCommunityIcons name={highVoltage ? "checkbox-marked" : "checkbox-blank-outline"} size={26} color={highVoltage ? "#FF9800" : "#BBB"} style={{ marginRight: 12 }} />
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 15, fontWeight: '800', color: highVoltage ? '#1A1A1A' : '#444' }}>High Voltage Substation Core</Text>
+                  <Text style={{ fontSize: 12, color: '#666', marginTop: 2 }}>Dedicated industrial power supply integration</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TouchableOpacity style={{ backgroundColor: '#F0F0F0', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(1)}>
+                <Text style={{ color: '#444', fontSize: 16, fontWeight: '700' }}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47, shadowColor: '#1A1A1A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => setStep(3)}>
+                <Text style={{ color: '#FFB300', fontSize: 16, fontWeight: '900' }}>Continue</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        )}
+
+        {step === 3 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20, color: '#1A1A1A' }}>3. Construction Grade</Text>
+
+            {[
+              { id: 'Standard', title: 'Standard Industrial', desc: 'Pre-engineered steel buildings meant for general warehousing and logistics.', icon: 'warehouse', color: '#607D8B', bg: '#F5F7F8', tag: 'BASE', tagColor: '#78909C' },
+              { id: 'HeavyDuty', title: 'Heavy-Duty RCC', desc: 'Thick reinforced concrete capable of supporting active manufacturing floors.', icon: 'wall', color: '#FF9800', bg: '#FFF3E0', tag: 'DURABLE', tagColor: '#F57C00' },
+              { id: 'Chemical', title: 'Chemical / Hazmat', desc: 'Specialized ventilation, resistant coatings, and isolated drainage systems.', icon: 'biohazard', color: '#E53935', bg: '#FFEBEE', tag: 'COMPLIANT', tagColor: '#D32F2F' },
+            ].map(f => (
+              <TouchableOpacity key={f.id} activeOpacity={0.9} onPress={() => setFinish(f.id)} style={{ flexDirection: 'row', alignItems: 'flex-start', padding: 20, borderRadius: 20, marginBottom: 16, backgroundColor: finish === f.id ? f.bg : '#FFF', borderWidth: 2, borderColor: finish === f.id ? f.color : '#F0F0F0', elevation: finish === f.id ? 8 : 2, shadowColor: finish === f.id ? f.color : '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: finish === f.id ? 0.25 : 0.05, shadowRadius: 8 }}>
+                <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: finish === f.id ? f.color : '#F5F5F5', justifyContent: 'center', alignItems: 'center', marginRight: 16, marginTop: 2 }}>
+                  <MaterialCommunityIcons name={f.icon} size={30} color={finish === f.id ? '#FFF' : '#888'} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 6 }}>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: finish === f.id ? f.color : '#1A1A1A' }}>{f.title}</Text>
+                    <View style={{ backgroundColor: finish === f.id ? f.color : '#F0F0F0', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>
+                      <Text style={{ fontSize: 9, fontWeight: '900', color: finish === f.id ? '#FFF' : f.tagColor, letterSpacing: 0.5 }}>{f.tag}</Text>
+                    </View>
+                  </View>
+                  <Text style={{ fontSize: 13, color: finish === f.id ? '#444' : '#666', lineHeight: 20, fontWeight: '500' }}>{f.desc}</Text>
+                </View>
+                {finish === f.id && <MaterialCommunityIcons name="check-circle" size={26} color={f.color} style={{ marginLeft: 10, alignSelf: 'center' }} />}
+              </TouchableOpacity>
+            ))}
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 }}>
+              <TouchableOpacity style={{ backgroundColor: '#F0F0F0', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(2)}>
+                <Text style={{ color: '#444', fontSize: 16, fontWeight: '700' }}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47, shadowColor: '#1A1A1A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
+                if (!finish) { Alert.alert('Selection Required', 'Please select a construction grade.'); return; }
+                setStep(4);
+              }}>
+                <Text style={{ color: '#FFB300', fontSize: 16, fontWeight: '900' }}>Review Specs</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        )}
+
+        {step === 4 && (
+          <Animated.View>
+            <View style={{ alignItems: 'center', marginBottom: 28, marginTop: 10 }}>
+              <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: '#1A1A1A', justifyContent: 'center', alignItems: 'center', marginBottom: 16, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 12 }}>
+                <MaterialCommunityIcons name="clipboard-check-multiple-outline" size={36} color="#FFB300" />
+              </View>
+              <Text style={{ fontSize: 26, fontWeight: '900', color: '#1A1A1A', textAlign: 'center', letterSpacing: -0.5 }}>Final Review</Text>
+              <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', marginTop: 6, fontWeight: '500' }}>Verify your heavy-duty specifications.</Text>
+            </View>
+
+            <View style={{ marginBottom: 32 }}>
+              <View style={{ backgroundColor: '#FFF', borderRadius: 20, padding: 20, marginBottom: 16, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                    <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: '#FFF3E0', justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
+                      <MaterialCommunityIcons name="map-marker-radius-outline" size={20} color="#FF9800" />
+                    </View>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: '#1A1A1A' }}>Site Details</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => setStep(1)} style={{ padding: 6, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
+                    <MaterialCommunityIcons name="pencil-outline" size={18} color="#000" />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={{ flexDirection: 'row', backgroundColor: '#F9F9F9', borderRadius: 12, padding: 12 }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 12, color: '#888', fontWeight: '700', textTransform: 'uppercase', marginBottom: 4 }}>Land Size</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '900', color: '#1A1A1A' }}>{plotSize || 'N/A'} <Text style={{ fontSize: 13, color: '#666', fontWeight: '600' }}>{unit}</Text></Text>
+                  </View>
+                  <View style={{ width: 1, backgroundColor: '#E0E0E0', marginHorizontal: 12 }} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 12, color: '#888', fontWeight: '700', textTransform: 'uppercase', marginBottom: 4 }}>Zoning</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '900', color: '#1A1A1A' }}>{zone || 'N/A'}</Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={{ backgroundColor: '#FFF', borderRadius: 20, padding: 20, marginBottom: 16, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                    <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: '#FFF8E1', justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
+                      <MaterialCommunityIcons name="factory" size={20} color="#FFB300" />
+                    </View>
+                    <Text style={{ fontSize: 18, fontWeight: '900', color: '#1A1A1A' }}>Facility Requirements</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => setStep(2)} style={{ padding: 6, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
+                    <MaterialCommunityIcons name="pencil-outline" size={18} color="#000" />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+                  <View style={{ backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, flexDirection: 'row', alignItems: 'center' }}>
+                    <MaterialCommunityIcons name="layers-outline" size={16} color="#666" style={{ marginRight: 6 }} />
+                    <Text style={{ fontSize: 15, fontWeight: '800', color: '#1A1A1A' }}>{floors} <Text style={{ fontSize: 13, fontWeight: '600', color: '#666' }}>Floor{floors !== 1 ? 's' : ''}</Text></Text>
+                  </View>
+                  <View style={{ backgroundColor: '#F5F5F5', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, flexDirection: 'row', alignItems: 'center' }}>
+                    <MaterialCommunityIcons name="domain" size={16} color="#666" style={{ marginRight: 6 }} />
+                    <Text style={{ fontSize: 15, fontWeight: '800', color: '#1A1A1A' }}>{type}</Text>
+                  </View>
+                  {heavyMachinery && (
+                    <View style={{ backgroundColor: '#FFF3E0', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialCommunityIcons name="weight" size={16} color="#E65100" style={{ marginRight: 6 }} />
+                      <Text style={{ fontSize: 15, fontWeight: '800', color: '#E65100' }}>Heavy Machinery Core</Text>
+                    </View>
+                  )}
+                  {highVoltage && (
+                    <View style={{ backgroundColor: '#FFF3E0', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, flexDirection: 'row', alignItems: 'center' }}>
+                      <MaterialCommunityIcons name="lightning-bolt" size={16} color="#E65100" style={{ marginRight: 6 }} />
+                      <Text style={{ fontSize: 15, fontWeight: '800', color: '#E65100' }}>High Voltage Grid</Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+
+              <View style={{ backgroundColor: '#FFF', borderRadius: 20, padding: 20, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: '#ECEFF1', justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
+                      <MaterialCommunityIcons name="shield-check" size={20} color="#607D8B" />
+                    </View>
+                    <View>
+                      <Text style={{ fontSize: 18, fontWeight: '900', color: '#1A1A1A' }}>Const. Grade</Text>
+                      <Text style={{ fontSize: 14, color: '#1A1A1A', fontWeight: '800', marginTop: 2 }}>{finish || 'Not Selected'} Tier</Text>
+                    </View>
+                  </View>
+                  <TouchableOpacity onPress={() => setStep(3)} style={{ padding: 6, backgroundColor: '#F5F5F5', borderRadius: 8 }}>
+                    <MaterialCommunityIcons name="pencil-outline" size={18} color="#000" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
+            <TouchableOpacity style={{ backgroundColor: '#FFB300', borderRadius: 24, height: 60, justifyContent: 'center', alignItems: 'center', shadowColor: '#FFB300', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6, flexDirection: 'row' }} onPress={() => {
+              Alert.alert(
+                "Industrial Requirement Submitted!",
+                "Your heavy-duty spec sheet has been shared with our industrial engineering team.",
+                [{ text: "OK", onPress: () => navigation.navigate('Root') }]
+              );
+            }}>
+              <Text style={{ color: '#000', fontSize: 18, fontWeight: '900', letterSpacing: 0.5, marginRight: 8 }}>Submit Project Specs</Text>
+              <MaterialCommunityIcons name="arrow-right" size={22} color="#000" />
+            </TouchableOpacity>
+          </Animated.View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -5442,6 +5732,7 @@ function AppNavigator() {
       <Stack.Screen name="CommercialBuild" component={CommercialBuildScreen} />
       <Stack.Screen name="CommercialBuildForm" component={CommercialBuildFormScreen} />
       <Stack.Screen name="IndustrialBuild" component={IndustrialBuildScreen} />
+      <Stack.Screen name="IndustrialBuildForm" component={IndustrialBuildFormScreen} />
       <Stack.Screen name="ProjectManagement" component={ProjectManagementScreen} />
       <Stack.Screen name="Renovation" component={RenovationScreen} />
       <Stack.Screen name="KitchenRemodel" component={KitchenRemodelScreen} />
