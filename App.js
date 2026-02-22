@@ -5978,8 +5978,8 @@ function MainTabs({ navigation }) {
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="TrackStatus" component={TrackStatusScreen} />
       <Tab.Screen name="FullStack" component={PremiumServicesScreen} />
+      <Tab.Screen name="TrackStatus" component={TrackStatusScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
