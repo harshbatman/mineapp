@@ -953,12 +953,21 @@ function EditProfileScreen({ navigation }) {
         profileImage: finalImageUrl
       };
 
+      const firebaseUploadData = {
+        name,
+        phone,
+        email,
+        address,
+        mineProfileImage: finalImageUrl
+      };
+
       // Push to Firestore if logged in
       const user = auth.currentUser;
       if (user) {
-        await updateDoc(doc(db, "users", user.uid), updatedData);
+        await updateDoc(doc(db, "users", user.uid), firebaseUploadData);
       }
 
+      // We explicitly pull saveSession here to ensure it's saved locally
       updateUserData(updatedData);
       setSaving(false);
       Alert.alert('Success', 'Profile updated successfully!');
@@ -5999,10 +6008,15 @@ function AppNavigator() {
         if (userDoc.exists()) {
           const cloudData = userDoc.data();
           await loadSession(); // Load app-specific data
-          // Ecosystem Sync: Only pull the profile photo from the cloud
-          if (cloudData.profileImage) {
-            updateUserData({ profileImage: cloudData.profileImage });
+          // Ecosystem Sync: Only pull the profile photo meant for the mine app
+          let dataToLoad = { ...cloudData };
+          if (dataToLoad.mineProfileImage) {
+            dataToLoad.profileImage = dataToLoad.mineProfileImage;
+          } else {
+            // Nullify the profile image so we don't accidentally load the MAHTO Home Loans photo!
+            dataToLoad.profileImage = null;
           }
+          updateUserData(dataToLoad);
           setIsLoggedIn(true);
         } else {
           // No doc? Still count as logged in if auth exists, but maybe a new user
