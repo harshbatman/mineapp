@@ -470,15 +470,20 @@ const ALL_IDEAS = [
   { label: 'Living Room', icon: 'sofa-outline', color: '#2196F3', bg: '#E3F2FD', images: [require('./assets/livingroom.png'), require('./assets/lr1.png'), require('./assets/lr2.png'), require('./assets/lr3.png'), require('./assets/lr4.png'), require('./assets/lr5.png')] },
   { label: 'Kitchen', icon: 'countertop-outline', color: '#FF9800', bg: '#FFF3E0', images: [require('./assets/kitchen.png'), require('./assets/k1.png'), require('./assets/k2.png'), require('./assets/k3.png')] },
   { label: 'Bathroom', icon: 'shower', color: '#00BCD4', bg: '#E0F7FA', images: [require('./assets/bathroom.png'), require('./assets/b1.png'), require('./assets/b2.png'), require('./assets/b3.png'), require('./assets/b4.png')] },
-  { label: 'Dining Table', icon: 'table-furniture', color: '#9C27B0', bg: '#F3E5F5', images: [require('./assets/diningtable.png')] },
+  { label: 'Dining Table', icon: 'table-furniture', color: '#9C27B0', bg: '#F3E5F5', images: [require('./assets/diningtable.png'), require('./assets/dt1.png'), require('./assets/dt2.png'), require('./assets/dt3.png'), require('./assets/dt4.png'), require('./assets/dt5.png')] },
   { label: 'Home Library', icon: 'bookshelf', color: '#795548', bg: '#EFEBE9', images: [require('./assets/homelibrary.png'), require('./assets/lib1.png'), require('./assets/lib2.png'), require('./assets/lib3.png'), require('./assets/lib4.png')] },
-  { label: 'Lawn & Garden', icon: 'flower-outline', color: '#4CAF50', bg: '#E8F5E9', images: [require('./assets/lawngarden.png')] },
-  { label: 'Bedroom', icon: 'bed-outline', color: '#E91E63', bg: '#FCE4EC', images: [require('./assets/bedroom.png')] },
+  { label: 'Lawn & Garden', icon: 'flower-outline', color: '#4CAF50', bg: '#E8F5E9', images: [require('./assets/lawngarden.png'), require('./assets/lg1.png'), require('./assets/lg2.png'), require('./assets/lg3.png'), require('./assets/lg4.png'), require('./assets/lg5.png')] },
+  { label: 'Bedroom', icon: 'bed-outline', color: '#E91E63', bg: '#FCE4EC', images: [require('./assets/bedroom.png'), require('./assets/bed1.png'), require('./assets/bed2.png'), require('./assets/bed3.png'), require('./assets/bed4.png'), require('./assets/bed5.png')] },
   {
     label: 'Front Elevation', icon: 'home-city', color: '#607D8B', bg: '#ECEFF1', images: [
       require('./assets/raj.png'),
       require('./assets/harsh.jpeg'),
       require('./assets/mahto.jpeg'),
+      require('./assets/fe1.png'),
+      require('./assets/fe2.png'),
+      require('./assets/fe3.png'),
+      require('./assets/fe4.png'),
+      require('./assets/fe5.png'),
     ]
   },
 ];
