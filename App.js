@@ -3396,9 +3396,9 @@ function KitchenRemodelScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('KitchenRemodelForm')}
         >
-          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Plan My Kitchen</Text>
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
@@ -3499,9 +3499,9 @@ function BathroomUpgradeScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('BathroomUpgradeForm')}
         >
-          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Upgrade Bathroom</Text>
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
@@ -3602,9 +3602,9 @@ function FlooringMakeoverScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('FlooringMakeoverForm')}
         >
-          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Get Flooring Quote</Text>
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
@@ -3705,9 +3705,9 @@ function FullHomeMakeoverScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('FullHomeMakeoverForm')}
         >
-          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Makeover</Text>
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
@@ -3808,9 +3808,9 @@ function HomePaintingScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('HomePaintingForm')}
         >
-          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Get Painting Quote</Text>
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Start Your Project</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
@@ -3818,7 +3818,291 @@ function HomePaintingScreen({ navigation }) {
   );
 }
 
-// --- ServiceScreen Component ---
+// --- Shared Style & Review Builder for Renovation Forms ---
+function buildRenovationReview(fields, onSubmit) {
+  return (
+    <Animated.View>
+      <View style={{ alignItems: 'center', marginBottom: 28, marginTop: 10 }}>
+        <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: '#1A1A1A', justifyContent: 'center', alignItems: 'center', marginBottom: 16, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 12 }}>
+          <MaterialCommunityIcons name="clipboard-check-multiple-outline" size={36} color="#FFF" />
+        </View>
+        <Text style={{ fontSize: 26, fontWeight: '900', color: '#1A1A1A', textAlign: 'center', letterSpacing: -0.5 }}>Final Review</Text>
+      </View>
+      <View style={{ backgroundColor: '#FFF', borderRadius: 20, padding: 20, marginBottom: 32, elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' }}>
+        {fields.map((f, i) => (
+          <View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: i === fields.length - 1 ? 0 : 1, borderBottomColor: '#F0F0F0' }}>
+            <Text style={{ fontSize: 15, color: '#666', fontWeight: '700' }}>{f.label}</Text>
+            <Text style={{ fontSize: 15, color: '#1A1A1A', fontWeight: '900' }}>{f.val || 'N/A'}</Text>
+          </View>
+        ))}
+      </View>
+      <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 24, height: 60, justifyContent: 'center', alignItems: 'center', shadowColor: '#1A1A1A', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6, flexDirection: 'row' }} onPress={onSubmit}>
+        <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '900', letterSpacing: 0.5, marginRight: 8 }}>Submit Requirements</Text>
+        <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
+      </TouchableOpacity>
+    </Animated.View>
+  );
+}
+
+// --- Kitchen Remodel Form Component ---
+function KitchenRemodelFormScreen({ navigation }) {
+  const [step, setStep] = useState(1);
+  const [size, setSize] = useState('Medium');
+  const [cabinets, setCabinets] = useState('Replace');
+  const [countertops, setCountertops] = useState('Quartz');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Kitchen Remodel" subtitle="Customize your culinary space" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        {step === 1 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20 }}>1. Kitchen Scope</Text>
+            <Text style={{ fontSize: 14, color: '#666', fontWeight: '700', marginBottom: 12, textTransform: 'uppercase' }}>Kitchen Size</Text>
+            <View style={{ flexDirection: 'row', gap: 10, marginBottom: 24 }}>
+              {['Small', 'Medium', 'Large'].map(sz => (
+                <TouchableOpacity key={sz} onPress={() => setSize(sz)} style={{ flex: 1, padding: 14, borderRadius: 12, backgroundColor: size === sz ? '#FFF8E1' : '#F5F5F5', borderWidth: 1, borderColor: size === sz ? '#FF9800' : '#E9E9E9', alignItems: 'center' }}>
+                  <Text style={{ color: size === sz ? '#E65100' : '#444', fontWeight: '800' }}>{sz}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <Text style={{ fontSize: 14, color: '#666', fontWeight: '700', marginBottom: 12, textTransform: 'uppercase' }}>Cabinets</Text>
+            <View style={{ flexDirection: 'row', gap: 10, marginBottom: 32 }}>
+              {['Keep', 'Refinish', 'Replace'].map(cb => (
+                <TouchableOpacity key={cb} onPress={() => setCabinets(cb)} style={{ flex: 1, padding: 14, borderRadius: 12, backgroundColor: cabinets === cb ? '#FFF8E1' : '#F5F5F5', borderWidth: 1, borderColor: cabinets === cb ? '#FF9800' : '#E9E9E9', alignItems: 'center' }}>
+                  <Text style={{ color: cabinets === cb ? '#E65100' : '#444', fontWeight: '800' }}>{cb}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => setStep(2)}>
+              <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Continue</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+        {step === 2 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20 }}>2. Materials</Text>
+            <Text style={{ fontSize: 14, color: '#666', fontWeight: '700', marginBottom: 12, textTransform: 'uppercase' }}>Countertops</Text>
+            <View style={{ flexDirection: 'column', gap: 10, marginBottom: 32 }}>
+              {['Quartz', 'Granite', 'Marble', 'Laminate', 'Wood'].map(ct => (
+                <TouchableOpacity key={ct} onPress={() => setCountertops(ct)} style={{ padding: 16, borderRadius: 16, backgroundColor: countertops === ct ? '#FFF8E1' : '#F5F5F5', borderWidth: 1, borderColor: countertops === ct ? '#FF9800' : '#E9E9E9' }}>
+                  <Text style={{ color: countertops === ct ? '#E65100' : '#444', fontWeight: '800', fontSize: 16 }}>{ct}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TouchableOpacity style={{ backgroundColor: '#F0F0F0', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(1)}><Text style={{ color: '#444', fontWeight: '700' }}>Back</Text></TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(3)}><Text style={{ color: '#FFF', fontWeight: '800' }}>Review</Text></TouchableOpacity>
+            </View>
+          </Animated.View>
+        )}
+        {step === 3 && buildRenovationReview([
+          { label: 'Size', val: size }, { label: 'Cabinets', val: cabinets }, { label: 'Countertops', val: countertops }
+        ], () => { Alert.alert("Success", "Kitchen plan submitted.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]); })}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- Bathroom Upgrade Form Component ---
+function BathroomUpgradeFormScreen({ navigation }) {
+  const [step, setStep] = useState(1);
+  const [bathType, setBathType] = useState('Full Bath');
+  const [shower, setShower] = useState('Walk-in Shower');
+  const [vanity, setVanity] = useState('Double');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Bathroom Upgrade" subtitle="Design your personal spa" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        {step === 1 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20 }}>1. Layout</Text>
+            <Text style={{ fontSize: 14, color: '#666', fontWeight: '700', marginBottom: 12, textTransform: 'uppercase' }}>Bathroom Type</Text>
+            <View style={{ flexDirection: 'row', gap: 10, marginBottom: 24 }}>
+              {['Half Bath', 'Full Bath', 'Master Bath'].map(t => (
+                <TouchableOpacity key={t} onPress={() => setBathType(t)} style={{ flex: 1, padding: 14, borderRadius: 12, backgroundColor: bathType === t ? '#E3F2FD' : '#F5F5F5', borderWidth: 1, borderColor: bathType === t ? '#2196F3' : '#E9E9E9', alignItems: 'center' }}>
+                  <Text style={{ color: bathType === t ? '#1976D2' : '#444', fontWeight: '800', textAlign: 'center' }}>{t}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <Text style={{ fontSize: 14, color: '#666', fontWeight: '700', marginBottom: 12, textTransform: 'uppercase' }}>Shower/Tub Preference</Text>
+            <View style={{ flexDirection: 'column', gap: 10, marginBottom: 32 }}>
+              {['Walk-in Shower', 'Freestanding Tub', 'Shower & Tub Combo'].map(s => (
+                <TouchableOpacity key={s} onPress={() => setShower(s)} style={{ padding: 16, borderRadius: 16, backgroundColor: shower === s ? '#E3F2FD' : '#F5F5F5', borderWidth: 1, borderColor: shower === s ? '#2196F3' : '#E9E9E9' }}>
+                  <Text style={{ color: shower === s ? '#1976D2' : '#444', fontWeight: '800', fontSize: 16 }}>{s}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => setStep(2)}>
+              <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Continue</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+        {step === 2 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20 }}>2. Fixtures</Text>
+            <Text style={{ fontSize: 14, color: '#666', fontWeight: '700', marginBottom: 12, textTransform: 'uppercase' }}>Vanity Sink</Text>
+            <View style={{ flexDirection: 'row', gap: 10, marginBottom: 32 }}>
+              {['Single', 'Double', 'Pedestal'].map(v => (
+                <TouchableOpacity key={v} onPress={() => setVanity(v)} style={{ flex: 1, padding: 16, borderRadius: 16, backgroundColor: vanity === v ? '#E3F2FD' : '#F5F5F5', borderWidth: 1, borderColor: vanity === v ? '#2196F3' : '#E9E9E9', alignItems: 'center' }}>
+                  <Text style={{ color: vanity === v ? '#1976D2' : '#444', fontWeight: '800', fontSize: 16 }}>{v}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TouchableOpacity style={{ backgroundColor: '#F0F0F0', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(1)}><Text style={{ color: '#444', fontWeight: '700' }}>Back</Text></TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(3)}><Text style={{ color: '#FFF', fontWeight: '800' }}>Review</Text></TouchableOpacity>
+            </View>
+          </Animated.View>
+        )}
+        {step === 3 && buildRenovationReview([
+          { label: 'Type', val: bathType }, { label: 'Shower/Tub', val: shower }, { label: 'Vanity', val: vanity }
+        ], () => { Alert.alert("Success", "Bathroom plan submitted.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]); })}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- Flooring Makeover Form Component ---
+function FlooringMakeoverFormScreen({ navigation }) {
+  const [step, setStep] = useState(1);
+  const [material, setMaterial] = useState('Hardwood');
+  const [area, setArea] = useState('');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Flooring" subtitle="Upgrade your foundation" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        {step === 1 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20 }}>1. Material</Text>
+            <View style={{ flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+              {['Hardwood', 'Engineered Wood', 'Laminate / Vinyl', 'Tile (Ceramic/Porcelain)', 'Carpet'].map(m => (
+                <TouchableOpacity key={m} onPress={() => setMaterial(m)} style={{ padding: 16, borderRadius: 16, backgroundColor: material === m ? '#EFEBE9' : '#F5F5F5', borderWidth: 1, borderColor: material === m ? '#795548' : '#E9E9E9' }}>
+                  <Text style={{ color: material === m ? '#5D4037' : '#444', fontWeight: '800', fontSize: 16 }}>{m}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => setStep(2)}>
+              <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Continue</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+        {step === 2 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20 }}>2. Coverage</Text>
+            <Text style={{ fontSize: 14, color: '#666', fontWeight: '700', marginBottom: 12, textTransform: 'uppercase' }}>Approx Area (Sq Ft)</Text>
+            <TextInput
+              style={[styles.input, { borderRadius: 16, paddingHorizontal: 16, height: 56, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9', marginBottom: 32 }]}
+              value={area} onChangeText={setArea} placeholder="e.g. 500" keyboardType="numeric" placeholderTextColor="#AAA"
+            />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TouchableOpacity style={{ backgroundColor: '#F0F0F0', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(1)}><Text style={{ color: '#444', fontWeight: '700' }}>Back</Text></TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => { if (!area) return Alert.alert('Missing Info', 'Please enter area size'); setStep(3); }}><Text style={{ color: '#FFF', fontWeight: '800' }}>Review</Text></TouchableOpacity>
+            </View>
+          </Animated.View>
+        )}
+        {step === 3 && buildRenovationReview([
+          { label: 'Material', val: material }, { label: 'Area', val: area ? area + ' Sq Ft' : 'TBD' }
+        ], () => { Alert.alert("Success", "Flooring plan submitted.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]); })}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- Full Home Makeover Form Component ---
+function FullHomeMakeoverFormScreen({ navigation }) {
+  const [step, setStep] = useState(1);
+  const [scope, setScope] = useState('Cosmetic');
+  const [rooms, setRooms] = useState('1-2');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Total Makeover" subtitle="Complete transformation" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        {step === 1 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20 }}>1. Project Scope</Text>
+            <Text style={{ fontSize: 13, color: '#666', marginBottom: 16, fontWeight: '500' }}>Select the intensity of your renovation.</Text>
+            <View style={{ flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+              {[
+                { id: 'Cosmetic', desc: 'Paint, floors, lighting' },
+                { id: 'Partial Gut', desc: 'New layout in specific rooms' },
+                { id: 'Full Gut', desc: 'Down to the studs, complete rebuild' }
+              ].map(s => (
+                <TouchableOpacity key={s.id} onPress={() => setScope(s.id)} style={{ padding: 16, borderRadius: 16, backgroundColor: scope === s.id ? '#E8F5E9' : '#F5F5F5', borderWidth: 1, borderColor: scope === s.id ? '#4CAF50' : '#E9E9E9' }}>
+                  <Text style={{ color: scope === s.id ? '#2E7D32' : '#1A1A1A', fontWeight: '800', fontSize: 16, marginBottom: 4 }}>{s.id}</Text>
+                  <Text style={{ color: scope === s.id ? '#4CAF50' : '#666', fontWeight: '500', fontSize: 13 }}>{s.desc}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => setStep(2)}>
+              <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Continue</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+        {step === 2 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20 }}>2. Scale</Text>
+            <Text style={{ fontSize: 14, color: '#666', fontWeight: '700', marginBottom: 12, textTransform: 'uppercase' }}>Rooms Affected</Text>
+            <View style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap', marginBottom: 32 }}>
+              {['1-2', '3-4', '5+', 'Entire Home'].map(r => (
+                <TouchableOpacity key={r} onPress={() => setRooms(r)} style={{ width: '47%', padding: 16, borderRadius: 16, backgroundColor: rooms === r ? '#E8F5E9' : '#F5F5F5', borderWidth: 1, borderColor: rooms === r ? '#4CAF50' : '#E9E9E9', alignItems: 'center' }}>
+                  <Text style={{ color: rooms === r ? '#2E7D32' : '#444', fontWeight: '800', fontSize: 16 }}>{r}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TouchableOpacity style={{ backgroundColor: '#F0F0F0', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(1)}><Text style={{ color: '#444', fontWeight: '700' }}>Back</Text></TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(3)}><Text style={{ color: '#FFF', fontWeight: '800' }}>Review</Text></TouchableOpacity>
+            </View>
+          </Animated.View>
+        )}
+        {step === 3 && buildRenovationReview([
+          { label: 'Scope', val: scope }, { label: 'Rooms', val: rooms }
+        ], () => { Alert.alert("Success", "Makeover plan submitted.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]); })}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- Home Painting Form Component ---
+function HomePaintingFormScreen({ navigation }) {
+  const [step, setStep] = useState(1);
+  const [exterior, setExterior] = useState(false);
+  const [interior, setInterior] = useState(true);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Painting" subtitle="Fresh coat of vitality" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        {step === 1 && (
+          <Animated.View>
+            <Text style={{ fontSize: 22, fontWeight: '900', marginBottom: 20 }}>1. Paint Areas</Text>
+            <View style={{ flexDirection: 'column', gap: 12, marginBottom: 32 }}>
+              <TouchableOpacity onPress={() => setInterior(!interior)} activeOpacity={0.8} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: interior ? '#FCE4EC' : '#FFF', padding: 16, borderRadius: 16, elevation: interior ? 3 : 1, borderWidth: 1, borderColor: interior ? '#E91E63' : '#F0F0F0' }}>
+                <MaterialCommunityIcons name={interior ? "checkbox-marked" : "checkbox-blank-outline"} size={26} color={interior ? "#E91E63" : "#BBB"} style={{ marginRight: 12 }} />
+                <View><Text style={{ fontSize: 15, fontWeight: '800', color: interior ? '#D81B60' : '#1A1A1A' }}>Interior Walls & Ceilings</Text></View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setExterior(!exterior)} activeOpacity={0.8} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: exterior ? '#FCE4EC' : '#FFF', padding: 16, borderRadius: 16, elevation: exterior ? 3 : 1, borderWidth: 1, borderColor: exterior ? '#E91E63' : '#F0F0F0' }}>
+                <MaterialCommunityIcons name={exterior ? "checkbox-marked" : "checkbox-blank-outline"} size={26} color={exterior ? "#E91E63" : "#BBB"} style={{ marginRight: 12 }} />
+                <View><Text style={{ fontSize: 15, fontWeight: '800', color: exterior ? '#D81B60' : '#1A1A1A' }}>Exterior Facade</Text></View>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => { if (!interior && !exterior) return Alert.alert('Error', 'Please select at least one area.'); setStep(2); }}>
+              <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Review Specs</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+        {step === 2 && buildRenovationReview([
+          { label: 'Interior', val: interior ? 'Selected' : 'No' }, { label: 'Exterior', val: exterior ? 'Selected' : 'No' }
+        ], () => { Alert.alert("Success", "Painting specs submitted.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]); })}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 function ServiceScreen({ navigation }) {
   const serviceOptions = [
     { title: 'Plumbing', icon: 'water-pump', image: require('./assets/plumbing.png'), details: 'Leak repairs, installs, & maintenance.', route: 'Plumbing', color: '#2196F3', bg: '#E3F2FD' },
@@ -5683,6 +5967,11 @@ function AppNavigator() {
       <Stack.Screen name="FlooringMakeover" component={FlooringMakeoverScreen} />
       <Stack.Screen name="FullHomeMakeover" component={FullHomeMakeoverScreen} />
       <Stack.Screen name="HomePainting" component={HomePaintingScreen} />
+      <Stack.Screen name="KitchenRemodelForm" component={KitchenRemodelFormScreen} />
+      <Stack.Screen name="BathroomUpgradeForm" component={BathroomUpgradeFormScreen} />
+      <Stack.Screen name="FlooringMakeoverForm" component={FlooringMakeoverFormScreen} />
+      <Stack.Screen name="FullHomeMakeoverForm" component={FullHomeMakeoverFormScreen} />
+      <Stack.Screen name="HomePaintingForm" component={HomePaintingFormScreen} />
       <Stack.Screen name="Service" component={ServiceScreen} />
       <Stack.Screen name="Plumbing" component={PlumbingScreen} />
       <Stack.Screen name="Electrical" component={ElectricalScreen} />
