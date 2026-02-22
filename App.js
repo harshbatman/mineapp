@@ -2971,109 +2971,52 @@ function IndustrialBuildFormScreen({ navigation }) {
 
 // --- ProjectManagementScreen Component ---
 function ProjectManagementScreen({ navigation }) {
-  const features = [
-    { title: 'Timeline Control', desc: 'Strict tracking of deadlines.', icon: 'calendar-clock-outline', color: '#8E24AA', bg: '#F3E5F5' },
-    { title: 'Cost Budgeting', desc: 'Precise resource allocation.', icon: 'finance', color: '#4CAF50', bg: '#E8F5E9' },
-    { title: 'Quality Checks', desc: 'Rigorous standard inspections.', icon: 'check-decagram-outline', color: '#1976D2', bg: '#E3F2FD' },
-    { title: 'Vendor Sync', desc: 'Managing all subcontractors.', icon: 'account-group-outline', color: '#FF9800', bg: '#FFF3E0' },
-  ];
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={[styles.scrollContent, { flexGrow: 1 }]}>
         <CustomHeader
           title="Project Management"
-          subtitle="Orchestrating Success."
+          subtitle="Track your construction progress."
           navigation={navigation}
           showBack={true}
         />
 
-        {/* Hero Section */}
-        <View style={{ paddingHorizontal: 20, marginBottom: 32 }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20, marginTop: 80 }}>
           <View style={{
-            backgroundColor: '#4A148C', // Deep, rich purple for management/orchestration
-            borderRadius: 24,
-            padding: 28,
-            shadowColor: '#4A148C',
-            shadowOffset: { width: 0, height: 10 },
-            shadowOpacity: 0.35,
-            shadowRadius: 20,
-            elevation: 10,
-            alignItems: 'center',
+            width: 140, height: 140, borderRadius: 70, backgroundColor: '#F5F5F5', justifyContent: 'center', alignItems: 'center', marginBottom: 24, elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8
           }}>
-            <MaterialCommunityIcons name="clipboard-check-outline" size={64} color="#FFF" style={{ marginBottom: 16 }} />
-            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 12, letterSpacing: 0.5 }}>End-to-End Control</Text>
-            <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 24, fontWeight: '500' }}>
-              We take the stress out of construction. Our expert managers ensure your project is completed on time, within budget, and to the highest industry standards.
-            </Text>
+            <MaterialCommunityIcons name="clipboard-text-off-outline" size={64} color="#9E9E9E" />
           </View>
+
+          <Text style={{ fontSize: 26, fontWeight: '900', color: '#1A1A1A', textAlign: 'center', marginBottom: 12, letterSpacing: -0.5 }}>
+            No Active Projects
+          </Text>
+          <Text style={{ fontSize: 15, color: '#666', textAlign: 'center', lineHeight: 24, fontWeight: '500', paddingHorizontal: 10 }}>
+            You currently do not have any ongoing projects to manage. Start a new construction or renovation project to track its progress here.
+          </Text>
+
+          <TouchableOpacity
+            style={{
+              marginTop: 40,
+              backgroundColor: '#1A1A1A',
+              paddingVertical: 18,
+              paddingHorizontal: 40,
+              borderRadius: 20,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.25,
+              shadowRadius: 12,
+              elevation: 8,
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}
+            onPress={() => navigation.goBack()}
+          >
+            <MaterialCommunityIcons name="arrow-left" size={20} color="#FFF" style={{ marginRight: 10 }} />
+            <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', letterSpacing: 0.5 }}>Go Back</Text>
+          </TouchableOpacity>
         </View>
-
-        {/* Steps Section as Stylish Cards */}
-        <View style={{ paddingHorizontal: 20, marginBottom: 30 }}>
-          <Text style={{ fontSize: 20, fontWeight: '800', color: '#1A1A1A', marginBottom: 20, paddingLeft: 4, letterSpacing: 0.5 }}>Our Services</Text>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-            {features.map((item, index) => (
-              <View key={index} style={{
-                width: '47.5%',
-                backgroundColor: '#FFF',
-                padding: 18,
-                borderRadius: 22,
-                marginBottom: 16,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 8 },
-                shadowOpacity: 0.08,
-                shadowRadius: 12,
-                elevation: 5,
-                borderWidth: 1,
-                borderColor: '#F5F5F5',
-              }}>
-                <View style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 16,
-                  backgroundColor: item.bg,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: 16,
-                }}>
-                  <MaterialCommunityIcons name={item.icon} size={26} color={item.color} />
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, width: '100%' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '800', color: '#1A1A1A', letterSpacing: -0.2, flexShrink: 1 }}>{index + 1}. {item.title}</Text>
-                  <View style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: '#F0F0F0', justifyContent: 'center', alignItems: 'center', marginLeft: 6 }}>
-                    <MaterialCommunityIcons name="chevron-right" size={14} color="#000" />
-                  </View>
-                </View>
-                <Text style={{ fontSize: 13, color: '#777', lineHeight: 18, fontWeight: '500' }}>{item.desc}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <TouchableOpacity
-          style={{
-            marginHorizontal: 20,
-            backgroundColor: '#1A1A1A',
-            paddingVertical: 18,
-            borderRadius: 18,
-            alignItems: 'center',
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.25,
-            shadowRadius: 12,
-            elevation: 8,
-            marginBottom: 20,
-            flexDirection: 'row',
-            justifyContent: 'center'
-          }}
-          onPress={() => navigation.navigate('ContactUs')}
-        >
-          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Hire a Manager</Text>
-          <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
-        </TouchableOpacity>
-
       </ScrollView>
     </SafeAreaView>
   );
