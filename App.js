@@ -405,8 +405,8 @@ function HomeScreen({ navigation }) {
               <MaterialCommunityIcons name="arrow-right-circle" size={18} color="#FFD700" />
             </View>
           </View>
-          <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: 'rgba(255,215,0,0.15)', justifyContent: 'center', alignItems: 'center', marginLeft: 16 }}>
-            <Text style={{ fontSize: 32 }}>🛋️</Text>
+          <View style={{ width: 80, height: 80, borderRadius: 20, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', marginLeft: 16, overflow: 'hidden' }}>
+            <Image source={require('./assets/design_3d.png')} style={{ width: 74, height: 74 }} resizeMode="contain" />
           </View>
           {/* Decorative background circle */}
           <View style={{ position: 'absolute', right: -30, bottom: -30, width: 120, height: 120, borderRadius: 60, backgroundColor: 'rgba(255,255,255,0.04)' }} />
@@ -6070,6 +6070,138 @@ function MainTabs({ navigation }) {
   );
 }
 
+// --- WelcomeScreen Component ---
+function WelcomeScreen({ navigation }) {
+  const fullText = "We Build Drea🏠s NOT Homes.";
+  const [displayText, setDisplayText] = useState('');
+  const [showButton, setShowButton] = useState(false);
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const brandFade = React.useRef(new Animated.Value(0)).current;
+  const brandSlide = React.useRef(new Animated.Value(30)).current;
+  const taglineFade = React.useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Brand name fade-in + slide up
+    Animated.parallel([
+      Animated.timing(brandFade, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(brandSlide, {
+        toValue: 0,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      // After brand appears, start tagline fade
+      Animated.timing(taglineFade, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    });
+  }, []);
+
+  useEffect(() => {
+    // Delay typewriter start to let brand animation finish
+    let timer;
+    let resetTimeout;
+    const startDelay = setTimeout(() => {
+      let charIndex = 0;
+      let firstLoop = true;
+
+      const runTypewriter = () => {
+        charIndex = 0;
+        setDisplayText('');
+        timer = setInterval(() => {
+          charIndex++;
+          if (charIndex <= fullText.length) {
+            setDisplayText(fullText.substring(0, charIndex));
+          } else {
+            clearInterval(timer);
+            // Show button after first complete loop
+            if (firstLoop) {
+              firstLoop = false;
+              setShowButton(true);
+              Animated.spring(fadeAnim, {
+                toValue: 1,
+                friction: 8,
+                tension: 40,
+                useNativeDriver: true,
+              }).start();
+            }
+            // Pause, then restart
+            resetTimeout = setTimeout(() => {
+              runTypewriter();
+            }, 1500);
+          }
+        }, 80);
+      };
+
+      runTypewriter();
+    }, 1200);
+    return () => {
+      clearTimeout(startDelay);
+      clearInterval(timer);
+      clearTimeout(resetTimeout);
+    };
+  }, []);
+
+  return (
+    <View style={{ flex: 1, backgroundColor: '#000', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 30 }}>
+      <StatusBar style="light" />
+
+      {/* Decorative subtle circles */}
+      <View style={{ position: 'absolute', top: -80, right: -80, width: 250, height: 250, borderRadius: 125, backgroundColor: 'rgba(255,255,255,0.02)' }} />
+      <View style={{ position: 'absolute', bottom: -60, left: -60, width: 200, height: 200, borderRadius: 100, backgroundColor: 'rgba(255,255,255,0.015)' }} />
+
+      {/* Brand */}
+      <Animated.View style={{ alignItems: 'center', marginBottom: 60, opacity: brandFade, transform: [{ translateY: brandSlide }] }}>
+        <Text style={{ fontSize: 64, fontWeight: '950', color: '#FFF', letterSpacing: -3 }}>mine</Text>
+        <Text style={{ fontSize: 18, fontWeight: '700', color: 'rgba(255,255,255,0.5)', marginTop: -8, textTransform: 'uppercase', letterSpacing: 4 }}>By MAHTO</Text>
+      </Animated.View>
+
+      {/* Tagline with typewriter */}
+      <Animated.View style={{ alignItems: 'center', marginBottom: 80, minHeight: 70, opacity: taglineFade }}>
+        <Text style={{ fontSize: 24, fontWeight: '800', color: '#FFF', textAlign: 'center', letterSpacing: -0.5, lineHeight: 34 }}>
+          {displayText}
+          <Text style={{ color: 'rgba(255,255,255,0.4)' }}>|</Text>
+        </Text>
+      </Animated.View>
+
+      {/* Get Started Button */}
+      <Animated.View style={{ width: '100%', opacity: fadeAnim, transform: [{ translateY: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [30, 0] }) }] }}>
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() => navigation.replace('Register')}
+          style={{
+            backgroundColor: '#FFF',
+            height: 62,
+            borderRadius: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+            shadowColor: '#FFF',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.15,
+            shadowRadius: 12,
+            elevation: 8,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: '900', color: '#000', marginRight: 8, letterSpacing: 0.5 }}>Get Started</Text>
+          <MaterialCommunityIcons name="arrow-right" size={22} color="#000" />
+        </TouchableOpacity>
+      </Animated.View>
+
+      {/* Bottom subtle text */}
+      <View style={{ position: 'absolute', bottom: 50, alignItems: 'center' }}>
+        <Text style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', fontWeight: '500' }}>Full Stack Construction • Renovation • Service</Text>
+      </View>
+    </View>
+  );
+}
+
 // Inner App that has access to UserContext
 function AppNavigator() {
   const { loadSession, updateUserData } = React.useContext(UserContext);
@@ -6121,13 +6253,14 @@ function AppNavigator() {
 
   return (
     <Stack.Navigator
-      initialRouteName={isLoggedIn ? 'Root' : 'Login'}
+      initialRouteName={isLoggedIn ? 'Root' : 'Welcome'}
       screenOptions={{
         headerShown: false,
         headerStyle: { backgroundColor: '#FFF' },
         contentStyle: { backgroundColor: '#FFF' },
       }}
     >
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="Root" component={MainTabs} />
