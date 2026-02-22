@@ -4270,9 +4270,9 @@ function PlumbingScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('PlumbingForm')}
         >
-          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Call a Plumber</Text>
+          <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Request Plumber</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
         </TouchableOpacity>
       </ScrollView>
@@ -4370,7 +4370,7 @@ function ElectricalScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('ElectricalForm')}
         >
           <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Book Electrician</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
@@ -4470,7 +4470,7 @@ function HVACScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('HVACForm')}
         >
           <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Schedule Service</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
@@ -4570,10 +4570,224 @@ function GeneralRepairsScreen({ navigation }) {
             flexDirection: 'row',
             justifyContent: 'center'
           }}
-          onPress={() => navigation.navigate('ContactUs')}
+          onPress={() => navigation.navigate('GeneralRepairsForm')}
         >
           <Text style={{ color: '#FFF', fontSize: 17, fontWeight: '800', marginRight: 10, letterSpacing: 0.5 }}>Request Handyman</Text>
           <MaterialCommunityIcons name="arrow-right" size={22} color="#FFF" />
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- Plumbing Form Component ---
+function PlumbingFormScreen({ navigation }) {
+  const [issue, setIssue] = useState('');
+  const [urgency, setUrgency] = useState('Standard');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Plumbing Request" subtitle="Describe your issue" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>What's the primary issue?</Text>
+        <TextInput
+          style={[styles.input, { height: 120, borderRadius: 16, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9', padding: 16, textAlignVertical: 'top', marginBottom: 24 }]}
+          multiline placeholder="e.g. Leaking pipe under the sink" value={issue} onChangeText={setIssue}
+        />
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>Urgency Level</Text>
+        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 32 }}>
+          {['Standard', 'Emergency'].map(u => (
+            <TouchableOpacity key={u} onPress={() => setUrgency(u)} style={{ flex: 1, padding: 16, borderRadius: 16, backgroundColor: urgency === u ? '#E3F2FD' : '#F5F5F5', borderWidth: 1, borderColor: urgency === u ? '#2196F3' : '#E9E9E9', alignItems: 'center' }}>
+              <MaterialCommunityIcons name={u === 'Emergency' ? 'alert-decagram' : 'clock-outline'} size={24} color={urgency === u ? '#1976D2' : '#888'} style={{ marginBottom: 8 }} />
+              <Text style={{ color: urgency === u ? '#1976D2' : '#444', fontWeight: '800' }}>{u}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
+          if (!issue) return Alert.alert('Error', 'Please describe the issue.');
+          Alert.alert("Request Received", "A plumber will contact you shortly.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+        }}>
+          <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- Electrical Form Component ---
+function ElectricalFormScreen({ navigation }) {
+  const [issue, setIssue] = useState('');
+  const [type, setType] = useState('Installation');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Electrical Request" subtitle="Power solutions" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>Service Type</Text>
+        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 24 }}>
+          {['Repair', 'Installation', 'Inspection'].map(t => (
+            <TouchableOpacity key={t} onPress={() => setType(t)} style={{ flex: 1, padding: 12, borderRadius: 12, backgroundColor: type === t ? '#FFF8E1' : '#F5F5F5', borderWidth: 1, borderColor: type === t ? '#FF9800' : '#E9E9E9', alignItems: 'center' }}>
+              <Text style={{ color: type === t ? '#F57C00' : '#444', fontWeight: '800', fontSize: 13 }}>{t}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>Job Description</Text>
+        <TextInput
+          style={[styles.input, { height: 120, borderRadius: 16, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9', padding: 16, textAlignVertical: 'top', marginBottom: 32 }]}
+          multiline placeholder="Describe what needs to be done..." value={issue} onChangeText={setIssue}
+        />
+        <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
+          if (!issue) return Alert.alert('Error', 'Please describe the job.');
+          Alert.alert("Request Received", "An electrician will contact you shortly.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+        }}>
+          <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- HVAC Form Component ---
+function HVACFormScreen({ navigation }) {
+  const [system, setSystem] = useState('AC');
+  const [issue, setIssue] = useState('');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="HVAC Request" subtitle="Climate control solutions" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>System Type</Text>
+        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 24 }}>
+          {['AC', 'Heater/Furnace', 'Ventilation'].map(s => (
+            <TouchableOpacity key={s} onPress={() => setSystem(s)} style={{ flex: 1, padding: 12, borderRadius: 12, backgroundColor: system === s ? '#E8F5E9' : '#F5F5F5', borderWidth: 1, borderColor: system === s ? '#4CAF50' : '#E9E9E9', alignItems: 'center' }}>
+              <Text style={{ color: system === s ? '#2E7D32' : '#444', fontWeight: '800', fontSize: 13 }}>{s}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>Issue/Request Details</Text>
+        <TextInput
+          style={[styles.input, { height: 120, borderRadius: 16, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9', padding: 16, textAlignVertical: 'top', marginBottom: 32 }]}
+          multiline placeholder="e.g. AC is blowing warm air..." value={issue} onChangeText={setIssue}
+        />
+        <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
+          if (!issue) return Alert.alert('Error', 'Please provide details.');
+          Alert.alert("Request Received", "Our HVAC tech will be in touch.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+        }}>
+          <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- General Repairs Form Component ---
+function GeneralRepairsFormScreen({ navigation }) {
+  const [issue, setIssue] = useState('');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="General Repair" subtitle="Handyman services" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>What needs fixing?</Text>
+        <TextInput
+          style={[styles.input, { height: 160, borderRadius: 16, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9', padding: 16, textAlignVertical: 'top', marginBottom: 32 }]}
+          multiline placeholder="Describe the repair in detail... (e.g. Broken door hinge, hole in drywall)" value={issue} onChangeText={setIssue}
+        />
+        <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
+          if (!issue) return Alert.alert('Error', 'Please describe what needs fixing.');
+          Alert.alert("Request Received", "A handyman will review your request.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+        }}>
+          <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- Electrical Form Component ---
+function ElectricalFormScreen({ navigation }) {
+  const [issue, setIssue] = useState('');
+  const [type, setType] = useState('Installation');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="Electrical Request" subtitle="Power solutions" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>Service Type</Text>
+        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 24 }}>
+          {['Repair', 'Installation', 'Inspection'].map(t => (
+            <TouchableOpacity key={t} onPress={() => setType(t)} style={{ flex: 1, padding: 12, borderRadius: 12, backgroundColor: type === t ? '#FFF8E1' : '#F5F5F5', borderWidth: 1, borderColor: type === t ? '#FF9800' : '#E9E9E9', alignItems: 'center' }}>
+              <Text style={{ color: type === t ? '#F57C00' : '#444', fontWeight: '800', fontSize: 13 }}>{t}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>Job Description</Text>
+        <TextInput
+          style={[styles.input, { height: 120, borderRadius: 16, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9', padding: 16, textAlignVertical: 'top', marginBottom: 32 }]}
+          multiline placeholder="Describe what needs to be done..." value={issue} onChangeText={setIssue}
+        />
+        <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
+          if (!issue) return Alert.alert('Error', 'Please describe the job.');
+          Alert.alert("Request Received", "An electrician will contact you shortly.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+        }}>
+          <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- HVAC Form Component ---
+function HVACFormScreen({ navigation }) {
+  const [system, setSystem] = useState('AC');
+  const [issue, setIssue] = useState('');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="HVAC Request" subtitle="Climate control solutions" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>System Type</Text>
+        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 24 }}>
+          {['AC', 'Heater/Furnace', 'Ventilation'].map(s => (
+            <TouchableOpacity key={s} onPress={() => setSystem(s)} style={{ flex: 1, padding: 12, borderRadius: 12, backgroundColor: system === s ? '#E8F5E9' : '#F5F5F5', borderWidth: 1, borderColor: system === s ? '#4CAF50' : '#E9E9E9', alignItems: 'center' }}>
+              <Text style={{ color: system === s ? '#2E7D32' : '#444', fontWeight: '800', fontSize: 13 }}>{s}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>Issue/Request Details</Text>
+        <TextInput
+          style={[styles.input, { height: 120, borderRadius: 16, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9', padding: 16, textAlignVertical: 'top', marginBottom: 32 }]}
+          multiline placeholder="e.g. AC is blowing warm air..." value={issue} onChangeText={setIssue}
+        />
+        <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
+          if (!issue) return Alert.alert('Error', 'Please provide details.');
+          Alert.alert("Request Received", "Our HVAC tech will be in touch.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+        }}>
+          <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// --- General Repairs Form Component ---
+function GeneralRepairsFormScreen({ navigation }) {
+  const [issue, setIssue] = useState('');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <CustomHeader title="General Repair" subtitle="Handyman services" navigation={navigation} showBack={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        <Text style={{ fontSize: 16, fontWeight: '800', marginBottom: 16, color: '#1A1A1A' }}>What needs fixing?</Text>
+        <TextInput
+          style={[styles.input, { height: 160, borderRadius: 16, borderWidth: 1, borderColor: '#DDD', backgroundColor: '#F9F9F9', padding: 16, textAlignVertical: 'top', marginBottom: 32 }]}
+          multiline placeholder="Describe the repair in detail... (e.g. Broken door hinge, hole in drywall)" value={issue} onChangeText={setIssue}
+        />
+        <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
+          if (!issue) return Alert.alert('Error', 'Please describe what needs fixing.');
+          Alert.alert("Request Received", "A handyman will review your request.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+        }}>
+          <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -5941,9 +6155,13 @@ function AppNavigator() {
       <Stack.Screen name="HomePaintingForm" component={HomePaintingFormScreen} />
       <Stack.Screen name="Service" component={ServiceScreen} />
       <Stack.Screen name="Plumbing" component={PlumbingScreen} />
+      <Stack.Screen name="PlumbingForm" component={PlumbingFormScreen} />
       <Stack.Screen name="Electrical" component={ElectricalScreen} />
+      <Stack.Screen name="ElectricalForm" component={ElectricalFormScreen} />
       <Stack.Screen name="HVAC" component={HVACScreen} />
+      <Stack.Screen name="HVACForm" component={HVACFormScreen} />
       <Stack.Screen name="GeneralRepairs" component={GeneralRepairsScreen} />
+      <Stack.Screen name="GeneralRepairsForm" component={GeneralRepairsFormScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
