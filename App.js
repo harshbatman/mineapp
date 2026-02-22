@@ -126,7 +126,7 @@ function CustomHeader({ title, subtitle, navigation, showBack = false }) {
     <View style={styles.customHeaderContainer}>
       {showBack && (
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+          <MaterialCommunityIcons name="arrow-left" size={22} color="#000" />
         </TouchableOpacity>
       )}
       <View style={{ flex: 1, alignItems: 'flex-start' }}>
@@ -336,12 +336,12 @@ function HomeScreen({ navigation }) {
             <View style={{ backgroundColor: 'rgba(255,215,0,0.15)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, alignSelf: 'flex-start', marginBottom: 10 }}>
               <Text style={{ color: '#FFD700', fontSize: 10, fontWeight: '900', letterSpacing: 1, textTransform: 'uppercase' }}>Inspiration</Text>
             </View>
-            <Text style={{ fontSize: 22, fontWeight: '900', color: '#FFF', marginBottom: 6, letterSpacing: -0.5 }}>💡 Ideas</Text>
+            <Text style={{ fontSize: 22, fontWeight: '900', color: '#FFF', marginBottom: 6, letterSpacing: -0.5 }}>💡 Design</Text>
             <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 20, fontWeight: '500', marginBottom: 16 }}>
-              Explore home, kitchen, bathroom, lawn & more design ideas.
+              Explore home, kitchen, bathroom, lawn & more Designs.
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ color: '#FFD700', fontWeight: '700', fontSize: 13, marginRight: 6 }}>Browse Ideas</Text>
+              <Text style={{ color: '#FFD700', fontWeight: '700', fontSize: 13, marginRight: 6 }}>Browse Design</Text>
               <MaterialCommunityIcons name="arrow-right-circle" size={18} color="#FFD700" />
             </View>
           </View>
@@ -360,7 +360,7 @@ function HomeScreen({ navigation }) {
 
 // --- IdeasGalleryScreen Component ---
 const ALL_IDEAS = [
-  { label: 'Living Room', icon: 'sofa-outline', color: '#2196F3', bg: '#E3F2FD', images: [require('./assets/livingroom.png')] },
+  { label: 'Living Room', icon: 'sofa-outline', color: '#2196F3', bg: '#E3F2FD', images: [require('./assets/livingroom.png'), require('./assets/lr1.png'), require('./assets/lr2.png'), require('./assets/lr3.png'), require('./assets/lr4.png'), require('./assets/lr5.png')] },
   { label: 'Kitchen', icon: 'countertop-outline', color: '#FF9800', bg: '#FFF3E0', images: [require('./assets/kitchen.png')] },
   { label: 'Bathroom', icon: 'shower', color: '#00BCD4', bg: '#E0F7FA', images: [require('./assets/bathroom.png')] },
   { label: 'Dining Table', icon: 'table-furniture', color: '#9C27B0', bg: '#F3E5F5', images: [require('./assets/diningtable.png')] },
@@ -386,11 +386,11 @@ function IdeasGalleryScreen({ navigation }) {
 
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 48, paddingBottom: 14, backgroundColor: '#FFF', borderBottomWidth: 1, borderBottomColor: '#F0F0F0' }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#F0F2F5', justifyContent: 'center', alignItems: 'center', marginRight: 14 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <MaterialCommunityIcons name="arrow-left" size={22} color="#1A1A1A" />
         </TouchableOpacity>
         <View>
-          <Text style={{ fontSize: 20, fontWeight: '900', color: '#1A1A1A', letterSpacing: -0.5 }}>💡 Ideas</Text>
+          <Text style={{ fontSize: 20, fontWeight: '900', color: '#1A1A1A', letterSpacing: -0.5 }}>💡 Design</Text>
           <Text style={{ fontSize: 12, color: '#888', fontWeight: '500', marginTop: 1 }}>Choose a category to get inspired</Text>
         </View>
       </View>
@@ -446,7 +446,7 @@ function IdeaDetailScreen({ navigation, route }) {
 
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 48, paddingBottom: 14, backgroundColor: '#FFF', borderBottomWidth: 1, borderBottomColor: '#F0F0F0' }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#F0F2F5', justifyContent: 'center', alignItems: 'center', marginRight: 14 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <MaterialCommunityIcons name="arrow-left" size={22} color="#1A1A1A" />
         </TouchableOpacity>
         <View>
@@ -1925,18 +1925,18 @@ function ConstructionScreen({ navigation }) {
                 }}
               >
                 <View style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 28,
-                  backgroundColor: item.image ? 'transparent' : item.bg,
+                  width: 125,
+                  height: 125,
+                  borderRadius: 32,
+                  backgroundColor: item.image ? '#FFF' : item.bg,
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginBottom: 16,
                 }}>
                   {item.image ? (
-                    <ExpoImage source={item.image} style={{ width: 100, height: 100, borderRadius: 24 }} contentFit="cover" />
+                    <ExpoImage source={item.image} style={{ width: 125, height: 125 }} contentFit="contain" />
                   ) : (
-                    <MaterialCommunityIcons name={item.icon} size={64} color={item.color} />
+                    <MaterialCommunityIcons name={item.icon} size={72} color={item.color} />
                   )}
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 8, width: '100%' }}>
@@ -1959,8 +1959,8 @@ function ConstructionScreen({ navigation }) {
 // --- RenovationScreen Component ---
 function RenovationScreen({ navigation }) {
   const renovationServices = [
-    { title: 'Kitchen Remodel', icon: 'silverware-fork-knife', image: require('./assets/kitchen.png'), details: 'Modern designs for your home heart.', route: 'KitchenRemodel', color: '#FF9800', bg: '#FFF3E0' },
-    { title: 'Bathroom Upgrade', icon: 'shower', image: require('./assets/bathroom.png'), details: 'Spa-like retreats & functional layouts.', route: 'BathroomUpgrade', color: '#2196F3', bg: '#E3F2FD' },
+    { title: 'Kitchen Remodel', icon: 'silverware-fork-knife', image: require('./assets/kitchen_new.png'), details: 'Modern designs for your home heart.', route: 'KitchenRemodel', color: '#FF9800', bg: '#FFF3E0' },
+    { title: 'Bathroom Upgrade', icon: 'shower', image: require('./assets/bathroom_new.png'), details: 'Spa-like retreats & functional layouts.', route: 'BathroomUpgrade', color: '#2196F3', bg: '#E3F2FD' },
     { title: 'Flooring', icon: 'floor-plan', image: require('./assets/flooring.png'), details: 'Hardwood, tile, & vinyl installation.', route: 'FlooringMakeover', color: '#795548', bg: '#EFEBE9' },
     { title: 'Full Home Makeover', icon: 'home-circle-outline', image: require('./assets/fullhome.png'), details: 'Complete living space transformation.', route: 'FullHomeMakeover', color: '#4CAF50', bg: '#E8F5E9' },
     { title: 'Home Painting', icon: 'format-paint', image: require('./assets/painting.png'), details: 'Professional interior & exterior work.', route: 'HomePainting', color: '#E91E63', bg: '#FCE4EC' },
@@ -2024,18 +2024,18 @@ function RenovationScreen({ navigation }) {
                 }}
               >
                 <View style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 28,
-                  backgroundColor: item.image ? 'transparent' : item.bg,
+                  width: 125,
+                  height: 125,
+                  borderRadius: 32,
+                  backgroundColor: item.image ? '#FFF' : item.bg,
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginBottom: 16,
                 }}>
                   {item.image ? (
-                    <ExpoImage source={item.image} style={{ width: 100, height: 100, borderRadius: 24 }} contentFit="cover" />
+                    <ExpoImage source={item.image} style={{ width: 125, height: 125 }} contentFit="contain" />
                   ) : (
-                    <MaterialCommunityIcons name={item.icon} size={64} color={item.color} />
+                    <MaterialCommunityIcons name={item.icon} size={72} color={item.color} />
                   )}
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 8, width: '100%' }}>
@@ -2637,18 +2637,18 @@ function ServiceScreen({ navigation }) {
                 }}
               >
                 <View style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 28,
-                  backgroundColor: item.image ? 'transparent' : item.bg,
+                  width: 125,
+                  height: 125,
+                  borderRadius: 32,
+                  backgroundColor: item.image ? '#FFF' : item.bg,
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginBottom: 16,
                 }}>
                   {item.image ? (
-                    <ExpoImage source={item.image} style={{ width: 100, height: 100, borderRadius: 24 }} contentFit="cover" />
+                    <ExpoImage source={item.image} style={{ width: 125, height: 125 }} contentFit="contain" />
                   ) : (
-                    <MaterialCommunityIcons name={item.icon} size={64} color={item.color} />
+                    <MaterialCommunityIcons name={item.icon} size={72} color={item.color} />
                   )}
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 8, width: '100%' }}>
@@ -3977,10 +3977,10 @@ function RegisterScreen({ navigation }) {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 25, paddingTop: 60 }}>
         <TouchableOpacity
-          style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#F8F9FA', justifyContent: 'center', alignItems: 'center', marginBottom: 30 }}
+          style={[styles.backButton, { marginBottom: 30 }]}
           onPress={() => navigation.goBack()}
         >
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+          <MaterialCommunityIcons name="arrow-left" size={22} color="#000" />
         </TouchableOpacity>
 
         <View style={{ marginBottom: 40 }}>
@@ -4569,6 +4569,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#F3F3F3',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 16,
   },
   screenTitle: {
