@@ -19,6 +19,66 @@ import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 const LanguageContext = React.createContext();
 const ScrollContext = React.createContext();
+const AlertContext = React.createContext();
+
+const AlertProvider = ({ children }) => {
+  const [visible, setVisible] = useState(false);
+  const [config, setConfig] = useState({ title: '', message: '', type: 'info', onConfirm: null });
+
+  const showAlert = useCallback((title, message, type = 'info', onConfirm = null) => {
+    // Professional mapping to hide technical details
+    let displayTitle = title;
+    let displayMessage = message;
+
+    if (message?.toLowerCase().includes('firebase') || message?.toLowerCase().includes('error')) {
+      displayTitle = "Notice";
+      displayMessage = "We encountered a temporary issue. Please verify your details and try again.";
+
+      if (message.includes('auth/invalid-credential') || message.includes('auth/user-not-found') || message.includes('auth/wrong-password')) {
+        displayMessage = "The login details entered don't match our records. Please check and try again.";
+      } else if (message.includes('auth/network-request-failed')) {
+        displayMessage = "Connectivity issue detected. Please check your internet and try again.";
+      } else if (message.includes('auth/email-already-in-use')) {
+        displayMessage = "An account with these details already exists in our ecosystem.";
+      }
+    }
+
+    setConfig({ title: displayTitle, message: displayMessage, type, onConfirm });
+    setVisible(true);
+  }, []);
+
+  const hideAlert = () => {
+    setVisible(false);
+    if (config.onConfirm) config.onConfirm();
+  };
+
+  return (
+    <AlertContext.Provider value={{ showAlert }}>
+      {children}
+      <Modal visible={visible} transparent animationType="fade">
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center', padding: 25 }}>
+          <View style={{ backgroundColor: '#FFF', width: '100%', borderRadius: 28, padding: 32, alignItems: 'center', elevation: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.3, shadowRadius: 16 }}>
+            <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: config.type === 'error' ? '#FFF0F0' : '#F0F7FF', justifyContent: 'center', alignItems: 'center', marginBottom: 24 }}>
+              <MaterialCommunityIcons
+                name={config.type === 'error' ? "alert-circle-outline" : "information-outline"}
+                size={42}
+                color={config.type === 'error' ? "#FF3B30" : "#007AFF"}
+              />
+            </View>
+            <Text style={{ fontSize: 24, fontWeight: '900', color: '#1A1A1A', marginBottom: 12, textAlign: 'center' }}>{config.title}</Text>
+            <Text style={{ fontSize: 16, color: '#666', lineHeight: 24, textAlign: 'center', marginBottom: 32, fontWeight: '500' }}>{config.message}</Text>
+            <TouchableOpacity
+              onPress={hideAlert}
+              style={{ backgroundColor: '#000', width: '100%', height: 60, borderRadius: 18, justifyContent: 'center', alignItems: 'center', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8 }}
+            >
+              <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '800' }}>Continue</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </AlertContext.Provider>
+  );
+};
 
 const ScrollProvider = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -768,35 +828,28 @@ function NotificationInboxScreen({ navigation }) {
 
 // --- DeleteAccountScreen Component ---
 function DeleteAccountScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleDelete = () => {
     if (!phone || !password) {
-      Alert.alert("Error", "Please enter your phone and password to confirm.");
+      showAlert("Verification Needed", "Please enter your phone and password to authorize account removal.", "error");
       return;
     }
 
-    Alert.alert(
-      "Confirm Deletion",
-      "Are you absolutely sure you want to permanently delete your account? This action cannot be undone.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete Permanently",
-          style: "destructive",
-          onPress: () => {
-            setLoading(true);
-            setTimeout(() => {
-              setLoading(false);
-              Alert.alert("Account Deleted", "Your account has been permanently removed.");
-              // Reset navigation to a hypothetical landing/auth screen or logout
-              navigation.navigate('Root');
-            }, 2000);
-          }
-        }
-      ]
+    showAlert(
+      "⚠️ Confirm Deletion",
+      "Are you absolutely sure you want to permanently delete your account? This action cannot be undone. Tap OK to proceed.",
+      "error",
+      () => {
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+          showAlert("Account Deleted", "Your account has been permanently removed from our system.", "info", () => navigation.navigate('Root'));
+        }, 2000);
+      }
     );
   };
 
@@ -868,6 +921,7 @@ function DeleteAccountScreen({ navigation }) {
 // --- EditProfileScreen Component ---
 function EditProfileScreen({ navigation }) {
   const { userData, updateUserData } = React.useContext(UserContext);
+  const { showAlert } = React.useContext(AlertContext);
 
   const [name, setName] = useState(userData.name);
   const [phone, setPhone] = useState(userData.phone);
@@ -895,7 +949,7 @@ function EditProfileScreen({ navigation }) {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permission denied', 'Location access is required to fetch address.');
+        showAlert('Permission Denied', 'Location access is required to fetch address details automatically.', 'error');
         setLoadingLocation(false);
         return;
       }
@@ -912,7 +966,7 @@ function EditProfileScreen({ navigation }) {
         setAddress(formattedAddress.replace(/ ,/g, ''));
       }
     } catch (error) {
-      Alert.alert('Error', 'Unable to fetch location.');
+      showAlert('Notice', 'Unable to retrieve location. Please enter address manually.', 'error');
     } finally {
       setLoadingLocation(false);
     }
@@ -970,12 +1024,11 @@ function EditProfileScreen({ navigation }) {
       // We explicitly pull saveSession here to ensure it's saved locally
       updateUserData(updatedData);
       setSaving(false);
-      Alert.alert('Success', 'Profile updated successfully!');
-      navigation.goBack();
+      showAlert('Success', 'Profile updated successfully!', 'success', () => navigation.goBack());
     } catch (error) {
       setSaving(false);
       console.error(error);
-      Alert.alert('Error', 'Failed to save changes: ' + error.message);
+      showAlert('Notice', 'We were unable to save your changes at this time. Please try again.', 'error');
     }
   };
 
@@ -1171,10 +1224,11 @@ function NotificationScreen({ navigation }) {
 // --- LanguageScreen Component ---
 function LanguageScreen({ navigation }) {
   const { setLocale, locale, t } = React.useContext(LanguageContext);
+  const { showAlert } = React.useContext(AlertContext);
 
   const languages = [
     { code: 'en', name: 'English', native: 'English' },
-    { code: 'hi', name: 'Hindi', native: 'हिंदी' },
+    { code: 'hi', name: 'Hindi', native: 'हिन्दी' },
     { code: 'ur', name: 'Urdu', native: 'اردو' },
     { code: 'ks', name: 'Kashmiri', native: 'کأشُر' },
     { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ' },
@@ -1195,9 +1249,7 @@ function LanguageScreen({ navigation }) {
 
   const handleLanguageSelect = (code) => {
     setLocale(code);
-    Alert.alert('Language Updated', 'App language has been updated successfully.', [
-      { text: 'OK', onPress: () => navigation.goBack() }
-    ]);
+    showAlert('Language Updated', 'App language has been updated successfully.', 'info', () => navigation.goBack());
   };
 
   return (
@@ -1603,6 +1655,7 @@ function HomeConstructionScreen({ navigation }) {
 
 // --- HomeConstructionFormScreen Component ---
 function HomeConstructionFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [step, setStep] = useState(1);
   const [plotSize, setPlotSize] = useState('');
   const [unit, setUnit] = useState('Sq Yard'); // Sq Yard or Gaz
@@ -1675,7 +1728,7 @@ function HomeConstructionFormScreen({ navigation }) {
             </View>
 
             <TouchableOpacity style={{ backgroundColor: '#0047AB', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', shadowColor: '#0047AB', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
-              if (!plotSize || !facing) { Alert.alert('Missing Details', 'Please complete all plot details to proceed.'); return; }
+              if (!plotSize || !facing) { showAlert('Missing Details', 'Please complete all plot details to proceed.', 'info'); return; }
               setStep(2);
             }}>
               <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800', letterSpacing: 0.5 }}>Continue</Text>
@@ -1760,7 +1813,7 @@ function HomeConstructionFormScreen({ navigation }) {
                 <Text style={{ color: '#444', fontSize: 16, fontWeight: '700' }}>Back</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ backgroundColor: '#0047AB', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47, shadowColor: '#0047AB', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
-                if (!finish) { Alert.alert('Selection Required', 'Please select a finishing style.'); return; }
+                if (!finish) { showAlert('Selection Required', 'Please select a finishing style.', 'info'); return; }
                 setStep(4);
               }}>
                 <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Review Plan</Text>
@@ -1867,10 +1920,11 @@ function HomeConstructionFormScreen({ navigation }) {
             </View>
 
             <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 24, height: 60, justifyContent: 'center', alignItems: 'center', shadowColor: '#1A1A1A', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6, flexDirection: 'row' }} onPress={() => {
-              Alert.alert(
+              showAlert(
                 "Plan Submitted!",
                 "Your project requirements have been sent to our estimation team. We'll be in touch soon.",
-                [{ text: "OK", onPress: () => navigation.navigate('Root') }]
+                "info",
+                () => navigation.navigate('Root')
               );
             }}>
               <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '900', letterSpacing: 0.5, marginRight: 8 }}>Submit Plan</Text>
@@ -1884,7 +1938,9 @@ function HomeConstructionFormScreen({ navigation }) {
 }
 
 // --- ResidentialBuildingFormScreen Component ---
+// --- ResidentialBuildingFormScreen Component ---
 function ResidentialBuildingFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [step, setStep] = useState(1);
   const [plotSize, setPlotSize] = useState('');
   const [unit, setUnit] = useState('Sq Yard'); // Sq Yard or Gaz
@@ -1957,7 +2013,7 @@ function ResidentialBuildingFormScreen({ navigation }) {
             </View>
 
             <TouchableOpacity style={{ backgroundColor: '#0047AB', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', shadowColor: '#0047AB', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
-              if (!plotSize || !facing) { Alert.alert('Missing Details', 'Please complete all plot details to proceed.'); return; }
+              if (!plotSize || !facing) { showAlert('Missing Details', 'Please complete all plot details to proceed.', 'info'); return; }
               setStep(2);
             }}>
               <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800', letterSpacing: 0.5 }}>Continue</Text>
@@ -2052,7 +2108,7 @@ function ResidentialBuildingFormScreen({ navigation }) {
                 <Text style={{ color: '#444', fontSize: 16, fontWeight: '700' }}>Back</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ backgroundColor: '#0047AB', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47, shadowColor: '#0047AB', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
-                if (!finish) { Alert.alert('Selection Required', 'Please select a finishing style.'); return; }
+                if (!finish) { showAlert('Selection Required', 'Please select a finishing style.', 'info'); return; }
                 setStep(4);
               }}>
                 <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Review Plan</Text>
@@ -2160,10 +2216,11 @@ function ResidentialBuildingFormScreen({ navigation }) {
             </View>
 
             <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 24, height: 60, justifyContent: 'center', alignItems: 'center', shadowColor: '#1A1A1A', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6, flexDirection: 'row' }} onPress={() => {
-              Alert.alert(
+              showAlert(
                 "Apartment Plan Submitted!",
                 "Your residential building requirements have been sent to our estimation team.",
-                [{ text: "OK", onPress: () => navigation.navigate('Root') }]
+                "info",
+                () => navigation.navigate('Root')
               );
             }}>
               <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '900', letterSpacing: 0.5, marginRight: 8 }}>Submit Plan</Text>
@@ -2284,7 +2341,9 @@ function CommercialBuildScreen({ navigation }) {
 }
 
 // --- CommercialBuildFormScreen Component ---
+// --- CommercialBuildFormScreen Component ---
 function CommercialBuildFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [step, setStep] = useState(1);
   const [plotSize, setPlotSize] = useState('');
   const [unit, setUnit] = useState('Sq Yard');
@@ -2356,7 +2415,7 @@ function CommercialBuildFormScreen({ navigation }) {
             </View>
 
             <TouchableOpacity style={{ backgroundColor: '#002B5B', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', shadowColor: '#002B5B', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
-              if (!plotSize || !facing) { Alert.alert('Missing Details', 'Please complete all site details to proceed.'); return; }
+              if (!plotSize || !facing) { showAlert('Missing Details', 'Please complete all site details to proceed.', 'info'); return; }
               setStep(2);
             }}>
               <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800', letterSpacing: 0.5 }}>Continue</Text>
@@ -2455,7 +2514,7 @@ function CommercialBuildFormScreen({ navigation }) {
                 <Text style={{ color: '#444', fontSize: 16, fontWeight: '700' }}>Back</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ backgroundColor: '#002B5B', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47, shadowColor: '#002B5B', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
-                if (!finish) { Alert.alert('Selection Required', 'Please select a construction tier.'); return; }
+                if (!finish) { showAlert('Selection Required', 'Please select a construction tier.', 'info'); return; }
                 setStep(4);
               }}>
                 <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Review Specs</Text>
@@ -2557,10 +2616,11 @@ function CommercialBuildFormScreen({ navigation }) {
             </View>
 
             <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 24, height: 60, justifyContent: 'center', alignItems: 'center', shadowColor: '#1A1A1A', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6, flexDirection: 'row' }} onPress={() => {
-              Alert.alert(
+              showAlert(
                 "Commercial Project Submitted!",
                 "Your enterprise spec sheet has been shared with our commercial operations team.",
-                [{ text: "OK", onPress: () => navigation.navigate('Root') }]
+                "info",
+                () => navigation.navigate('Root')
               );
             }}>
               <Text style={{ color: '#FFF', fontSize: 18, fontWeight: '900', letterSpacing: 0.5, marginRight: 8 }}>Submit Project Specs</Text>
@@ -2683,7 +2743,9 @@ function IndustrialBuildScreen({ navigation }) {
 }
 
 // --- IndustrialBuildFormScreen Component ---
+// --- IndustrialBuildFormScreen Component ---
 function IndustrialBuildFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [step, setStep] = useState(1);
   const [plotSize, setPlotSize] = useState('');
   const [unit, setUnit] = useState('Acres'); // Acres, Sq Meter
@@ -2755,7 +2817,7 @@ function IndustrialBuildFormScreen({ navigation }) {
             </View>
 
             <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', shadowColor: '#1A1A1A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
-              if (!plotSize || !zone) { Alert.alert('Missing Details', 'Please complete all site details to proceed.'); return; }
+              if (!plotSize || !zone) { showAlert('Missing Details', 'Please complete all site details to proceed.', 'info'); return; }
               setStep(2);
             }}>
               <Text style={{ color: '#FFB300', fontSize: 16, fontWeight: '900', letterSpacing: 0.5 }}>Continue</Text>
@@ -2854,7 +2916,7 @@ function IndustrialBuildFormScreen({ navigation }) {
                 <Text style={{ color: '#444', fontSize: 16, fontWeight: '700' }}>Back</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47, shadowColor: '#1A1A1A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 4 }} onPress={() => {
-                if (!finish) { Alert.alert('Selection Required', 'Please select a construction grade.'); return; }
+                if (!finish) { showAlert('Selection Required', 'Please select a construction grade.', 'info'); return; }
                 setStep(4);
               }}>
                 <Text style={{ color: '#FFB300', fontSize: 16, fontWeight: '900' }}>Review Specs</Text>
@@ -2956,10 +3018,11 @@ function IndustrialBuildFormScreen({ navigation }) {
             </View>
 
             <TouchableOpacity style={{ backgroundColor: '#FFB300', borderRadius: 24, height: 60, justifyContent: 'center', alignItems: 'center', shadowColor: '#FFB300', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6, flexDirection: 'row' }} onPress={() => {
-              Alert.alert(
+              showAlert(
                 "Industrial Requirement Submitted!",
                 "Your heavy-duty spec sheet has been shared with our industrial engineering team.",
-                [{ text: "OK", onPress: () => navigation.navigate('Root') }]
+                "info",
+                () => navigation.navigate('Root')
               );
             }}>
               <Text style={{ color: '#000', fontSize: 18, fontWeight: '900', letterSpacing: 0.5, marginRight: 8 }}>Submit Project Specs</Text>
@@ -3834,6 +3897,7 @@ function buildRenovationReview(fields, onSubmit) {
 
 // --- Kitchen Remodel Form Component ---
 function KitchenRemodelFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [step, setStep] = useState(1);
   const [size, setSize] = useState('Medium');
   const [cabinets, setCabinets] = useState('Replace');
@@ -3886,7 +3950,7 @@ function KitchenRemodelFormScreen({ navigation }) {
         )}
         {step === 3 && buildRenovationReview([
           { label: 'Size', val: size }, { label: 'Cabinets', val: cabinets }, { label: 'Countertops', val: countertops }
-        ], () => { Alert.alert("Success", "Kitchen plan submitted.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]); })}
+        ], () => { showAlert("Success", "Kitchen plan submitted.", "info", () => navigation.navigate('Root')); })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -3894,6 +3958,7 @@ function KitchenRemodelFormScreen({ navigation }) {
 
 // --- Bathroom Upgrade Form Component ---
 function BathroomUpgradeFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [step, setStep] = useState(1);
   const [bathType, setBathType] = useState('Full Bath');
   const [shower, setShower] = useState('Walk-in Shower');
@@ -3946,7 +4011,7 @@ function BathroomUpgradeFormScreen({ navigation }) {
         )}
         {step === 3 && buildRenovationReview([
           { label: 'Type', val: bathType }, { label: 'Shower/Tub', val: shower }, { label: 'Vanity', val: vanity }
-        ], () => { Alert.alert("Success", "Bathroom plan submitted.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]); })}
+        ], () => { showAlert("Success", "Bathroom plan submitted.", "info", () => navigation.navigate('Root')); })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -3954,6 +4019,7 @@ function BathroomUpgradeFormScreen({ navigation }) {
 
 // --- Flooring Makeover Form Component ---
 function FlooringMakeoverFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [step, setStep] = useState(1);
   const [material, setMaterial] = useState('Hardwood');
   const [area, setArea] = useState('');
@@ -3987,13 +4053,13 @@ function FlooringMakeoverFormScreen({ navigation }) {
             />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <TouchableOpacity style={{ backgroundColor: '#F0F0F0', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => setStep(1)}><Text style={{ color: '#444', fontWeight: '700' }}>Back</Text></TouchableOpacity>
-              <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => { if (!area) return Alert.alert('Missing Info', 'Please enter area size'); setStep(3); }}><Text style={{ color: '#FFF', fontWeight: '800' }}>Review</Text></TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center', flex: 0.47 }} onPress={() => { if (!area) return showAlert('Missing Info', 'Please enter area size', 'info'); setStep(3); }}><Text style={{ color: '#FFF', fontWeight: '800' }}>Review</Text></TouchableOpacity>
             </View>
           </Animated.View>
         )}
         {step === 3 && buildRenovationReview([
           { label: 'Material', val: material }, { label: 'Area', val: area ? area + ' Sq Ft' : 'TBD' }
-        ], () => { Alert.alert("Success", "Flooring plan submitted.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]); })}
+        ], () => { showAlert("Success", "Flooring plan submitted.", "info", () => navigation.navigate('Root')); })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -4001,6 +4067,7 @@ function FlooringMakeoverFormScreen({ navigation }) {
 
 // --- Full Home Makeover Form Component ---
 function FullHomeMakeoverFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [step, setStep] = useState(1);
   const [scope, setScope] = useState('Cosmetic');
   const [rooms, setRooms] = useState('1-2');
@@ -4049,7 +4116,7 @@ function FullHomeMakeoverFormScreen({ navigation }) {
         )}
         {step === 3 && buildRenovationReview([
           { label: 'Scope', val: scope }, { label: 'Rooms', val: rooms }
-        ], () => { Alert.alert("Success", "Makeover plan submitted.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]); })}
+        ], () => { showAlert("Success", "Makeover plan submitted.", "info", () => navigation.navigate('Root')); })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -4057,6 +4124,7 @@ function FullHomeMakeoverFormScreen({ navigation }) {
 
 // --- Home Painting Form Component ---
 function HomePaintingFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [step, setStep] = useState(1);
   const [exterior, setExterior] = useState(false);
   const [interior, setInterior] = useState(true);
@@ -4078,14 +4146,14 @@ function HomePaintingFormScreen({ navigation }) {
                 <View><Text style={{ fontSize: 15, fontWeight: '800', color: exterior ? '#D81B60' : '#1A1A1A' }}>Exterior Facade</Text></View>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => { if (!interior && !exterior) return Alert.alert('Error', 'Please select at least one area.'); setStep(2); }}>
+            <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => { if (!interior && !exterior) return showAlert('Error', 'Please select at least one area.', 'error'); setStep(2); }}>
               <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Review Specs</Text>
             </TouchableOpacity>
           </Animated.View>
         )}
         {step === 2 && buildRenovationReview([
           { label: 'Interior', val: interior ? 'Selected' : 'No' }, { label: 'Exterior', val: exterior ? 'Selected' : 'No' }
-        ], () => { Alert.alert("Success", "Painting specs submitted.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]); })}
+        ], () => { showAlert("Success", "Painting specs submitted.", "info", () => navigation.navigate('Root')); })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -4591,6 +4659,7 @@ function GeneralRepairsScreen({ navigation }) {
 
 // --- Plumbing Form Component ---
 function PlumbingFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [issue, setIssue] = useState('');
   const [urgency, setUrgency] = useState('Standard');
 
@@ -4613,8 +4682,8 @@ function PlumbingFormScreen({ navigation }) {
           ))}
         </View>
         <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
-          if (!issue) return Alert.alert('Error', 'Please describe the issue.');
-          Alert.alert("Request Received", "A plumber will contact you shortly.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+          if (!issue) return showAlert('Information Needed', 'Please describe the issue so we can help you better.', 'info');
+          showAlert("Request Received", "We have received your plumbing request. A professional will contact you shortly.", "info", () => navigation.navigate('Root'));
         }}>
           <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
         </TouchableOpacity>
@@ -4625,6 +4694,7 @@ function PlumbingFormScreen({ navigation }) {
 
 // --- Electrical Form Component ---
 function ElectricalFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [issue, setIssue] = useState('');
   const [type, setType] = useState('Installation');
 
@@ -4646,8 +4716,8 @@ function ElectricalFormScreen({ navigation }) {
           multiline placeholder="Describe what needs to be done..." value={issue} onChangeText={setIssue}
         />
         <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
-          if (!issue) return Alert.alert('Error', 'Please describe the job.');
-          Alert.alert("Request Received", "An electrician will contact you shortly.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+          if (!issue) return showAlert('Details Missing', 'Please describe the job details for our electrician.', 'info');
+          showAlert("Booking Confirmed", "Your electrical service request is being processed. An expert will reach out soon.", "info", () => navigation.navigate('Root'));
         }}>
           <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
         </TouchableOpacity>
@@ -4658,6 +4728,7 @@ function ElectricalFormScreen({ navigation }) {
 
 // --- HVAC Form Component ---
 function HVACFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [system, setSystem] = useState('AC');
   const [issue, setIssue] = useState('');
 
@@ -4679,8 +4750,8 @@ function HVACFormScreen({ navigation }) {
           multiline placeholder="e.g. AC is blowing warm air..." value={issue} onChangeText={setIssue}
         />
         <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
-          if (!issue) return Alert.alert('Error', 'Please provide details.');
-          Alert.alert("Request Received", "Our HVAC tech will be in touch.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+          if (!issue) return showAlert('More Details', 'Please provide a brief description of the climate control issue.', 'info');
+          showAlert("Request Logged", "Your HVAC service request has been successfully logged. Our technician will reach out shortly.", "info", () => navigation.navigate('Root'));
         }}>
           <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
         </TouchableOpacity>
@@ -4691,6 +4762,7 @@ function HVACFormScreen({ navigation }) {
 
 // --- General Repairs Form Component ---
 function GeneralRepairsFormScreen({ navigation }) {
+  const { showAlert } = React.useContext(AlertContext);
   const [issue, setIssue] = useState('');
 
   return (
@@ -4703,8 +4775,8 @@ function GeneralRepairsFormScreen({ navigation }) {
           multiline placeholder="Describe the repair in detail... (e.g. Broken door hinge, hole in drywall)" value={issue} onChangeText={setIssue}
         />
         <TouchableOpacity style={{ backgroundColor: '#1A1A1A', borderRadius: 16, height: 56, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
-          if (!issue) return Alert.alert('Error', 'Please describe what needs fixing.');
-          Alert.alert("Request Received", "A handyman will review your request.", [{ text: "OK", onPress: () => navigation.navigate('Root') }]);
+          if (!issue) return showAlert('Missing Details', 'Please describe what needs fixing so we can assign the right specialist.', 'info');
+          showAlert("Request Received", "We have queued your handyman request. A service provider will reach out to schedule a visit.", "info", () => navigation.navigate('Root'));
         }}>
           <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '800' }}>Submit Request</Text>
         </TouchableOpacity>
@@ -5371,6 +5443,7 @@ const COUNTRIES = [
 
 function LoginScreen({ navigation }) {
   const { saveSession } = React.useContext(UserContext);
+  const { showAlert } = React.useContext(AlertContext);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -5386,7 +5459,7 @@ function LoginScreen({ navigation }) {
 
   const handleLogin = async () => {
     if (!phone || !password) {
-      Alert.alert("Error", "Please enter both phone and password.");
+      showAlert("Notice", "Please enter both phone and password.", "error");
       return;
     }
     setLoading(true);
@@ -5418,7 +5491,7 @@ function LoginScreen({ navigation }) {
     } catch (error) {
       setLoading(false);
       console.error(error);
-      Alert.alert("Login Failed", error.message);
+      showAlert("Login Failed", error.message, "error");
     }
   };
 
@@ -5550,6 +5623,7 @@ function LoginScreen({ navigation }) {
 // --- RegisterScreen Component ---
 function RegisterScreen({ navigation }) {
   const { saveSession } = React.useContext(UserContext);
+  const { showAlert } = React.useContext(AlertContext);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -5566,7 +5640,7 @@ function RegisterScreen({ navigation }) {
 
   const handleRegister = async () => {
     if (!name || !phone || !password) {
-      Alert.alert("Error", "All fields are required.");
+      showAlert("Notice", "All fields are required to create your account.", "error");
       return;
     }
     setLoading(true);
@@ -5600,7 +5674,7 @@ function RegisterScreen({ navigation }) {
     } catch (error) {
       setLoading(false);
       console.error(error);
-      Alert.alert("Registration Failed", error.message);
+      showAlert("Registration Failed", error.message, "error");
     }
   };
 
@@ -6109,15 +6183,17 @@ function AppNavigator() {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <UserProvider>
-        <ScrollProvider>
-          <NavigationContainer>
-            <AppNavigator />
-          </NavigationContainer>
-        </ScrollProvider>
-      </UserProvider>
-    </LanguageProvider>
+    <AlertProvider>
+      <LanguageProvider>
+        <UserProvider>
+          <ScrollProvider>
+            <NavigationContainer>
+              <AppNavigator />
+            </NavigationContainer>
+          </ScrollProvider>
+        </UserProvider>
+      </LanguageProvider>
+    </AlertProvider>
   );
 }
 
