@@ -288,13 +288,13 @@ function HomeScreen({ navigation }) {
             shadowRadius: 16,
             elevation: 10,
           }}
-          onPress={() => navigation.navigate('AboutUs')}
+          onPress={() => navigation.navigate('PremiumServices')}
         >
           <View style={{ flex: 1, zIndex: 1 }}>
             <View style={{ backgroundColor: 'rgba(255,255,255,0.1)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, alignSelf: 'flex-start', marginBottom: 12 }}>
               <Text style={{ color: '#FFB300', fontSize: 10, fontWeight: '900', letterSpacing: 1, textTransform: 'uppercase' }}>Premium Service</Text>
             </View>
-            <Text style={{ fontSize: 22, fontWeight: '800', color: '#FFF', marginBottom: 6, letterSpacing: -0.5 }}>Full-Stack Construction</Text>
+            <Text style={{ fontSize: 22, fontWeight: '800', color: '#FFF', marginBottom: 6, letterSpacing: -0.5 }}>Full-Stack</Text>
             <Text style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', marginBottom: 18, lineHeight: 20, fontWeight: '500' }}>
               End-to-end management by MAHTO experts. We bring your vision to life.
             </Text>
@@ -355,6 +355,51 @@ function HomeScreen({ navigation }) {
 
       </Animated.ScrollView>
     </View>
+  );
+}
+
+// --- PremiumServicesScreen Component ---
+function PremiumServicesScreen({ navigation }) {
+  const services = [
+    { id: 'Construction', title: 'Construction', image: require('./assets/construction_3d.png'), desc: 'Foundations to finishings, completely managed' },
+    { id: 'Renovation', title: 'Renovation', image: require('./assets/renovation_3d.png'), desc: 'Modernize and upgrade your living space' },
+    { id: 'Service', title: 'Service', image: require('./assets/services.png'), desc: 'Expert plumbing, electrical and fast repairs' },
+  ];
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
+      <StatusBar style="dark" />
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 48, paddingBottom: 14, backgroundColor: '#FFF', borderBottomWidth: 1, borderBottomColor: '#F0F0F0' }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <MaterialCommunityIcons name="arrow-left" size={22} color="#1A1A1A" />
+        </TouchableOpacity>
+        <View>
+          <Text style={{ fontSize: 20, fontWeight: '900', color: '#1A1A1A', letterSpacing: -0.5 }}>Premium Services</Text>
+          <Text style={{ fontSize: 12, color: '#888', fontWeight: '500', marginTop: 1 }}>Full-stack management by experts</Text>
+        </View>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20 }}>
+        {services.map((service) => (
+          <TouchableOpacity
+            key={service.id}
+            style={{ backgroundColor: '#FFF', borderRadius: 20, padding: 20, marginBottom: 16, flexDirection: 'row', alignItems: 'center', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 12 }}
+            onPress={() => navigation.navigate(service.id)}
+          >
+            <View style={{ width: 80, height: 80, backgroundColor: '#FFF', borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginRight: 16 }}>
+              <Image source={service.image} style={{ width: 74, height: 74 }} resizeMode="contain" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 18, fontWeight: '800', color: '#1A1A1A', marginBottom: 4 }}>{service.title}</Text>
+              <Text style={{ fontSize: 13, color: '#666', lineHeight: 20 }}>{service.desc}</Text>
+            </View>
+            <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#F3F3F3', justifyContent: 'center', alignItems: 'center', marginLeft: 12 }}>
+              <MaterialCommunityIcons name="chevron-right" size={20} color="#000" />
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -4357,6 +4402,7 @@ function AppNavigator() {
       <Stack.Screen name="RefundPolicy" component={RefundPolicyScreen} />
       <Stack.Screen name="AboutUs" component={AboutUsScreen} />
       <Stack.Screen name="ActivityScreen" component={ActivityScreen} />
+      <Stack.Screen name="PremiumServices" component={PremiumServicesScreen} />
       <Stack.Screen name="IdeasGallery" component={IdeasGalleryScreen} />
       <Stack.Screen name="IdeaDetail" component={IdeaDetailScreen} />
     </Stack.Navigator>
