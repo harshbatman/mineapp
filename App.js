@@ -6036,9 +6036,8 @@ function AppNavigator() {
   if (isLoading) {
     // Splash while checking stored session
     return (
-      <View style={{ flex: 1, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ fontSize: 42, fontWeight: '950', color: '#000', letterSpacing: -2 }}>mine</Text>
-        <Text style={{ fontSize: 16, fontWeight: '700', color: '#666', marginTop: -5, textTransform: 'uppercase', letterSpacing: 2 }}>By MAHTO</Text>
+      <View style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center' }}>
+        <Image source={require('./assets/splash.png')} style={{ width: 250, height: 250 }} resizeMode="contain" />
         <ActivityIndicator style={{ marginTop: 32 }} size="large" color="#000" />
       </View>
     );
