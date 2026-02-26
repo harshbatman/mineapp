@@ -5604,9 +5604,7 @@ function LoginScreen({ navigation }) {
           </View>
         </View>
 
-        <TouchableOpacity style={{ alignSelf: 'flex-end', marginBottom: 30 }}>
-          <Text style={{ color: '#000', fontWeight: '700', fontSize: 14 }}>Forgot Password?</Text>
-        </TouchableOpacity>
+
 
         <TouchableOpacity
           style={[styles.saveButton, { borderRadius: 16, height: 60, elevation: 6, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 10 }]}
