@@ -1,8 +1,14 @@
 {
   "expo": {
     "name": "mine",
-    "slug": "mine-app",
+    "slug": "mine-",
+    "owner": "mahtobuild",
     "version": "1.1.11",
+    "extra": {
+      "eas": {
+        "projectId": "30a56275-67b3-42d1-8b4a-3ece433a962f"
+      }
+    },
     "orientation": "portrait",
     "icon": "./assets/launcher.jpg",
     "userInterfaceStyle": "light",
