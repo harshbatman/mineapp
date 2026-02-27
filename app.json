@@ -3,7 +3,7 @@
     "name": "mine",
     "slug": "mine-",
     "owner": "mahtobuild",
-    "version": "1.1.23",
+    "version": "1.1.26",
     "extra": {
       "eas": {
         "projectId": "30a56275-67b3-42d1-8b4a-3ece433a962f"
@@ -21,11 +21,11 @@
     "ios": {
       "supportsTablet": true,
       "icon": "./assets/launcher.jpg",
-      "buildNumber": "23"
+      "buildNumber": "26"
     },
     "android": {
       "package": "com.harshbatman.mineapp",
-      "versionCode": 23,
+      "versionCode": 26,
       "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/launcher.jpg",
