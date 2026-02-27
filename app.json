@@ -10,7 +10,7 @@
       }
     },
     "orientation": "portrait",
-    "icon": "./assets/launcher.jpg",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -20,7 +20,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "icon": "./assets/launcher.jpg",
+      "icon": "./assets/icon.png",
       "buildNumber": "26"
     },
     "android": {
@@ -28,7 +28,7 @@
       "versionCode": 26,
       "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/launcher.jpg",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#000000"
       }
     },
