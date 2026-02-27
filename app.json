@@ -20,7 +20,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "icon": "./assets/icon.png",
+      "icon": "./assets/icon-ios.png",
       "buildNumber": "26"
     },
     "android": {
