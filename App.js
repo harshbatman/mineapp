@@ -485,6 +485,7 @@ const ALL_IDEAS = [
       { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/fe4.png" },
       { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/fe5.png" },
       { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/new_elevation.png" },
+      { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/harshe.png" },
     ]
   },
 ];
