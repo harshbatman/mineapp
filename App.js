@@ -467,23 +467,23 @@ function PremiumServicesScreen({ navigation }) {
 
 // --- IdeasGalleryScreen Component ---
 const ALL_IDEAS = [
-  { label: 'Living Room', icon: 'sofa-outline', color: '#2196F3', bg: '#E3F2FD', images: [require('./assets/livingroom.png'), require('./assets/lr1.png'), require('./assets/lr2.png'), require('./assets/lr3.png'), require('./assets/lr4.png'), require('./assets/lr5.png')] },
-  { label: 'Kitchen', icon: 'countertop-outline', color: '#FF9800', bg: '#FFF3E0', images: [require('./assets/kitchen.png'), require('./assets/k1.png'), require('./assets/k2.png'), require('./assets/k3.png')] },
-  { label: 'Bathroom', icon: 'shower', color: '#00BCD4', bg: '#E0F7FA', images: [require('./assets/bathroom.png'), require('./assets/b1.png'), require('./assets/b2.png'), require('./assets/b3.png'), require('./assets/b4.png')] },
-  { label: 'Dining Table', icon: 'table-furniture', color: '#9C27B0', bg: '#F3E5F5', images: [require('./assets/diningtable.png'), require('./assets/dt1.png'), require('./assets/dt2.png'), require('./assets/dt3.png'), require('./assets/dt4.png'), require('./assets/dt5.png')] },
-  { label: 'Home Library', icon: 'bookshelf', color: '#795548', bg: '#EFEBE9', images: [require('./assets/homelibrary.png'), require('./assets/lib1.png'), require('./assets/lib2.png'), require('./assets/lib3.png'), require('./assets/lib4.png')] },
-  { label: 'Lawn & Garden', icon: 'flower-outline', color: '#4CAF50', bg: '#E8F5E9', images: [require('./assets/lawngarden.png'), require('./assets/lg1.png'), require('./assets/lg2.png'), require('./assets/lg3.png'), require('./assets/lg4.png'), require('./assets/lg5.png')] },
-  { label: 'Bedroom', icon: 'bed-outline', color: '#E91E63', bg: '#FCE4EC', images: [require('./assets/bedroom.png'), require('./assets/bed1.png'), require('./assets/bed2.png'), require('./assets/bed3.png'), require('./assets/bed4.png'), require('./assets/bed5.png')] },
+  { label: 'Living Room', icon: 'sofa-outline', color: '#2196F3', bg: '#E3F2FD', images: [{ uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/livingroom.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lr1.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lr2.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lr3.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lr4.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lr5.png" }] },
+  { label: 'Kitchen', icon: 'countertop-outline', color: '#FF9800', bg: '#FFF3E0', images: [{ uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/kitchen.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/k1.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/k2.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/k3.png" }] },
+  { label: 'Bathroom', icon: 'shower', color: '#00BCD4', bg: '#E0F7FA', images: [{ uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/bathroom.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/b1.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/b2.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/b3.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/b4.png" }] },
+  { label: 'Dining Table', icon: 'table-furniture', color: '#9C27B0', bg: '#F3E5F5', images: [{ uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/diningtable.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/dt1.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/dt2.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/dt3.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/dt4.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/dt5.png" }] },
+  { label: 'Home Library', icon: 'bookshelf', color: '#795548', bg: '#EFEBE9', images: [{ uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/homelibrary.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lib1.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lib2.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lib3.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lib4.png" }] },
+  { label: 'Lawn & Garden', icon: 'flower-outline', color: '#4CAF50', bg: '#E8F5E9', images: [{ uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lawngarden.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lg1.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lg2.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lg3.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lg4.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/lg5.png" }] },
+  { label: 'Bedroom', icon: 'bed-outline', color: '#E91E63', bg: '#FCE4EC', images: [{ uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/bedroom.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/bed1.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/bed2.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/bed3.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/bed4.png" }, { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/bed5.png" }] },
   {
     label: 'Front Elevation', icon: 'home-city', color: '#607D8B', bg: '#ECEFF1', images: [
-      require('./assets/raj.png'),
-      require('./assets/harsh.jpeg'),
-      require('./assets/mahto.jpeg'),
-      require('./assets/fe1.png'),
-      require('./assets/fe2.png'),
-      require('./assets/fe3.png'),
-      require('./assets/fe4.png'),
-      require('./assets/fe5.png'),
+      { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/raj.png" },
+      { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/harsh.jpeg" },
+      { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/mahto.jpeg" },
+      { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/fe1.png" },
+      { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/fe2.png" },
+      { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/fe3.png" },
+      { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/fe4.png" },
+      { uri: "https://storage.googleapis.com/mahto-b8626.firebasestorage.app/design_images/fe5.png" },
     ]
   },
 ];
